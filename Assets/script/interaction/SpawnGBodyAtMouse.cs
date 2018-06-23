@@ -15,8 +15,9 @@ public class SpawnGBodyAtMouse : NetworkBehaviour {
   void Update() {
     if (isLocalPlayer) {
       if (Input.GetMouseButtonDown((int) MouseButton.Left)) {
-        RaycastHit hit;
-        if (InteractionManager.instance.MousePositionToObject(out hit)) {
+        InteractionManager im = InteractionManager.instance;
+        RaycastHit hit = im.targetHit;
+        if (im.isTargetValid) {
           Vector3 point = hit.point + (hit.normal.normalized * spawnHeight);
           CmdSpawnPrefab(point);
         }

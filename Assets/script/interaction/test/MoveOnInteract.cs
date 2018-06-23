@@ -20,7 +20,7 @@ public class MoveOnInteract : Interactable {
       Vector3 velocity = moveDirection.normalized;
       velocity = (forward * velocity.x) + (up * velocity.y);
       velocity = velocity.normalized * moveSpeed;
-      gbody.body.AddForceAtPosition(velocity, cursor, ForceMode.VelocityChange);
+      gbody.body.AddForceAtPosition(velocity, manager.targetHit.point, ForceMode.VelocityChange);
     }
   }
 

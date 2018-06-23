@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class InteractionCursor : MonoBehaviour {
 
+  public float normalOffset = 0.05f;
   Renderer render;
 
   void Awake() {
@@ -10,8 +11,13 @@ public class InteractionCursor : MonoBehaviour {
 
   void Update() {
     InteractionManager im = InteractionManager.instance;
-    render.enabled = im.cursor != Vector3.zero;
-    transform.position = im.cursor;
+    if (im.isTargetValid) {
+      transform.position = im.targetHit.point + (im.targetHit.normal.normalized * normalOffset);
+      render.enabled = true;
+    }
+    else {
+      render.enabled = false;
+    }
   }
 
 }

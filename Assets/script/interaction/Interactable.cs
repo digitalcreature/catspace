@@ -11,10 +11,6 @@ public class Interactable : NetworkBehaviour {
   public InteractionManager manager
     => InteractionManager.instance;
 
-    // the position of the cursor, for convenience
-  public Vector3 cursor
-    => manager.cursor;
-
   public NetworkIdentity identity { get; private set; }
 
   protected virtual void Awake() {

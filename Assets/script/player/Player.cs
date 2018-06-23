@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class Player : NetworkBehaviour {
 
-  public NetworkIdentity identity { get; private set; }
   public GCharacter chr { get; private set; }
+  public CameraRigFocusable focus { get; private set; }
 
   public Rigidbody body => chr.body;
   public GField gfield => chr.gfield;
@@ -16,13 +16,14 @@ public class Player : NetworkBehaviour {
 
   void Awake() {
     chr = GetComponent<GCharacter>();
+    focus = GetComponent<CameraRigFocusable>();
   }
 
   public override void OnStartLocalPlayer() {
     localPlayer = this;
     // set the rig to target the player
     CameraRig rig = CameraRig.instance;
-    rig.Retarget(transform, gfield);
+    rig.SetFocus(focus);
     StartCoroutine(PlaceOnNorthPoleSurfaceRoutine());
   }
 
@@ -38,34 +39,7 @@ public class Player : NetworkBehaviour {
     }
   }
 
-  void Update() {
-    if (isLocalPlayer) {
-      CameraRig.instance.SetGField(gfield);
-    }
-  }
-
-  // assign this player's client as the authority for a NetworkIdentity
-  public void AssignClientAuthority(NetworkIdentity identity) {
-    if (isLocalPlayer) {
-      CmdAssignClientAuthority(identity, this.identity);
-    }
-  }
-
-  // remove this player's client as the authority for a NetworkIdentity
-  public void RemoveClientAuthority(NetworkIdentity identity) {
-    if (isLocalPlayer) {
-      CmdRemoveClientAuthority(identity, this.identity);
-    }
-  }
-
-  [Command]
-  void CmdAssignClientAuthority(NetworkIdentity obj, NetworkIdentity auth) {
-    obj.AssignClientAuthority(auth.connectionToClient);
-  }
-
-  [Command]
-  void CmdRemoveClientAuthority(NetworkIdentity obj, NetworkIdentity auth) {
-    obj.RemoveClientAuthority(auth.connectionToClient);
-  }
+  // void Update() {
+  // }
 
 }

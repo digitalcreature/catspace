@@ -12,8 +12,9 @@ public class InteractionManager : SingletonBehaviour<InteractionManager> {
   public Material selectionGlowEffect;
   public ExaminationCameraRig backpackExaminationRig;
 
-  public Vector3 cursor { get; private set; }         // the world space position of the cursor (Vector3.zero if the cursor isnt over anything)
   public Interactable target { get; private set; }    // the target interactable currently being hovered over
+  public RaycastHit targetHit { get; private set; }   // the hit result of the current target (contains extra values like distance, normal, collider, etc)
+  public bool isTargetValid => targetHit.collider != null;
 
   public void OpenBackpack() {
     Player player = Player.localPlayer;
@@ -46,26 +47,32 @@ public class InteractionManager : SingletonBehaviour<InteractionManager> {
   }
 
   void Update() {
+    CameraRig rig = CameraRig.instance;
     if (Input.GetKeyDown(backpackKey)) {
       ToggleBackpack();
     }
     Player player = Player.localPlayer;
     if (player != null) {
+      Ray ray = new Ray();
+      if (rig.isFirstPerson) {
+        ray.origin = rig.cam.transform.position;
+        ray.direction = rig.cam.transform.forward;
+      }
+      else {
+        ray = rig.cam.ScreenPointToRay(Input.mousePosition);
+      }
       RaycastHit hit;
-      MousePositionToObject(out hit);
+      Physics.Raycast(ray, out hit, Mathf.Infinity, interactableMask);
+      targetHit = hit;
       float distance = (player.transform.position - hit.point).magnitude;
       Interactable target = null;
       if (hit.collider != null) {
-        cursor = hit.point;
         target = hit.collider.GetComponent<Interactable>();
         if (target != null) {
           if (!target.isInteractable || distance > interactionRange) {
             target = null;
           }
         }
-      }
-      else {
-        cursor = Vector3.zero;
       }
       SetTarget(target);
       if (Input.GetKeyDown(interactionKey)) {
@@ -84,17 +91,6 @@ public class InteractionManager : SingletonBehaviour<InteractionManager> {
       }
       this.target = target;
     }
-  }
-
-  // return a world space location that is under the a given screen point
-  public bool ScreenPointToObject(Vector3 screenPoint, out RaycastHit hit) {
-    CameraRig rig = CameraRig.instance;
-    Ray ray = rig.cam.ScreenPointToRay(screenPoint);
-    return Physics.Raycast(ray, out hit, Mathf.Infinity, interactableMask);
-  }
-
-  public bool MousePositionToObject(out RaycastHit hit) {
-    return ScreenPointToObject(Input.mousePosition, out hit);
   }
 
 }
