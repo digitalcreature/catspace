@@ -99,7 +99,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1610720783957912}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0.061, z: 0.114}
+  m_LocalPosition: {x: 0, y: -0.086, z: 0.029}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4510921894843988}
@@ -238,6 +238,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isInteractable: 1
+  changeOwner: 0
   anchor: {fileID: 4487090081825092}
   exit: {fileID: 4601824962285848}
 --- !u!114 &114921240321076698

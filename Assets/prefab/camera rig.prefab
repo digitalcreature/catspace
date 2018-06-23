@@ -54,7 +54,7 @@ GameObject:
   - component: {fileID: 20576071622514370}
   - component: {fileID: 124511962600469628}
   - component: {fileID: 81491940556631996}
-  - component: {fileID: 114800577184633096}
+  - component: {fileID: 114732730470787820}
   m_Layer: 0
   m_Name: camera
   m_TagString: MainCamera
@@ -233,7 +233,7 @@ MonoBehaviour:
   maxDistance: 12
   distanceBias: 3
   mouseOrbitButton: 2
---- !u!114 &114800577184633096
+--- !u!114 &114732730470787820
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -247,9 +247,9 @@ MonoBehaviour:
   volumeTrigger: {fileID: 4288931974123506}
   volumeLayer:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 1048576
   stopNaNPropagation: 1
-  antialiasingMode: 3
+  antialiasingMode: 2
   temporalAntialiasing:
     jitterSpread: 0.75
     sharpness: 0.25
