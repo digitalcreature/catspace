@@ -1,0 +1,125 @@
+fileFormatVersion: 2
+guid: 6f51ca93af5ac6544917c6e0391b3075
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: pod_front.L
+    100002: pod_front.L_end
+    100004: pod_front.R
+    100006: pod_front.R_end
+    100008: pod_rear.L
+    100010: pod_rear.L_end
+    100012: pod_rear.R
+    100014: pod_rear.R_end
+    100016: root
+    100018: Sun
+    100020: //RootNode
+    100022: vtolshuttle
+    100024: vtolshuttle_armature
+    100026: vtolshuttle_windscreen
+    100028: vtolshuttle_skylight
+    400000: pod_front.L
+    400002: pod_front.L_end
+    400004: pod_front.R
+    400006: pod_front.R_end
+    400008: pod_rear.L
+    400010: pod_rear.L_end
+    400012: pod_rear.R
+    400014: pod_rear.R_end
+    400016: root
+    400018: Sun
+    400020: //RootNode
+    400022: vtolshuttle
+    400024: vtolshuttle_armature
+    400026: vtolshuttle_windscreen
+    400028: vtolshuttle_skylight
+    2300000: vtolshuttle_windscreen
+    3300000: vtolshuttle_windscreen
+    4300000: vtolshuttle_windscreen
+    4300002: vtolshuttle
+    4300004: vtolshuttle_skylight
+    9500000: //RootNode
+    10800000: Sun
+    13700000: vtolshuttle
+    13700002: vtolshuttle_skylight
+  externalObjects: {}
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
