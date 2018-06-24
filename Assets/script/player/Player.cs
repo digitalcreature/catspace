@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections.Generic;
 
-public class Player : NetworkBehaviour {
+public class Player : KittyNetworkBehaviour {
 
   public GCharacter chr { get; private set; }
   public CameraRigFocusable focus { get; private set; }
@@ -14,7 +14,8 @@ public class Player : NetworkBehaviour {
 
   public Examinable backpack;
 
-  void Awake() {
+  protected override void Awake() {
+    base.Awake();
     chr = GetComponent<GCharacter>();
     focus = GetComponent<CameraRigFocusable>();
   }

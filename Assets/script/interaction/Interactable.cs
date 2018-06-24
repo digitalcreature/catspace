@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class Interactable : NetworkBehaviour {
+public class Interactable : KittyNetworkBehaviour {
 
   [SyncVar] public bool isInteractable = true;
 
@@ -11,10 +11,8 @@ public class Interactable : NetworkBehaviour {
   public InteractionManager manager
     => InteractionManager.instance;
 
-  public NetworkIdentity identity { get; private set; }
-
-  protected virtual void Awake() {
-    identity = GetComponent<NetworkIdentity>();
+  protected override void Awake() {
+    base.Awake();
     filters = GetComponentsInChildren<MeshFilter>();
   }
 

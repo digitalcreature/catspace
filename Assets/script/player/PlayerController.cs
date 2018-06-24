@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class PlayerController : NetworkBehaviour {
+public class PlayerController : KittyNetworkBehaviour {
 
   public bool faceVelocity = true;
   public float baseWalkSpeed = 8f;
@@ -23,7 +23,8 @@ public class PlayerController : NetworkBehaviour {
   Vector3 acceleration;
   float jumpBoostTime = 0;
 
-  void Awake() {
+  protected override void Awake() {
+    base.Awake();
     player = GetComponent<Player>();
   }
 

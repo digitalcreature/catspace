@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class PlayerAnimation : NetworkBehaviour {
-
-	Animator anim;
+public class PlayerAnimation : KittyNetworkBehaviour {
 
 	public Player player { get; private set; }
+	public Animator anim { get; private set; }
 
-	void Awake() {
+	protected override void Awake() {
+		base.Awake();
 		player = GetComponent<Player>();
 		anim = GetComponent<Animator>();
 	}

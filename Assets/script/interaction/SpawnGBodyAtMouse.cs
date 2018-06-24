@@ -1,14 +1,15 @@
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class SpawnGBodyAtMouse : NetworkBehaviour {
+public class SpawnGBodyAtMouse : KittyNetworkBehaviour {
 
   public GBody prefab;
   public float spawnHeight = 1;
 
   public Player player { get; private set; }
 
-  void Awake() {
+  protected override void Awake() {
+    base.Awake();
     player = GetComponent<Player>();
   }
 

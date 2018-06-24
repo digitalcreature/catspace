@@ -3,7 +3,7 @@ using UnityEngine.Networking;
 
 // an abstract gravity field. to define a field with a certain shape, extend this class.
 // all gravity fields should have a defined "sea level"
-public abstract class GField : NetworkBehaviour {
+public abstract class GField : KittyNetworkBehaviour {
 
   public float surfaceGravity = 20;
 

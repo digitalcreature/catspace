@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class Part : NetworkBehaviour {
+public class Part : KittyNetworkBehaviour {
 
   public PartChild parent { get; private set; }
   [SyncVar] NetworkInstanceId rootId;

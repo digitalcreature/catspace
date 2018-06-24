@@ -3,7 +3,7 @@ using UnityEngine.Networking;
 using System.Collections.Generic;
 
 // attach to an object that needs to load terrain in a radius
-public class TViewer : NetworkBehaviour {
+public class TViewer : KittyNetworkBehaviour {
 
   public float minRange = 100f;
   public float maxRange = 250f;

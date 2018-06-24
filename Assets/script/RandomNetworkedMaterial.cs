@@ -3,18 +3,12 @@ using UnityEngine.Networking;
 
 // select a random material from a list and apply it to all renderers given
 // syncronize the material chosen over the network
-public class RandomNetworkedMaterial : NetworkBehaviour {
+public class RandomNetworkedMaterial : KittyNetworkBehaviour {
 
   public Renderer[] renderers;
   public Material[] materials;
 
-  public NetworkIdentity id { get; private set; }
-
   [SyncVar] int m;
-
-  void Awake() {
-    id = GetComponent<NetworkIdentity>();
-  }
 
   public override void OnStartServer() {
     base.OnStartServer();

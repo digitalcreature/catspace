@@ -1,11 +1,12 @@
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class PartRoot : NetworkBehaviour {
+public class PartRoot : KittyNetworkBehaviour {
 
   public PartChild[] children { get; private set; }
 
-  void Awake() {
+  protected override void Awake() {
+    base.Awake();
     children = GetComponentsInChildren<PartChild>();
   }
 

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Networking;
 
-public abstract class TerrainBase : NetworkBehaviour {
+public abstract class TerrainBase : KittyNetworkBehaviour {
 
   public GField gfield { get; private set; }
 
@@ -10,7 +10,8 @@ public abstract class TerrainBase : NetworkBehaviour {
 
   public TMeshGenerator generator { get; private set; } // optional procedural generator script
 
-  protected virtual void Awake() {
+  protected override void Awake() {
+    base.Awake();
     generator = GetComponent<TMeshGenerator>();
     gfield = GetComponent<GField>();
   }

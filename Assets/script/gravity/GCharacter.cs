@@ -19,7 +19,6 @@ public class GCharacter : GBody {
   public bool isSitting => seat != null;              // is the character sitting?
 
   public Seat seat { get; private set; }          // the seat the character is sitting in
-  [SyncVar] NetworkInstanceId seatId;
 
   [Range(0f, 90f)] public float maxSlopeAngle = 60f;  // the max slope that can be traversed
 
@@ -128,17 +127,13 @@ public class GCharacter : GBody {
     Gizmos.color = c;
   }
 
-  public override bool OnSerialize(NetworkWriter writer, bool forceAll) {
-    base.OnSerialize(writer, forceAll);
-    writer.Write(seatId);
-    return true;
-  }
-
-  public override void OnDeserialize(NetworkReader reader, bool forceAll) {
-    base.OnDeserialize(reader, forceAll);
-    seatId = reader.ReadNetworkId();
-    Seat seat = seatId.FindLocalObject<Seat>();
-    SitLocal(seat);
+  protected override void OnSync(NetworkSync sync) {
+    base.OnSync(sync);
+    Seat seat = this.seat;
+    sync.SyncBehaviour(ref seat);
+    if (sync.isReading) {
+      SitLocal(seat);
+    }
   }
 
   // interact with an interactable object
@@ -165,17 +160,8 @@ public class GCharacter : GBody {
   public void Sit(Seat seat) {
     if (isServer) {
       if (seat == null || seat.CanSit(this)) {
-        if (this.seat != null) {
-          this.seat.SetSittingCharacter(null);
-        }
-        if (seat != null) {
-          seat.SetSittingCharacter(this);
-        }
         SitLocal(seat);
-        NetworkInstanceId seatId = seat.GetInstanceId();
-        if (seatId != this.seatId) {
-          this.seatId = seatId;
-        }
+        ServerSync();
       }
     }
     else if (isLocalPlayer) {
@@ -196,7 +182,11 @@ public class GCharacter : GBody {
     Seat oldSeat = this.seat;
     if (newSeat != oldSeat) {
       this.seat = newSeat;
+      if (oldSeat != null) {
+        oldSeat.sittingCharacter = null;
+      }
       if (newSeat != null) {
+        newSeat.sittingCharacter = this;
         if (oldSeat == null) {
           // entering seat from standing
           oldParent = transform.parent;

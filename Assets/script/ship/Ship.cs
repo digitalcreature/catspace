@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 using UnityEngine;
 
 
-public class Ship : NetworkBehaviour {
+public class Ship : KittyNetworkBehaviour {
 
 		public float thrust;
 		public float thrustHover;
@@ -26,7 +26,8 @@ public class Ship : NetworkBehaviour {
 		public Camera cockpit { get; private set; }
 		public Camera playercam { get ; private set; }
 
-		void Awake() {
+		protected override void Awake() {
+			base.Awake();
 				cockpit = GetComponentInChildren<Camera>();
 				rb = GetComponent<Rigidbody>();
 				gbody = GetComponent<GBody>();

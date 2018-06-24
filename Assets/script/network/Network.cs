@@ -3,7 +3,7 @@ using UnityEngine.Networking;
 
 public static class Network {
 
-  public static NetworkInstanceId GetInstanceId(this NetworkBehaviour component) {
+  public static NetworkInstanceId GetInstanceId(this KittyNetworkBehaviour component) {
     if (component == null) {
       return NetworkInstanceId.Invalid;
     }
@@ -12,7 +12,7 @@ public static class Network {
     }
   }
 
-  public static T FindLocalObject<T>(this NetworkInstanceId id) where T : NetworkBehaviour {
+  public static T FindLocalObject<T>(this NetworkInstanceId id) where T : KittyNetworkBehaviour {
     GameObject obj;
     // because for some fucking reason unity has you call different
     // functions for this depending if youre on the client or the server
@@ -27,5 +27,7 @@ public static class Network {
     }
     return null;
   }
+
+
 
 }

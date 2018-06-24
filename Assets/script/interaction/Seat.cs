@@ -12,8 +12,9 @@ public class Seat : Interactable {
   public Vector3 exitPosition
     => exit == null ? anchor.position : exit.position;
 
-  public GCharacter sittingCharacter { get; private set; }
-  [SyncVar] NetworkInstanceId sittingCharacterId;
+  // a reference to the character sitting in this seat
+  // the value is managed by GCharacter's sync operations
+  public GCharacter sittingCharacter { get; set; }
 
   public bool isOccupied => sittingCharacter != null;
 
@@ -21,40 +22,6 @@ public class Seat : Interactable {
   // only reliable on server side
   public bool CanSit(GCharacter character) {
     return (character.seat != this) && (!isOccupied);
-  }
-
-  // change which character is sitting in this seat
-  // WARNING: NO CHECKS ARE MADE
-  // ONLY CALL FROM SECURE CODE IN GCHARACTER
-  // always called on server
-  public void SetSittingCharacter(GCharacter character) {
-    NetworkInstanceId id = character.GetInstanceId();
-    if (id != sittingCharacterId) {
-      sittingCharacterId = id;
-    }
-    if (identity.localPlayerAuthority && changeOwner) {
-      if (character != null && character.identity.localPlayerAuthority) {
-        NetworkConnection oldConnection = identity.clientAuthorityOwner;
-        NetworkConnection newConnection = character.identity.connectionToClient;
-        if (oldConnection != newConnection) {
-          identity.RemoveClientAuthority(oldConnection);
-          identity.AssignClientAuthority(newConnection);
-        }
-      }
-    }
-    this.sittingCharacter = character;
-  }
-
-  public override bool OnSerialize(NetworkWriter writer, bool forceAll) {
-    base.OnSerialize(writer, forceAll);
-    writer.Write(sittingCharacterId);
-    return true;
-  }
-
-  public override void OnDeserialize(NetworkReader reader, bool forceAll) {
-    base.OnDeserialize(reader, forceAll);
-    sittingCharacterId = reader.ReadNetworkId();
-    sittingCharacter = sittingCharacterId.FindLocalObject<GCharacter>();
   }
 
   protected override void OnInteractLocal(GCharacter character) {
