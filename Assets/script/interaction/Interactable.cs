@@ -5,7 +5,7 @@ public class Interactable : NetworkBehaviour {
 
   [SyncVar] public bool isInteractable = true;
 
-  Renderer[] renderers;
+  MeshFilter[] filters;
 
   // the interaction manager, for convenience
   public InteractionManager manager
@@ -15,27 +15,16 @@ public class Interactable : NetworkBehaviour {
 
   protected virtual void Awake() {
     identity = GetComponent<NetworkIdentity>();
-    renderers = GetComponentsInChildren<Renderer>();
-    // make sure each renderer has an extra material slot open for an effect material
-    // this is so that we can add the an effect to interactable objects when the player hovers over them etc
-    foreach (Renderer renderer in renderers) {
-      Material[] materials = renderer.materials;
-      if (materials[materials.Length - 1] != null) {
-        Material[] newMaterials = new Material[materials.Length + 1];
-        for (int i = 0; i < materials.Length; i ++) {
-          newMaterials[i] = materials[i];
-        }
-        materials = newMaterials;
-        renderer.materials = materials;
-      }
-    }
+    filters = GetComponentsInChildren<MeshFilter>();
   }
 
-  public void SetEffectMaterial(Material material) {
-    foreach (Renderer renderer in renderers) {
-      Material[] materials = renderer.materials;
-      materials[materials.Length - 1] = material;
-      renderer.materials = materials;
+  public void DrawHighlight(Material highlightMaterial, Camera camera = null) {
+    foreach (MeshFilter filter in filters) {
+      if (filter != null) {
+        Mesh mesh = filter.mesh;
+        Matrix4x4 matrix = filter.transform.localToWorldMatrix;
+        Graphics.DrawMesh(mesh, matrix, highlightMaterial, gameObject.layer, camera);
+      }
     }
   }
 

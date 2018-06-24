@@ -35,7 +35,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - ExaminedBackpack
   - ExaminedObject
   m_SortingLayers:
   - name: Default

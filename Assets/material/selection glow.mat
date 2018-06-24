@@ -64,8 +64,8 @@ Material:
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _GlowPower: 1.39
-    - _GlowPowerHigh: 5
-    - _GlowPowerLow: 6
+    - _GlowPowerHigh: 3
+    - _GlowPowerLow: 5
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1

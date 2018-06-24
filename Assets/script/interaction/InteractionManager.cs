@@ -11,6 +11,7 @@ public class InteractionManager : SingletonBehaviour<InteractionManager> {
   public LayerMask interactableMask;
   public Material selectionGlowEffect;
   public ExaminationCameraRig backpackExaminationRig;
+  public ExaminationCameraRig otherExaminationRig;
 
   public Interactable target { get; private set; }    // the target interactable currently being hovered over
   public RaycastHit targetHit { get; private set; }   // the hit result of the current target (contains extra values like distance, normal, collider, etc)
@@ -46,6 +47,10 @@ public class InteractionManager : SingletonBehaviour<InteractionManager> {
     }
   }
 
+  public void Examine(Examinable examinable) {
+    otherExaminationRig.SetTarget(examinable);
+  }
+
   void Update() {
     CameraRig rig = CameraRig.instance;
     if (Input.GetKeyDown(backpackKey)) {
@@ -75,20 +80,23 @@ public class InteractionManager : SingletonBehaviour<InteractionManager> {
         }
       }
       SetTarget(target);
+      if (target != null) {
+        target.DrawHighlight(selectionGlowEffect);
+      }
       if (Input.GetKeyDown(interactionKey)) {
         player.chr.Interact(target);
+      }
+      if (otherExaminationRig.target != null) {
+        Vector3 targetPosition = otherExaminationRig.target.examineCenter.position;
+        if (Vector3.Distance(targetPosition, player.transform.position) > interactionRange) {
+          otherExaminationRig.SetTarget(null);
+        }
       }
     }
   }
 
   void SetTarget(Interactable target) {
     if (this.target != target) {
-      if (this.target != null) {
-        this.target.SetEffectMaterial(null);
-      }
-      if (target != null) {
-        target.SetEffectMaterial(selectionGlowEffect);
-      }
       this.target = target;
     }
   }
