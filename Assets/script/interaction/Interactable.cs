@@ -35,9 +35,7 @@ public class Interactable : NetworkBehaviour {
       if (character != null && isInteractable) {
         InteractLocal(character);
         NetworkInstanceId charId = character.GetInstanceId();
-        if (!isClient) {  // dont call InteractLocal more than once if we are hosting
-          RpcInteract(charId);
-        }
+        RpcInteract(charId);
       }
     }
   }
@@ -48,9 +46,13 @@ public class Interactable : NetworkBehaviour {
 
   [ClientRpc]
   void RpcInteract(NetworkInstanceId charId) {
-    GCharacter character = charId.FindLocalObject<GCharacter>();
-    if (character != null) {
-      InteractLocal(character);
+    // we only need to do this when on a client
+    // if we are also the server, InteractLocal will already have been called in from ServerInteract!
+    if (!isServer) {
+      GCharacter character = charId.FindLocalObject<GCharacter>();
+      if (character != null) {
+        InteractLocal(character);
+      }
     }
   }
 

@@ -227,7 +227,7 @@ MonoBehaviour:
   renderers:
   - {fileID: 23070582308980238}
   examineCenter: {fileID: 4167509259019402}
-  boundingRadius: 0.72
+  boundingRadius: 1
   lockCameraRotation: 0
 --- !u!114 &114602940876973118
 MonoBehaviour:

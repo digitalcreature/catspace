@@ -593,13 +593,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   examinationLayer: 31
-  startDistance: 100
+  startDistance: 200
   endDistance: 0
   scale: 0.65
   rotateSpeed: 30
   gimbal: {fileID: 4517728893600950}
   zoomTween:
-    duration: 0.25
+    duration: 0.15
     curve:
       serializedVersion: 2
       m_Curve:
@@ -611,24 +611,6 @@ MonoBehaviour:
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 0.33514857
-        value: 0.6916477
-        inSlope: 1.6014726
-        outSlope: 1.6014726
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.099119335
-        outWeight: 0.056303587
-      - serializedVersion: 3
-        time: 0.6403521
-        value: 0.98786587
-        inSlope: 0.5059996
-        outSlope: 0.5059996
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.1283983
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
@@ -654,13 +636,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   examinationLayer: 30
-  startDistance: 100
+  startDistance: 200
   endDistance: 0
   scale: 0.65
   rotateSpeed: 0
   gimbal: {fileID: 4836867345667900}
   zoomTween:
-    duration: 0.25
+    duration: 0.15
     curve:
       serializedVersion: 2
       m_Curve:
@@ -672,24 +654,6 @@ MonoBehaviour:
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 0.33514857
-        value: 0.6916477
-        inSlope: 1.6014726
-        outSlope: 1.6014726
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.099119335
-        outWeight: 0.056303587
-      - serializedVersion: 3
-        time: 0.6403521
-        value: 0.98786587
-        inSlope: 0.5059996
-        outSlope: 0.5059996
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.1283983
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
