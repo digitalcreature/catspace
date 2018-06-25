@@ -179,10 +179,10 @@ GameObject:
   - component: {fileID: 114609587813954906}
   - component: {fileID: 114217934965784390}
   - component: {fileID: 114236999233246330}
-  - component: {fileID: 114705783259531726}
   - component: {fileID: 114431548848775960}
   - component: {fileID: 114421453538199194}
   - component: {fileID: 114717007297429528}
+  - component: {fileID: 114566646264115336}
   m_Layer: 0
   m_Name: player
   m_TagString: Untagged
@@ -2116,6 +2116,28 @@ MonoBehaviour:
   groundCheckRadius: 0.45
   groundCheckDistance: 0.8
   maxSlopeAngle: 50
+--- !u!114 &114566646264115336
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1193754530521302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccfeb1629a468ea4e9087e6ace9e6a84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab1: {fileID: 114607560305259286, guid: bae294a5b78938d43ac4d23a68677593, type: 2}
+  prefab2: {fileID: 114092903369050426, guid: ac3e838e0d47ff541960b8e47b782f22, type: 2}
+  prefab3: {fileID: 0}
+  prefab4: {fileID: 0}
+  prefab5: {fileID: 0}
+  prefab6: {fileID: 0}
+  prefab7: {fileID: 0}
+  prefab8: {fileID: 0}
+  prefab9: {fileID: 0}
+  prefab0: {fileID: 0}
+  spawnHeight: 1
 --- !u!114 &114609587813954906
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2137,19 +2159,6 @@ MonoBehaviour:
   m_SnapThreshold: 5
   m_InterpolateRotation: 10
   m_InterpolateMovement: 1
---- !u!114 &114705783259531726
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1193754530521302}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf64f9e5fa32bb048b7de3ad558665b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefab: {fileID: 114092903369050426, guid: ac3e838e0d47ff541960b8e47b782f22, type: 2}
-  spawnHeight: 1
 --- !u!114 &114717007297429528
 MonoBehaviour:
   m_ObjectHideFlags: 1

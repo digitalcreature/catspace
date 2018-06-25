@@ -69,11 +69,11 @@ public class InteractionManager : SingletonBehaviour<InteractionManager> {
       RaycastHit hit;
       Physics.Raycast(ray, out hit, Mathf.Infinity, interactableMask);
       targetHit = hit;
-      float distance = (player.transform.position - hit.point).magnitude;
       Interactable target = null;
       if (hit.collider != null) {
         target = hit.collider.GetComponentInParent<Interactable>();
         if (target != null) {
+          float distance = (player.transform.position - target.transform.position).magnitude;
           if (!target.isInteractable || distance > interactionRange) {
             target = null;
           }
