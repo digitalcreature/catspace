@@ -1,25 +1,42 @@
 using UnityEngine;
 using UnityEngine.Networking;
 
+// this, and its companion class PartSpawn, allow us to get around the "no nested NetworkIdentity's" problem
+// it also gives us something akin to nested prefabs, but with no ux to be seen whatsoever
 public class Part : KittyNetworkBehaviour {
 
-  public PartChild parent { get; private set; }
+  public PartSpawn spawn { get; private set; }
+
+  public PartSpawn[] childSpawns { get; private set; }
+
+  protected override void Awake() {
+    base.Awake();
+    childSpawns = GetComponentsInChildren<PartSpawn>();
+  }
+
+  public override void OnStartServer() {
+    base.OnStartServer();
+    for (int i = 0; i < childSpawns.Length; i ++) {
+      PartSpawn childSpawn = childSpawns[i];
+      childSpawn.SpawnChild(i);
+    }
+  }
 
   // must be called from server
   // only called once, when first spawned
-  public void SetParent(PartRoot root, int childId) {
+  public void AttachToParent(Part parent, int childId) {
     if (isServer) {
-      SetParentLocal(root, childId);
+      AttachToParentLocal(parent, childId);
       ServerSync();
     }
   }
 
-  void SetParentLocal(PartRoot root, int childId) {
-    if (root != null) {
-      PartChild parent = root.children[childId];
-      if (parent != this.parent) {
-        this.parent = parent;
-        transform.parent = parent.transform;
+  void AttachToParentLocal(Part parent, int childId) {
+    if (parent != null) {
+      PartSpawn spawn = parent.childSpawns[childId];
+      if (spawn != this.spawn) {
+        this.spawn = spawn;
+        transform.parent = spawn.transform;
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
       }
@@ -28,15 +45,15 @@ public class Part : KittyNetworkBehaviour {
 
   protected override void OnSync(NetworkSync sync) {
     if (sync.isWriting) {
-      sync.Write(parent == null ? null : parent.root);
-      sync.Write(parent == null ? -1 : parent.childId);
+      sync.Write(spawn == null ? null : spawn.parent);
+      sync.Write(spawn == null ? -1 : spawn.childId);
     }
     else {
-      PartRoot root = null;
+      Part parent = null;
       int childId = 0;
-      sync.ReadBehaviour(ref root);
+      sync.ReadBehaviour(ref parent);
       sync.Read(ref childId);
-      SetParentLocal(root, childId);
+      AttachToParentLocal(parent, childId);
     }
   }
 

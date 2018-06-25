@@ -72,7 +72,7 @@ public class InteractionManager : SingletonBehaviour<InteractionManager> {
       float distance = (player.transform.position - hit.point).magnitude;
       Interactable target = null;
       if (hit.collider != null) {
-        target = hit.collider.GetComponent<Interactable>();
+        target = hit.collider.GetComponentInParent<Interactable>();
         if (target != null) {
           if (!target.isInteractable || distance > interactionRange) {
             target = null;

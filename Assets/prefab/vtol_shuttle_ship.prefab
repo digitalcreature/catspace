@@ -844,11 +844,11 @@ GameObject:
   m_Component:
   - component: {fileID: 4665560464768060}
   - component: {fileID: 114335314856968004}
+  - component: {fileID: 114858906645371688}
   - component: {fileID: 114198428048910128}
   - component: {fileID: 54056854300571380}
   - component: {fileID: 114982952013389064}
   - component: {fileID: 114534797416874122}
-  - component: {fileID: 114779642484391152}
   m_Layer: 0
   m_Name: vtol_shuttle_ship
   m_TagString: Untagged
@@ -3555,7 +3555,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1176690924081132}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24e26ff19cebc554cab7ac3870e740a3, type: 3}
+  m_Script: {fileID: 11500000, guid: be53cf82daa1b634b912f4db0d96646f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   partPrefab: {fileID: 114735214743514470, guid: 0124896ba929cda419899f9d3be97cf0,
@@ -3580,7 +3580,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1097858995224666}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24e26ff19cebc554cab7ac3870e740a3, type: 3}
+  m_Script: {fileID: 11500000, guid: be53cf82daa1b634b912f4db0d96646f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   partPrefab: {fileID: 114735214743514470, guid: 8012c956fdfe08c4e976d8e3d98bb987,
@@ -3593,22 +3593,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1314972484133766}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24e26ff19cebc554cab7ac3870e740a3, type: 3}
+  m_Script: {fileID: 11500000, guid: be53cf82daa1b634b912f4db0d96646f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   partPrefab: {fileID: 114735214743514470, guid: 0124896ba929cda419899f9d3be97cf0,
     type: 2}
---- !u!114 &114779642484391152
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1648212071545866}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5755c425b79ea34fa1fe4abb2318967, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114823111604433424
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3666,6 +3655,17 @@ MonoBehaviour:
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
   m_AfterStackBundles: []
+--- !u!114 &114858906645371688
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1648212071545866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73692e979f2a73d4d8063c67cfce56b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114982952013389064
 MonoBehaviour:
   m_ObjectHideFlags: 1

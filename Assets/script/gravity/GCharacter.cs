@@ -182,6 +182,7 @@ public class GCharacter : GBody {
       this.seat = newSeat;
       if (oldSeat != null) {
         oldSeat.sittingCharacter = null;
+        oldSeat.OnSitLocal();
       }
       if (newSeat != null) {
         newSeat.sittingCharacter = this;
@@ -197,6 +198,7 @@ public class GCharacter : GBody {
         transform.localRotation = Quaternion.identity;
         body.isKinematic = true;
         hullTransform.gameObject.SetActive(false);
+        newSeat.OnSitLocal();
       }
       else {
         // leaving seat

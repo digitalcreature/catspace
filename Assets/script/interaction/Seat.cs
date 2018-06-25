@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 // an object that gcharacters can sit on
 public class Seat : Interactable {
 
-  public bool changeOwner;        // if the sitting character is a player, give their client authority over this object while they are sitting
+  // public bool changeOwner;        // if the sitting character is a player, give their client authority over this object while they are sitting
 
   public Transform anchor;        // the transform that the sitting character will parent to
   public Transform exit;          // where to position the character when they exit the seat
@@ -22,6 +22,15 @@ public class Seat : Interactable {
   // only reliable on server side
   public bool CanSit(GCharacter character) {
     return (character.seat != this) && (!isOccupied);
+  }
+
+  // called once on the server and on all clients when the sitting character changes
+  public void OnSitLocal() {
+    // if (isServer) {
+    //   if (changeOwner) {
+    //     AssignClientOwner(sittingCharacter == null ? null : sittingCharacter.identity);
+    //   }
+    // }
   }
 
   protected override void OnInteractLocal(GCharacter character) {

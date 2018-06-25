@@ -1,16 +1,16 @@
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class PartChild : MonoBehaviour {
+public class PartSpawn : MonoBehaviour {
 
   public Part partPrefab;
 
-  public PartRoot root { get; private set; }
+  public Part parent { get; private set; }
 
   public int childId { get; private set; }
 
   void Awake() {
-    root = GetComponentInParent<PartRoot>();
+    parent = GetComponentInParent<Part>();
   }
 
   // must be called on server
@@ -20,7 +20,7 @@ public class PartChild : MonoBehaviour {
     part.transform.position = transform.position;
     part.transform.rotation = transform.rotation;
     NetworkServer.Spawn(part.gameObject);
-    part.SetParent(root, childId);
+    part.AttachToParent(parent, childId);
   }
 
 }

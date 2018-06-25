@@ -23,6 +23,35 @@ public abstract class KittyNetworkBehaviour : NetworkBehaviour {
     SetDirtyBit(~0u);
   }
 
+  // assign local authority to this object
+  // can only be called from the server
+  // given identity must have local authority
+  // if the object already has local authority, then its previous owner will have its ownership revoked
+  // if the passed identity is null, the object will return to server authority
+  // DO NOT USE: IS BROKEN
+  public void AssignClientOwner(NetworkIdentity authority) {
+    if (isServer) {
+      if (identity.localPlayerAuthority) {
+        if (authority != identity) {
+          identity.RemoveClientAuthority(identity.clientAuthorityOwner);
+        }
+      }
+      if (authority != null) {
+        if (!identity.localPlayerAuthority) {
+          identity.localPlayerAuthority = true;
+        }
+        identity.AssignClientAuthority(authority.connectionToClient);
+      }
+      else {
+        if (identity.localPlayerAuthority) {
+          identity.localPlayerAuthority = false;
+        }
+      }
+    }
+  }
+
+  public void RevokeClientOwner() => AssignClientOwner(null);
+
 }
 
 // public struct Message {
