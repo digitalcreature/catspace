@@ -32,7 +32,7 @@ public class Interactable : KittyNetworkBehaviour {
     if (isServer) {
       if (character != null && isInteractable) {
         InteractLocal(character);
-        NetworkInstanceId charId = character.GetInstanceId();
+        Id charId = character.Id();
         RpcInteract(charId);
       }
     }
@@ -43,11 +43,11 @@ public class Interactable : KittyNetworkBehaviour {
   }
 
   [ClientRpc]
-  void RpcInteract(NetworkInstanceId charId) {
+  void RpcInteract(Id charId) {
     // we only need to do this when on a client
     // if we are also the server, InteractLocal will already have been called in from ServerInteract!
     if (!isServer) {
-      GCharacter character = charId.FindLocalObject<GCharacter>();
+      GCharacter character = charId.Find<GCharacter>();
       if (character != null) {
         InteractLocal(character);
       }

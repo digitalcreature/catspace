@@ -5,7 +5,9 @@ public class PartChild : MonoBehaviour {
 
   public Part partPrefab;
 
-  PartRoot root;
+  public PartRoot root { get; private set; }
+
+  public int childId { get; private set; }
 
   void Awake() {
     root = GetComponentInParent<PartRoot>();
@@ -13,6 +15,7 @@ public class PartChild : MonoBehaviour {
 
   // must be called on server
   public void SpawnChild(int childId) {
+    this.childId = childId;
     Part part = Instantiate(partPrefab);
     part.transform.position = transform.position;
     part.transform.rotation = transform.rotation;

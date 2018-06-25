@@ -40,7 +40,4 @@ public class Player : KittyNetworkBehaviour {
     }
   }
 
-  // void Update() {
-  // }
-
 }

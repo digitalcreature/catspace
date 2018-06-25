@@ -28,8 +28,7 @@ public class SpawnShipAtRClick : KittyNetworkBehaviour {
     }
   }
 
-  [Command]
-  void CmdSpawnPrefab(Vector3 point) {
+  [Command] void CmdSpawnPrefab(Vector3 point) {
     Ship ship = Instantiate(prefab);
     ship.transform.position = point;
     NetworkServer.SpawnWithClientAuthority(ship.gameObject, player.gameObject);

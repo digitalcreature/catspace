@@ -133,13 +133,13 @@ public class Ship : KittyNetworkBehaviour {
 		 // if the server is the one changing this ship's owner,
 		 // make sure the change is done on the client as well!
 		 if (isServer) {
-			 RpcSetOwner(owner.GetInstanceId());
+			 RpcSetOwner(owner.Id());
 		 }
 	 }
 
 	 [ClientRpc]
-	 void RpcSetOwner(NetworkInstanceId id) {
-		 SetOwner(id.FindLocalObject<Player>());
+	 void RpcSetOwner(Id id) {
+		 SetOwner(id.Find<Player>());
 	 }
 
 }

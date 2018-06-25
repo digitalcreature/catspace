@@ -11,6 +11,7 @@ public class PartRoot : KittyNetworkBehaviour {
   }
 
   public override void OnStartServer() {
+    base.OnStartServer();
     for (int i = 0; i < children.Length; i ++) {
       PartChild child = children[i];
       child.SpawnChild(i);

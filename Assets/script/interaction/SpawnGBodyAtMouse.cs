@@ -26,8 +26,7 @@ public class SpawnGBodyAtMouse : KittyNetworkBehaviour {
     }
   }
 
-  [Command]
-  void CmdSpawnPrefab(Vector3 point) {
+  [Command] void CmdSpawnPrefab(Vector3 point) {
     GBody gbody = Instantiate(prefab);
     gbody.transform.position = point;
     if (gbody.identity.localPlayerAuthority) {

@@ -146,14 +146,13 @@ public class GCharacter : GBody {
         interactable.ServerInteract(this);
       }
       else if (isLocalPlayer) {
-        NetworkInstanceId interactableId = interactable.GetInstanceId();
+        Id interactableId = interactable.Id();
         CmdInteract(interactableId);
       }
     }
   }
 
-  [Command] void CmdInteract(NetworkInstanceId interactableId)
-    => Interact(interactableId.FindLocalObject<Interactable>());
+  [Command] void CmdInteract(Id interactableId) => Interact(interactableId.Find<Interactable>());
 
   // make the character sit
   // can only be called on server or local player
@@ -165,12 +164,11 @@ public class GCharacter : GBody {
       }
     }
     else if (isLocalPlayer) {
-      CmdSit(seat.GetInstanceId());
+      CmdSit(seat.Id());
     }
   }
 
-  [Command] void CmdSit(NetworkInstanceId seatId)
-    => Sit(seatId.FindLocalObject<Seat>());
+  [Command] void CmdSit(Id seatId) => Sit(seatId.Find<Seat>());
 
   public void LeaveSeat()
     => Sit(null);

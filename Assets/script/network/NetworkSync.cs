@@ -2,8 +2,8 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System;
 
-// helper struct to make serialization code shorter and less of a pain in the ass to write and read
-public struct NetworkSync {
+// helper class to make serialization code shorter and less of a pain in the ass to write and read
+public class NetworkSync {
 
   public NetworkWriter writer { get; private set; }
   public NetworkReader reader { get; private set; }
@@ -21,157 +21,193 @@ public struct NetworkSync {
     this.reader = reader;
   }
 
-  public void SyncBehaviour<T>(ref T value) where T : KittyNetworkBehaviour {
-    if (isWriting) {
-      writer.Write(value == null ? null : value.gameObject);
-    }
-    else {
-      GameObject obj = reader.ReadGameObject();
-      if (obj == null)
-        value = null;
-      else
-        value = obj.GetComponent<T>();
-    }
-  }
+  public NetworkSync SyncBehaviour<T>(ref T value) where T : KittyNetworkBehaviour {
+    if (isWriting) return Write(value);
+    else return ReadBehaviour(ref value); }
 
-  public void Sync<T>(ref T value) where T : INetworkSyncable {
+  public NetworkSync Sync<T>(ref T value) where T : INetworkSyncable {
     value.OnSync(this);
+    return this;
   }
 
   // unity supported types
 
-  public void Sync(ref char value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadChar(); }
+  public NetworkSync Sync(ref char value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref byte value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref sbyte value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref short value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref ushort value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref int value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref uint value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref long value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref ulong value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref float value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref double value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref Decimal value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref string value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref bool value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref byte[] buffer, int count) {
+    if (isWriting) return Write(buffer, count);
+    else return Read(ref buffer, count); }
+  public NetworkSync Sync(ref byte[] buffer, int offset, int count) {
+    if (isWriting) return Write(buffer, offset, count);
+    else return Read(ref buffer, offset, count); }
+  public NetworkSync Sync(ref Vector2 value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref Vector3 value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref Vector4 value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref Color value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref Color32 value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref GameObject value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref Quaternion value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref Rect value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref Plane value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref Ray value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref Matrix4x4 value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync SyncMessage<T>(ref T msg) where T : MessageBase, new() {
+    if (isWriting) return Write(msg);
+    else return ReadMessage<T>(ref msg); }
+  public NetworkSync Sync(ref NetworkHash128 value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref NetworkIdentity value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref NetworkInstanceId value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref NetworkSceneId value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
+  public NetworkSync Sync(ref Transform value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
 
-  public void Sync(ref byte value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadByte(); }
+  // write
+  public NetworkSync Write(KittyNetworkBehaviour value) { writer.Write(value == null ? null : value.gameObject); return this; }
+  public NetworkSync Write(INetworkSyncable value) { INetworkSyncable v = value; return Sync(ref v); }
+  public NetworkSync Write(char value) { writer.Write(value); return this; }
+  public NetworkSync Write(byte value) { writer.Write(value); return this; }
+  public NetworkSync Write(sbyte value) { writer.Write(value); return this; }
+  public NetworkSync Write(short value) { writer.Write(value); return this; }
+  public NetworkSync Write(ushort value) { writer.Write(value); return this; }
+  public NetworkSync Write(int value) { writer.Write(value); return this; }
+  public NetworkSync Write(uint value) { writer.Write(value); return this; }
+  public NetworkSync Write(long value) { writer.Write(value); return this; }
+  public NetworkSync Write(ulong value) { writer.Write(value); return this; }
+  public NetworkSync Write(float value) { writer.Write(value); return this; }
+  public NetworkSync Write(double value) { writer.Write(value); return this; }
+  public NetworkSync Write(Decimal value) { writer.Write(value); return this; }
+  public NetworkSync Write(string value) { writer.Write(value); return this; }
+  public NetworkSync Write(bool value) { writer.Write(value); return this; }
+  public NetworkSync Write(byte[] buffer, int count) { writer.Write(buffer, count); return this; }
+  public NetworkSync Write(byte[] buffer, int offset, int count) { writer.Write(buffer, offset, count); return this; }
+  public NetworkSync Write(Vector2 value) { writer.Write(value); return this; }
+  public NetworkSync Write(Vector3 value) { writer.Write(value); return this; }
+  public NetworkSync Write(Vector4 value) { writer.Write(value); return this; }
+  public NetworkSync Write(Color value) { writer.Write(value); return this; }
+  public NetworkSync Write(Color32 value) { writer.Write(value); return this; }
+  public NetworkSync Write(GameObject value) { writer.Write(value); return this; }
+  public NetworkSync Write(Quaternion value) { writer.Write(value); return this; }
+  public NetworkSync Write(Rect value) { writer.Write(value); return this; }
+  public NetworkSync Write(Plane value) { writer.Write(value); return this; }
+  public NetworkSync Write(Ray value) { writer.Write(value); return this; }
+  public NetworkSync Write(Matrix4x4 value) { writer.Write(value); return this; }
+  public NetworkSync Write(MessageBase msg) { writer.Write(msg); return this; }
+  public NetworkSync Write(NetworkHash128 value) { writer.Write(value); return this; }
+  public NetworkSync Write(NetworkIdentity value) { writer.Write(value); return this; }
+  public NetworkSync Write(NetworkInstanceId value) { writer.Write(value); return this; }
+  public NetworkSync Write(NetworkSceneId value) { writer.Write(value); return this; }
+  public NetworkSync Write(Transform value) { writer.Write(value); return this; }
 
-  public void Sync(ref sbyte value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadSByte(); }
-
-  public void Sync(ref short value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadInt16(); }
-
-  public void Sync(ref ushort value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadUInt16(); }
-
-  public void Sync(ref int value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadInt32(); }
-
-  public void Sync(ref uint value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadUInt32(); }
-
-  public void Sync(ref long value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadInt64(); }
-
-  public void Sync(ref ulong value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadUInt64(); }
-
-  public void Sync(ref float value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadSingle(); }
-
-  public void Sync(ref double value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadDouble(); }
-
-  public void Sync(ref Decimal value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadDecimal(); }
-
-  public void Sync(ref string value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadString(); }
-
-  public void Sync(ref bool value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadBoolean(); }
-
-  public void Sync(ref byte[] buffer, int count) {
-    if (isWriting) writer.Write(buffer, count);
-    else buffer = reader.ReadBytes(count); }
-
-  public void Sync(ref byte[] buffer, int offset, int count) {
-    if (isWriting) writer.Write(buffer, offset, count);
-    else buffer = reader.ReadBytes(count); }
-
-  public void Sync(ref Vector2 value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadVector2(); }
-
-  public void Sync(ref Vector3 value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadVector3(); }
-
-  public void Sync(ref Vector4 value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadVector4(); }
-
-  public void Sync(ref Color value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadColor(); }
-
-  public void Sync(ref Color32 value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadColor32(); }
-
-  public void Sync(ref GameObject value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadGameObject(); }
-
-  public void Sync(ref Quaternion value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadQuaternion(); }
-
-  public void Sync(ref Rect value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadRect(); }
-
-  public void Sync(ref Plane value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadPlane(); }
-
-  public void Sync(ref Ray value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadRay(); }
-
-  public void Sync(ref Matrix4x4 value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadMatrix4x4(); }
-
-  public void SyncMessage<T>(ref T msg) where T : MessageBase, new() {
-    if (isWriting) writer.Write(msg);
-    else msg = reader.ReadMessage<T>(); }
-
-  public void Sync(ref NetworkHash128 value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadNetworkHash128(); }
-
-  public void Sync(ref NetworkIdentity value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadNetworkIdentity(); }
-
-  public void Sync(ref NetworkInstanceId value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadNetworkId(); }
-
-  public void Sync(ref NetworkSceneId value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadSceneId(); }
-
-  public void Sync(ref Transform value) {
-    if (isWriting) writer.Write(value);
-    else value = reader.ReadTransform(); }
-
+  // read
+  public NetworkSync ReadBehaviour<T>(ref T value) where T : KittyNetworkBehaviour {
+    GameObject obj = null; this.Read(ref obj);
+    value = obj == null ? null : obj.GetComponent<T>();
+    return this; }
+  public NetworkSync Read<T>(ref T value) where T : INetworkSyncable { return this.Sync(ref value); }
+  public NetworkSync Read(ref char value) { value = reader.ReadChar(); return this; }
+  public NetworkSync Read(ref byte value) { value = reader.ReadByte(); return this; }
+  public NetworkSync Read(ref sbyte value) { value = reader.ReadSByte(); return this; }
+  public NetworkSync Read(ref short value) { value = reader.ReadInt16(); return this; }
+  public NetworkSync Read(ref ushort value) { value = reader.ReadUInt16(); return this; }
+  public NetworkSync Read(ref int value) { value = reader.ReadInt32(); return this; }
+  public NetworkSync Read(ref uint value) { value = reader.ReadUInt32(); return this; }
+  public NetworkSync Read(ref long value) { value = reader.ReadInt64(); return this; }
+  public NetworkSync Read(ref ulong value) { value = reader.ReadUInt64(); return this; }
+  public NetworkSync Read(ref float value) { value = reader.ReadSingle(); return this; }
+  public NetworkSync Read(ref double value) { value = reader.ReadDouble(); return this; }
+  public NetworkSync Read(ref Decimal value) { value = reader.ReadDecimal(); return this; }
+  public NetworkSync Read(ref string value) { value = reader.ReadString(); return this; }
+  public NetworkSync Read(ref bool value) { value = reader.ReadBoolean(); return this; }
+  public NetworkSync Read(ref byte[] buffer, int count) { buffer = reader.ReadBytes(count); return this; }
+  public NetworkSync Read(ref byte[] buffer, int offset, int count) { buffer = reader.ReadBytes(count); return this; }
+  public NetworkSync Read(ref Vector2 value) { value = reader.ReadVector2(); return this; }
+  public NetworkSync Read(ref Vector3 value) { value = reader.ReadVector3(); return this; }
+  public NetworkSync Read(ref Vector4 value) { value = reader.ReadVector4(); return this; }
+  public NetworkSync Read(ref Color value) { value = reader.ReadColor(); return this; }
+  public NetworkSync Read(ref Color32 value) { value = reader.ReadColor32(); return this; }
+  public NetworkSync Read(ref GameObject value) { value = reader.ReadGameObject(); return this; }
+  public NetworkSync Read(ref Quaternion value) { value = reader.ReadQuaternion(); return this; }
+  public NetworkSync Read(ref Rect value) { value = reader.ReadRect(); return this; }
+  public NetworkSync Read(ref Plane value) { value = reader.ReadPlane(); return this; }
+  public NetworkSync Read(ref Ray value) { value = reader.ReadRay(); return this; }
+  public NetworkSync Read(ref Matrix4x4 value) { value = reader.ReadMatrix4x4(); return this; }
+  public NetworkSync ReadMessage<T>(ref T msg) where T : MessageBase, new() { msg = reader.ReadMessage<T>(); return this; }
+  public NetworkSync Read(ref NetworkHash128 value) { value = reader.ReadNetworkHash128(); return this; }
+  public NetworkSync Read(ref NetworkIdentity value) { value = reader.ReadNetworkIdentity(); return this; }
+  public NetworkSync Read(ref NetworkInstanceId value) { value = reader.ReadNetworkId(); return this; }
+  public NetworkSync Read(ref NetworkSceneId value) { value = reader.ReadSceneId(); return this; }
+  public NetworkSync Read(ref Transform value) { value = reader.ReadTransform(); return this; }
 
 }
 

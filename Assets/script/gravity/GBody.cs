@@ -51,12 +51,11 @@ public class GBody : KittyNetworkBehaviour {
       ServerSync();
     }
     else if (isLocalPlayer) {
-      CmdSetGField(gfield.GetInstanceId());
+      CmdSetGField(gfield.Id());
     }
   }
 
-  [Command] void CmdSetGField(NetworkInstanceId gfieldId)
-    => SetGField(gfieldId.FindLocalObject<GField>());
+  [Command] void CmdSetGField(Id gfieldId) => SetGField(gfieldId.Find<GField>());
 
   void SetGFieldLocal(GField gfield) {
     if (gfield != this.gfield) {
