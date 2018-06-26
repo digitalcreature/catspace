@@ -9,6 +9,8 @@ public class CameraRigFocusable : MonoBehaviour {
 
   public GBody gbody { get; private set; }  // optional. if present, the camerarig will use this to align itself to gravity
   public GField gfield => gbody == null ? null : gbody.gfield;
+  public GCharacter character
+    => gbody is GCharacter ? (GCharacter) gbody : null;
 
   bool isFirstPerson;
 

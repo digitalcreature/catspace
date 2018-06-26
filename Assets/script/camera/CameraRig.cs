@@ -36,36 +36,55 @@ public class CameraRig : SingletonBehaviour<CameraRig> {
   }
 
   void Update() {
+    // check to see if the target is a character that is driving
+    bool isDriving = false;
     if (focus != null) {
       transform.position = focus.focusTarget.position;
+      isDriving = (focus.character != null && focus.character.isDriving);
     }
-    if (gfield != null) {
-      gfield.AlignTransformToGravity(transform);
-    }
-    if (isFirstPerson || Input.GetMouseButton((int) mouseOrbitButton)) {
-      // update the gimbal based on mouse input
-      // this is only done what the mouse button is being held down, or if the player is in first person
+    if (isDriving) {
+      // if the target is driving, force them into first person
+      cam.transform.localPosition = Vector3.zero;
+      isFirstPerson = true;
+      focus.UpdateRenderers(isFirstPerson);
+      // align the camerarig to the vehicle
+      Vehicle vehicle = focus.character.vehicle;
+      // Vector3 up = vehicle.transform.up;
+      // transform.rotation = Quaternion.LookRotation(transform.forward, up);
+      transform.rotation = vehicle.transform.rotation;
+      // update the mouselook gimbal
       mouseOrbit.UpdateGimbal(transform.up);
     }
-    // handle scroll zoom
-    targetDistance -= Input.mouseScrollDelta.y * zoomRate;
-    targetDistance = Mathf.Clamp(targetDistance, 0f, maxDistance);
-    distance = Mathf.SmoothDamp(distance, targetDistance, ref zoomVelocity, zoomSmoothTime);
-    distance = Mathf.Clamp(distance, 0f, maxDistance);
-    isFirstPerson = distance < firstPersonDistanceThreshold;
-    if (focus != null) {
-      focus.UpdateRenderers(isFirstPerson);
-    }
-    // adjust the distance of the camera
-    RaycastHit hit;
-    float d = distance;
-    if (Physics.Raycast(gimbal.position, -gimbal.forward, out hit, d + distanceBias, distanceAdjustMask)) {
-      d = hit.distance - distanceBias;
-      if (d < 0f) {
-        d = 0f;
+    else {
+      if (gfield != null) {
+        gfield.AlignTransformToGravity(transform);
       }
+      if (isFirstPerson || Input.GetMouseButton((int) mouseOrbitButton)) {
+        // update the gimbal based on mouse input
+        // this is only done what the mouse button is being held down, or if the player is in first person
+        mouseOrbit.UpdateGimbal(transform.up);
+      }
+      // handle scroll zoom
+      targetDistance -= Input.mouseScrollDelta.y * zoomRate;
+      targetDistance = Mathf.Clamp(targetDistance, 0f, maxDistance);
+      distance = Mathf.SmoothDamp(distance, targetDistance, ref zoomVelocity, zoomSmoothTime);
+      distance = Mathf.Clamp(distance, 0f, maxDistance);
+      // make sure the focus knows were in first person
+      isFirstPerson = distance < firstPersonDistanceThreshold;
+      if (focus != null) {
+        focus.UpdateRenderers(isFirstPerson);
+      }
+      // adjust the distance of the camera
+      RaycastHit hit;
+      float d = distance;
+      if (Physics.Raycast(gimbal.position, -gimbal.forward, out hit, d + distanceBias, distanceAdjustMask)) {
+        d = hit.distance - distanceBias;
+        if (d < 0f) {
+          d = 0f;
+        }
+      }
+      cam.transform.localPosition = -Vector3.forward * d;
     }
-    cam.transform.localPosition = -Vector3.forward * d;
   }
 
 

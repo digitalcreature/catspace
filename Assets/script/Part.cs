@@ -39,6 +39,7 @@ public class Part : KittyNetworkBehaviour {
         transform.parent = spawn.transform;
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
+        spawn.OnChildSpawnedLocal(this);
       }
     }
   }

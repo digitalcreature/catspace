@@ -1,20 +1,22 @@
 using UnityEngine;
 using UnityEngine.Networking;
+using System;
 
 // an object that gcharacters can sit on
 public class Seat : Interactable {
 
-  // public bool changeOwner;        // if the sitting character is a player, give their client authority over this object while they are sitting
+  public event Action<GCharacter> EventOnSitLocal;
 
   public Transform anchor;        // the transform that the sitting character will parent to
   public Transform exit;          // where to position the character when they exit the seat
 
+  public Vehicle drivenVehicle { get; private set; }  // the vehicle, if any, that this seat drives
+  public bool isDriversSeat => drivenVehicle != null;
+
   public Vector3 exitPosition
     => exit == null ? anchor.position : exit.position;
 
-  // a reference to the character sitting in this seat
-  // the value is managed by GCharacter's sync operations
-  public GCharacter sittingCharacter { get; set; }
+  public GCharacter sittingCharacter { get; set; }    // a reference to the character sitting in this seat
 
   public bool isOccupied => sittingCharacter != null;
 
@@ -25,12 +27,15 @@ public class Seat : Interactable {
   }
 
   // called once on the server and on all clients when the sitting character changes
-  public void OnSitLocal() {
-    // if (isServer) {
-    //   if (changeOwner) {
-    //     AssignClientOwner(sittingCharacter == null ? null : sittingCharacter.identity);
-    //   }
-    // }
+  public void OnSitLocal(GCharacter character) {
+    sittingCharacter = character;
+    if (EventOnSitLocal != null) {
+      EventOnSitLocal(sittingCharacter);
+    }
+  }
+
+  public void SetDrivenVehicle(Vehicle vehicle) {
+    drivenVehicle = vehicle;
   }
 
   protected override void OnInteractLocal(GCharacter character) {

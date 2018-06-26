@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Networking;
+using System;
 
 public class PartSpawn : MonoBehaviour {
 
@@ -8,6 +9,8 @@ public class PartSpawn : MonoBehaviour {
   public Part parent { get; private set; }
 
   public int childId { get; private set; }
+
+  public event Action<Part> EventOnChildSpawnedLocal;
 
   void Awake() {
     parent = GetComponentInParent<Part>();
@@ -21,6 +24,10 @@ public class PartSpawn : MonoBehaviour {
     part.transform.rotation = transform.rotation;
     NetworkServer.Spawn(part.gameObject);
     part.AttachToParent(parent, childId);
+  }
+
+  public void OnChildSpawnedLocal(Part child) {
+    if (EventOnChildSpawnedLocal != null) EventOnChildSpawnedLocal(child);
   }
 
 }

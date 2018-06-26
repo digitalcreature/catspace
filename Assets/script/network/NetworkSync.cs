@@ -25,7 +25,12 @@ public class NetworkSync {
     if (isWriting) return Write(value);
     else return ReadBehaviour(ref value); }
 
-  public NetworkSync Sync<T>(ref T value) where T : INetworkSyncable {
+  public NetworkSync Sync<T>(ref T value) where T : struct, INetworkSyncable {
+    value.OnSync(this);
+    return this;
+  }
+
+  public NetworkSync Sync<T>(T value) where T : class, INetworkSyncable {
     value.OnSync(this);
     return this;
   }
@@ -131,10 +136,12 @@ public class NetworkSync {
   public NetworkSync Sync(ref Transform value) {
     if (isWriting) return Write(value);
     else return Read(ref value); }
+  public NetworkSync Sync(ref KeyCode value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
 
   // write
   public NetworkSync Write(KittyNetworkBehaviour value) { writer.Write(value == null ? null : value.gameObject); return this; }
-  public NetworkSync Write(INetworkSyncable value) { INetworkSyncable v = value; return Sync(ref v); }
   public NetworkSync Write(char value) { writer.Write(value); return this; }
   public NetworkSync Write(byte value) { writer.Write(value); return this; }
   public NetworkSync Write(sbyte value) { writer.Write(value); return this; }
@@ -168,13 +175,13 @@ public class NetworkSync {
   public NetworkSync Write(NetworkInstanceId value) { writer.Write(value); return this; }
   public NetworkSync Write(NetworkSceneId value) { writer.Write(value); return this; }
   public NetworkSync Write(Transform value) { writer.Write(value); return this; }
+  public NetworkSync Write(KeyCode value) { writer.Write((int) value); return this; }
 
   // read
   public NetworkSync ReadBehaviour<T>(ref T value) where T : KittyNetworkBehaviour {
     GameObject obj = null; this.Read(ref obj);
     value = obj == null ? null : obj.GetComponent<T>();
     return this; }
-  public NetworkSync Read<T>(ref T value) where T : INetworkSyncable { return this.Sync(ref value); }
   public NetworkSync Read(ref char value) { value = reader.ReadChar(); return this; }
   public NetworkSync Read(ref byte value) { value = reader.ReadByte(); return this; }
   public NetworkSync Read(ref sbyte value) { value = reader.ReadSByte(); return this; }
@@ -208,6 +215,7 @@ public class NetworkSync {
   public NetworkSync Read(ref NetworkInstanceId value) { value = reader.ReadNetworkId(); return this; }
   public NetworkSync Read(ref NetworkSceneId value) { value = reader.ReadSceneId(); return this; }
   public NetworkSync Read(ref Transform value) { value = reader.ReadTransform(); return this; }
+  public NetworkSync Read(ref KeyCode value) { value = (KeyCode) reader.ReadInt32(); return this; }
 
 }
 

@@ -4,23 +4,39 @@ using System;
 
 public abstract class KittyNetworkBehaviour : NetworkBehaviour {
 
+  bool syncRequested;
+
   public NetworkIdentity identity { get; private set; }
 
   protected virtual void Awake() {
     identity = GetComponent<NetworkIdentity>();
   }
 
-  public override bool OnSerialize(NetworkWriter writer, bool forceAll)
-    { OnSync(new NetworkSync(writer)); return true; }
-  public override void OnDeserialize(NetworkReader reader, bool forceAll)
-    { OnSync(new NetworkSync(reader)); }
+  public override bool OnSerialize(NetworkWriter writer, bool forceAll) {
+    writer.Write(syncRequested);
+    if (syncRequested || forceAll) {
+      OnSync(new NetworkSync(writer));
+      syncRequested = false;
+      return true;
+    }
+    return false;
+  }
+  public override void OnDeserialize(NetworkReader reader, bool forceAll) {
+    bool syncRequested = reader.ReadBoolean();
+    if (syncRequested || forceAll) {
+      OnSync(new NetworkSync(reader));
+    }
+  }
 
   // override and implement to customize syncronization
   protected virtual void OnSync(NetworkSync sync) {}
 
-  // call this on the server to manually force syncronization
+  // call this on the server to send syncronization data to the clients
   public void ServerSync() {
-    SetDirtyBit(~0u);
+    if (isServer) {
+      syncRequested = true;
+      SetDirtyBit(1u);
+    }
   }
 
   // assign local authority to this object

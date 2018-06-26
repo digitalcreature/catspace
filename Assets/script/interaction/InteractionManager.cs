@@ -58,38 +58,48 @@ public class InteractionManager : SingletonBehaviour<InteractionManager> {
     }
     Player player = Player.localPlayer;
     if (player != null) {
-      Ray ray = new Ray();
-      if (rig.isFirstPerson) {
-        ray.origin = rig.cam.transform.position;
-        ray.direction = rig.cam.transform.forward;
-      }
-      else {
-        ray = rig.cam.ScreenPointToRay(Input.mousePosition);
-      }
-      RaycastHit hit;
-      Physics.Raycast(ray, out hit, Mathf.Infinity, interactableMask);
-      targetHit = hit;
-      Interactable target = null;
-      if (hit.collider != null) {
-        target = hit.collider.GetComponentInParent<Interactable>();
-        if (target != null) {
-          float distance = (player.transform.position - target.transform.position).magnitude;
-          if (!target.isInteractable || distance > interactionRange) {
-            target = null;
-          }
+      if (player.chr.isDriving) {
+        // dont let the cursor show, or let the player interact while driving
+        targetHit = new RaycastHit();
+        // let them leave the seat theyre in still
+        if (Input.GetKeyDown(interactionKey)) {
+          player.chr.Interact(null);
         }
       }
-      SetTarget(target);
-      if (target != null) {
-        target.DrawHighlight(selectionGlowEffect);
-      }
-      if (Input.GetKeyDown(interactionKey)) {
-        player.chr.Interact(target);
-      }
-      if (otherExaminationRig.target != null) {
-        Vector3 targetPosition = otherExaminationRig.target.examineCenter.position;
-        if (Vector3.Distance(targetPosition, player.transform.position) > interactionRange) {
-          otherExaminationRig.SetTarget(null);
+      else {
+        Ray ray = new Ray();
+        if (rig.isFirstPerson) {
+          ray.origin = rig.cam.transform.position;
+          ray.direction = rig.cam.transform.forward;
+        }
+        else {
+          ray = rig.cam.ScreenPointToRay(Input.mousePosition);
+        }
+        RaycastHit hit;
+        Physics.Raycast(ray, out hit, Mathf.Infinity, interactableMask);
+        targetHit = hit;
+        Interactable target = null;
+        if (hit.collider != null) {
+          target = hit.collider.GetComponentInParent<Interactable>();
+          if (target != null) {
+            float distance = (player.transform.position - target.transform.position).magnitude;
+            if (!target.isInteractable || distance > interactionRange) {
+              target = null;
+            }
+          }
+        }
+        SetTarget(target);
+        if (target != null) {
+          target.DrawHighlight(selectionGlowEffect);
+        }
+        if (Input.GetKeyDown(interactionKey)) {
+          player.chr.Interact(target);
+        }
+        if (otherExaminationRig.target != null) {
+          Vector3 targetPosition = otherExaminationRig.target.examineCenter.position;
+          if (Vector3.Distance(targetPosition, player.transform.position) > interactionRange) {
+            otherExaminationRig.SetTarget(null);
+          }
         }
       }
     }

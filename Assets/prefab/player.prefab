@@ -174,15 +174,15 @@ GameObject:
   - component: {fileID: 114879461234755778}
   - component: {fileID: 114563769206621288}
   - component: {fileID: 54133797803356966}
+  - component: {fileID: 114566646264115336}
   - component: {fileID: 95990772253233462}
   - component: {fileID: 114894354901835276}
   - component: {fileID: 114609587813954906}
   - component: {fileID: 114217934965784390}
   - component: {fileID: 114236999233246330}
   - component: {fileID: 114431548848775960}
-  - component: {fileID: 114421453538199194}
   - component: {fileID: 114717007297429528}
-  - component: {fileID: 114566646264115336}
+  - component: {fileID: 114546416098252714}
   m_Layer: 0
   m_Name: player
   m_TagString: Untagged
@@ -2057,20 +2057,6 @@ MonoBehaviour:
   thirdPersonOnlyRenderers:
   - {fileID: 137450344785583462}
   - {fileID: 23134926386105524}
---- !u!114 &114421453538199194
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1193754530521302}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8adf2c267608e5f4aaab40750287a8a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spawned: 0
-  prefab: {fileID: 114198428048910128, guid: 2a223652bc550c94ab22be7cb801844d, type: 2}
-  spawnHeight: 3
 --- !u!114 &114431548848775960
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2094,6 +2080,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backpack: {fileID: 114002625253016202}
+--- !u!114 &114546416098252714
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1193754530521302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b3cea9640f3f1446b50b8281081a24c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sendRate: 12
+  controls:
+    thrust:
+      positive: 119
+      negative: 115
+    strafe:
+      positive: 100
+      negative: 97
+    lift:
+      positive: 304
+      negative: 32
+    roll:
+      positive: 113
+      negative: 101
+    toggleHover:
+      key: 104
+    toggleDampener:
+      key: 105
+    toggleGyro:
+      key: 103
 --- !u!114 &114563769206621288
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2136,7 +2153,7 @@ MonoBehaviour:
   prefab7: {fileID: 0}
   prefab8: {fileID: 0}
   prefab9: {fileID: 0}
-  prefab0: {fileID: 0}
+  prefab0: {fileID: 114534797416874122, guid: 643f72c5a380acf499e9610ad546a0c0, type: 2}
   spawnHeight: 1
 --- !u!114 &114609587813954906
 MonoBehaviour:
@@ -2150,7 +2167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TransformSyncMode: 3
-  m_SendInterval: 0.0625
+  m_SendInterval: 0.04761905
   m_SyncRotationAxis: 7
   m_RotationSyncCompression: 0
   m_SyncSpin: 0
