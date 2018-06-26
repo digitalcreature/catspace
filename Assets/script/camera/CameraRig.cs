@@ -14,6 +14,8 @@ public class CameraRig : SingletonBehaviour<CameraRig> {
 
   public MouseButton mouseOrbitButton = MouseButton.Middle; // button to use for orbiting
 
+  public Vector3 lookDirection => gimbal.forward;
+
   public bool isFirstPerson { get; private set; }
   public bool isThirdPerson {
     get { return !isFirstPerson; }

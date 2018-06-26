@@ -172,6 +172,7 @@ GameObject:
   - component: {fileID: 4921046171813640}
   - component: {fileID: 114501836894621390}
   - component: {fileID: 114879461234755778}
+  - component: {fileID: 114546416098252714}
   - component: {fileID: 114563769206621288}
   - component: {fileID: 54133797803356966}
   - component: {fileID: 114566646264115336}
@@ -182,7 +183,6 @@ GameObject:
   - component: {fileID: 114236999233246330}
   - component: {fileID: 114431548848775960}
   - component: {fileID: 114717007297429528}
-  - component: {fileID: 114546416098252714}
   m_Layer: 0
   m_Name: player
   m_TagString: Untagged
@@ -2111,6 +2111,7 @@ MonoBehaviour:
       key: 105
     toggleGyro:
       key: 103
+  altLookKey: 122
 --- !u!114 &114563769206621288
 MonoBehaviour:
   m_ObjectHideFlags: 1

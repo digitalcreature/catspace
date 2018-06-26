@@ -7,6 +7,7 @@ public class PlayerVehicleController : KittyNetworkBehaviour {
   public float sendRate = 12; // how often to send updates to the server (updates per second)
 
   public Controls controls;
+  public KeyCode altLookKey = KeyCode.LeftAlt;
 
   public const short controlsUpdateMessageType = 413;
 
@@ -29,7 +30,13 @@ public class PlayerVehicleController : KittyNetworkBehaviour {
 
   void Update() {
     if (isLocalPlayer && character.isDriving) {
-      controls.Update(CameraRig.instance.gimbal.forward);
+      // update the controls locally
+      Vector3 attitudeTarget = controls.attitudeTarget;
+      if (!Input.GetKey(altLookKey)) {
+        attitudeTarget = CameraRig.instance.lookDirection;
+      }
+      controls.Update(attitudeTarget);
+      // if we arent the server, send the update to the server
       if (!isServer) {
         if (t <= 0) {
           SendControlsUpdate();
