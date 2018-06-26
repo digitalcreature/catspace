@@ -23,8 +23,7 @@ public class CameraRig : SingletonBehaviour<CameraRig> {
   public CameraRigFocusable focus { get; private set; }
   public GField gfield => focus == null ? null : focus.gfield;     // the gravity field to align to
 
-  public Camera cam { get; private set; }
-
+  public Camera cam { get; private set; }         // one of the cameras this rig uses (any should do for most things)
   public Transform gimbal => mouseOrbit.gimbal;
 
   float targetDistance;
