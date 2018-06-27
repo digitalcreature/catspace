@@ -7,7 +7,7 @@ public class PlayerVehicleController : KittyNetworkBehaviour {
   public float sendRate = 12; // how often to send updates to the server (updates per second)
 
   public Controls controls;
-  public KeyCode altLookKey = KeyCode.LeftAlt;
+  public KeyCode toggleSteeringKey = KeyCode.Z;
 
   public const short controlsUpdateMessageType = 413;
 
@@ -31,11 +31,10 @@ public class PlayerVehicleController : KittyNetworkBehaviour {
   void Update() {
     if (isLocalPlayer && character.isDriving) {
       // update the controls locally
-      Vector3 attitudeTarget = controls.attitudeTarget;
-      if (!Input.GetKey(altLookKey)) {
-        attitudeTarget = CameraRig.instance.lookDirection;
+      if (Input.GetKeyDown(toggleSteeringKey)) {
+        controls.steeringEnabled = !controls.steeringEnabled;
       }
-      controls.Update(attitudeTarget);
+      controls.Update(CameraRig.instance.lookDirection);
       // if we arent the server, send the update to the server
       if (!isServer) {
         if (t <= 0) {
@@ -69,6 +68,8 @@ public class PlayerVehicleController : KittyNetworkBehaviour {
     public Button toggleDampener = new Button(KeyCode.I);
     public Button toggleGyro = new Button(KeyCode.G);
 
+    public bool steeringEnabled = true;
+
     public Vector3 attitudeTarget { get; private set; }
 
     public void OnSync(NetworkSync sync) {
@@ -82,6 +83,7 @@ public class PlayerVehicleController : KittyNetworkBehaviour {
       Vector3 at = attitudeTarget;
       sync.Sync(ref at);
       attitudeTarget = at;
+      sync.Sync(ref steeringEnabled);
     }
 
     public void Reset() {

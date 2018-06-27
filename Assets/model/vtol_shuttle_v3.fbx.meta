@@ -70,6 +70,7 @@ ModelImporter:
     100128: vtolshuttle_hull.055
     100130: vtolshuttle_hull.056
     100132: windscreen
+    100134: thruster_plume1
     400000: body
     400002: hull
     400004: pod_frontleft
@@ -137,6 +138,7 @@ ModelImporter:
     400128: vtolshuttle_hull.055
     400130: vtolshuttle_hull.056
     400132: windscreen
+    400134: thruster_plume1
     2300000: body
     2300002: pod_frontleft
     2300004: pod_frontright
@@ -200,6 +202,7 @@ ModelImporter:
     2300120: vtolshuttle_hull.055
     2300122: vtolshuttle_hull.056
     2300124: windscreen
+    2300126: thruster_plume1
     3300000: body
     3300002: pod_frontleft
     3300004: pod_frontright
@@ -263,6 +266,7 @@ ModelImporter:
     3300120: vtolshuttle_hull.055
     3300122: vtolshuttle_hull.056
     3300124: windscreen
+    3300126: thruster_plume1
     4300000: pod_rearright
     4300002: pod_rearleft
     4300004: body
@@ -326,6 +330,7 @@ ModelImporter:
     4300120: vtolshuttle_hull.003
     4300122: vtolshuttle_hull.002
     4300124: vtolshuttle_hull.001
+    4300126: thruster_plume1
     6400000: body
     6400002: pod_frontleft
     6400004: pod_frontright
@@ -389,6 +394,7 @@ ModelImporter:
     6400120: vtolshuttle_hull.055
     6400122: vtolshuttle_hull.056
     6400124: windscreen
+    6400126: thruster_plume1
     10800000: Sun
   externalObjects: {}
   materials:

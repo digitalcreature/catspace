@@ -9,7 +9,19 @@ public class InteractionCursor : MonoBehaviour {
     render = GetComponent<Renderer>();
   }
 
-  void Update() {
+  void OnEnable() {
+    if (!Application.isEditor) {
+      Cursor.visible = false;
+    }
+  }
+
+  void OnDisable() {
+    if (!Application.isEditor) {
+      Cursor.visible = true;
+    }
+  }
+
+  void LateUpdate() {
     InteractionManager im = InteractionManager.instance;
     if (im.isTargetValid) {
       transform.position = im.targetHit.point + (im.targetHit.normal.normalized * normalOffset);

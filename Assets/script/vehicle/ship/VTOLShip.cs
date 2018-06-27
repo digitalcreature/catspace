@@ -3,6 +3,9 @@ using UnityEngine.Networking;
 
 public class VTOLShip : Vehicle {
 
+  // the thrusters this ship uses
+  public ThrusterGroup thrusters;
+
   // all thrust values are in m/s2 (mass independant)
   public float thrust;                  // forward/backward
   public float thrustVertical;          // up/down
@@ -30,12 +33,9 @@ public class VTOLShip : Vehicle {
     gyro = true;
   }
 
-  // public void PivotTo(Vector3 position){
-  //   Vector3 offset = transform.position - position;
-  //   foreach (Transform child in transform)
-  //     child.transform.position += offset;
-  //   transform.position = position;
-  // }
+  protected override void OnSync(NetworkSync sync) {
+    sync.Sync(thrusters);
+  }
 
   void FixedUpdate() {
     if (isServer) {
@@ -45,26 +45,31 @@ public class VTOLShip : Vehicle {
         gravity = gfield.WorldPointToGravity(transform.position);
       }
       if (hover) {
-        body.AddForce(-gravity, ForceMode.Acceleration);
+        float dot = Vector3.Dot(-gravity, transform.up);
+        if (dot >= 0) {
+          thrusters.AddLinearThrust(Vector3.Project(-gravity, transform.up));
+        }
       }
       if (isDriven) {
         // apply thrust forces
-        body.AddForce(transform.forward * controls.thrust.value * thrust, ForceMode.Acceleration);
-        body.AddForce(transform.right * controls.strafe.value * thrustStrafe, ForceMode.Acceleration);
-        body.AddForce(-transform.up * controls.lift.value * thrustVertical, ForceMode.Acceleration);
+        thrusters.AddLinearThrust(transform.forward * controls.thrust.value * thrust);
+        thrusters.AddLinearThrust(transform.right * controls.strafe.value * thrustStrafe);
+        thrusters.AddLinearThrust(-transform.up * controls.lift.value * thrustVertical);
         // apply roll torque
-        body.AddTorque(transform.forward * controls.roll.value * roll, ForceMode.Acceleration);
+        thrusters.AddAngularThrust(transform.forward * controls.roll.value * roll);
         // apply attitude control
-        Vector3 attitudeTarget = controls.attitudeTarget;
-        //get the angle between transform.forward and target delta
-        float angleDiff = Vector3.Angle(transform.forward, attitudeTarget);
-        // get its cross product, which is the axis of rotation to
-        // get from one vector to the other
-        Vector3 cross = Vector3.Cross(transform.forward, attitudeTarget);
-        // apply torque along that axis according to the magnitude of the angle.
-        body.AddTorque(cross * angleDiff * attitudeControlForce, ForceMode.Acceleration);
-
+        if (controls.steeringEnabled) {
+          Vector3 attitudeTarget = controls.attitudeTarget;
+          //get the angle between transform.forward and target delta
+          float angleDiff = Vector3.Angle(transform.forward, attitudeTarget);
+          // get its cross product, which is the axis of rotation to
+          // get from one vector to the other
+          Vector3 cross = Vector3.Cross(transform.forward, attitudeTarget);
+          // apply torque along that axis according to the magnitude of the angle.
+          thrusters.AddAngularThrust(cross * angleDiff * attitudeControlForce);
+        }
       }
+      thrusters.ApplyThrust(body);
     }
   }
 

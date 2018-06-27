@@ -75,6 +75,7 @@ public class GBodySpawnHotbar : KittyNetworkBehaviour {
     if (prefab != null) {
       GBody gbody = Instantiate(prefab);
       gbody.transform.position = point;
+      gbody.transform.up = -player.gfield.WorldPointToGravity(point);
       if (gbody.identity.localPlayerAuthority) {
         NetworkServer.SpawnWithClientAuthority(gbody.gameObject, player.gameObject);
       }
