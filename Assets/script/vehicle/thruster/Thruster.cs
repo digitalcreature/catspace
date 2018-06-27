@@ -3,14 +3,13 @@ using System.Collections.Generic;
 
 public class Thruster : MonoBehaviour, INetworkSyncable {
 
-  public float throttle;
   public float throttleSmoothTime = 0.25f;
-
   public float maxThrust = 15f; // the maximum thrust that this thruster can give (m/s2)
 
-  ThrusterEffect[] effects;
-
+  public float throttle { get; private set; }
   public Vector3 thrustDirection => transform.forward;
+
+  ThrusterEffect[] effects;
 
   float targetThrottle;
   float throttleVelocity;
@@ -27,7 +26,7 @@ public class Thruster : MonoBehaviour, INetworkSyncable {
   }
 
   public virtual void OnSync(NetworkSync sync) {
-    sync.Sync(ref throttle);
+    sync.Sync(ref targetThrottle);
   }
 
   public float ThrustForThrottle(float throttle) =>
@@ -35,10 +34,16 @@ public class Thruster : MonoBehaviour, INetworkSyncable {
   public float ThrottleForThrust(float thrust) =>
     Mathf.InverseLerp(0, maxThrust, thrust) ;
 
-  public void SetTargetThrust(Vector3 totalThrust) {
+  // return true if any values changed that need to be syncronized over the network
+  public bool SetTargetThrust(Vector3 totalThrust) {
     // figure out how much thrust we need to give in the direction that we are facing
     float thrust = Vector3.Dot(thrustDirection, -totalThrust);
-    targetThrottle = ThrottleForThrust(thrust);
+    float targetThrottle = ThrottleForThrust(thrust);
+    if (targetThrottle != this.targetThrottle) {
+      this.targetThrottle = targetThrottle;
+      return true;
+    }
+    return false;
   }
 
 
@@ -53,14 +58,17 @@ public class ThrusterGroup : INetworkSyncable {
   Vector3 linearAcc;
   Vector3 angularAcc;
 
-  public void ApplyThrust(Rigidbody body) {
+  // return true if any values changed that need to be syncronized over the network
+  public bool ApplyThrust(Rigidbody body) {
     body.AddForce(linearAcc, ForceMode.Acceleration);
     body.AddTorque(angularAcc, ForceMode.Acceleration);
+    bool dirty = false;
     foreach (var thruster in thrusters) {
-      thruster.SetTargetThrust(linearAcc);
+      dirty = thruster.SetTargetThrust(linearAcc) || dirty;
     }
     linearAcc = Vector3.zero;
     angularAcc = Vector3.zero;
+    return dirty;
   }
 
   public void AddLinearThrust(Vector3 acceleration) {

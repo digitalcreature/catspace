@@ -10,15 +10,15 @@ public class InteractionCursor : MonoBehaviour {
   }
 
   void OnEnable() {
-    if (!Application.isEditor) {
-      Cursor.visible = false;
-    }
+    // if (!Application.isEditor) {
+    //   Cursor.visible = false;
+    // }
   }
 
   void OnDisable() {
-    if (!Application.isEditor) {
-      Cursor.visible = true;
-    }
+    // if (!Application.isEditor) {
+    //   Cursor.visible = true;
+    // }
   }
 
   void LateUpdate() {

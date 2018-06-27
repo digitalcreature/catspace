@@ -69,7 +69,9 @@ public class VTOLShip : Vehicle {
           thrusters.AddAngularThrust(cross * angleDiff * attitudeControlForce);
         }
       }
-      thrusters.ApplyThrust(body);
+      if(thrusters.ApplyThrust(body)) {
+        ServerSync();
+      }
     }
   }
 

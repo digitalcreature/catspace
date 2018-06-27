@@ -85,14 +85,14 @@ public class CameraRig : SingletonBehaviour<CameraRig> {
         }
       }
       cam.transform.localPosition = -Vector3.forward * d;
-      // lock/unlock the cursor as needed
-      if (!Cursor.visible) {
-        if (isFirstPerson) {
-          Cursor.lockState = CursorLockMode.Locked;
-        }
-        else {
-          Cursor.lockState = CursorLockMode.None;
-        }
+    }
+    // lock/unlock the cursor as needed
+    if (!Application.isEditor) {
+      if (isFirstPerson) {
+        Cursor.lockState = CursorLockMode.Confined;
+      }
+      else {
+        Cursor.lockState = CursorLockMode.None;
       }
     }
   }
