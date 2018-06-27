@@ -7,18 +7,22 @@ public class Thruster : MonoBehaviour, INetworkSyncable {
   public float maxThrust = 15f; // the maximum thrust that this thruster can give (m/s2)
 
   public float throttle { get; private set; }
+  public float thrust => ThrustForThrottle(throttle);
   public Vector3 thrustDirection => transform.forward;
 
   ThrusterEffect[] effects;
 
-  float targetThrottle;
+  protected float targetThrottle;
   float throttleVelocity;
 
-  void Awake() {
+  public Vehicle vehicle { get; private set; }
+
+  protected virtual void Awake() {
+    vehicle = GetComponentInParent<Vehicle>();
     effects = GetComponentsInChildren<ThrusterEffect>();
   }
 
-  void Update() {
+  protected virtual void Update() {
     throttle = Mathf.SmoothDamp(throttle, targetThrottle, ref throttleVelocity, throttleSmoothTime);
     foreach (var effect in effects) {
       effect.throttle = throttle;
@@ -35,7 +39,7 @@ public class Thruster : MonoBehaviour, INetworkSyncable {
     Mathf.InverseLerp(0, maxThrust, thrust) ;
 
   // return true if any values changed that need to be syncronized over the network
-  public bool SetTargetThrust(Vector3 totalThrust) {
+  public virtual bool SetTargetThrust(Vector3 totalThrust) {
     // figure out how much thrust we need to give in the direction that we are facing
     float thrust = Vector3.Dot(thrustDirection, -totalThrust);
     float targetThrottle = ThrottleForThrust(thrust);
