@@ -4776,7 +4776,7 @@ MonoBehaviour:
   thrustVertical: 40
   thrustStrafe: 15
   roll: 2.5
-  inertiaDampenerDrag: 2.5
+  inertiaDampenerDrag: 1
   gyroDrag: 5
   attitudeControlForce: 0.1
 --- !u!114 &114640828946486362

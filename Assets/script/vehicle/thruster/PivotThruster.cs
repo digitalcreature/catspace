@@ -3,50 +3,71 @@ using UnityEngine;
 public class PivotThruster : Thruster {
 
   public Transform pivot;         // the transform to rotate around it's local x axis
-  public Transform restAngle;     // the transform to use as a reference when too little thrust is present
-  public float pivotSpeed = 90f;  // the speed the thruster pivots at in degrees/s
+  public Transform parent;     // the parent transform that we are pivoting with respect to
   public float pivotSmoothTime = 0.35f;
   public float pivotThrustThreshold = 0.5f; // the minimum thrust required for the thruster to pivot
 
-  Vector3 targetForward;  // the target to pivot to (where the forward vector of the pivot should end up)
-  Vector3 pivotVelocity;
+  float targetAngle;
+  float angleVelocity;
+
+  // the angle of the pivot, in radians
+  public float angle {
+    get {
+      return ForwardToAngle(pivot.forward);
+    }
+    set {
+      pivot.rotation = parent.rotation;
+      pivot.Rotate(-value * Mathf.Rad2Deg, 0, 0);
+    }
+  }
+
+  // given a forward vector, return the angle in radians needed to match it
+  public float ForwardToAngle(Vector3 forward) {
+    return Mathf.Atan2(
+      Vector3.Dot(forward, parent.up) / parent.up.magnitude,
+      Vector3.Dot(forward, parent.forward) / parent.forward.magnitude
+    );
+  }
 
   protected override void Awake() {
     base.Awake();
-    targetForward = pivot.forward;
   }
 
   protected override void Update() {
     base.Update();
-    UpdateForward(targetForward);
+    angle = Mathf.SmoothDamp(angle, targetAngle, ref angleVelocity, pivotSmoothTime);
   }
 
   public override bool SetTargetThrust(Vector3 totalThrust) {
     if (Vector3.ProjectOnPlane(totalThrust, pivot.right).magnitude > pivotThrustThreshold) {
-      targetForward = totalThrust;
+      targetAngle = ForwardToAngle(totalThrust);
     }
     else {
-      targetForward = (restAngle == null ? vehicle.transform : restAngle).forward;
+      targetAngle = 0;
     }
     base.SetTargetThrust(totalThrust);
     return true;
   }
 
-  void UpdateForward(Vector3 targetForward) {
-    Vector3 nextForward = Vector3.SmoothDamp(
-      pivot.forward, Vector3.ProjectOnPlane(targetForward, pivot.right).normalized,
-      ref pivotVelocity, pivotSmoothTime
-    ).normalized;
-    // i think this is making it break (its very janky anyway, need to fix)
-    pivot.rotation = Quaternion.LookRotation(nextForward, pivot.right);
-    pivot.Rotate(0, 0, 90);
+  void OnValidate() {
+    if (pivot == null) {
+      pivot = transform;
+    }
+    if (parent == null) {
+      if (pivot.parent == null) {
+        parent = pivot;
+      }
+      else {
+        parent = pivot.parent;
+      }
+    }
   }
-
-  void OnValidate() => pivot = pivot == null ? transform : pivot;
 
   public override void OnSync(NetworkSync sync) {
     base.OnSync(sync);
-    sync.Sync(ref targetForward);
+    float angle = this.angle;
+    sync.Sync(ref angle);
+    this.angle = angle;
   }
 
 }
