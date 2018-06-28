@@ -4351,7 +4351,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 2
-  m_Color: {r: 0.5391682, g: 0.27843142, b: 1, a: 1}
+  m_Color: {r: 0.5025178, g: 0.27843142, b: 1, a: 1}
   m_Intensity: 50
   m_Range: 3
   m_SpotAngle: 30
@@ -4387,7 +4387,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 2
-  m_Color: {r: 0.5391682, g: 0.27843142, b: 1, a: 1}
+  m_Color: {r: 0.5025178, g: 0.27843142, b: 1, a: 1}
   m_Intensity: 50
   m_Range: 3
   m_SpotAngle: 30
@@ -4423,7 +4423,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 2
-  m_Color: {r: 0.5391682, g: 0.27843142, b: 1, a: 1}
+  m_Color: {r: 0.5025178, g: 0.27843142, b: 1, a: 1}
   m_Intensity: 50
   m_Range: 3
   m_SpotAngle: 30
@@ -4459,7 +4459,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 2
-  m_Color: {r: 0.5391682, g: 0.27843142, b: 1, a: 1}
+  m_Color: {r: 0.5025178, g: 0.27843142, b: 1, a: 1}
   m_Intensity: 50
   m_Range: 3
   m_SpotAngle: 30
