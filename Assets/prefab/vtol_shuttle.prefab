@@ -4572,8 +4572,7 @@ MonoBehaviour:
   throttleSmoothTime: 0.25
   maxThrust: 40
   pivot: {fileID: 4546601198093142}
-  restAngle: {fileID: 4655971218819574}
-  pivotSpeed: 90
+  parent: {fileID: 4655971218819574}
   pivotSmoothTime: 0.25
   pivotThrustThreshold: 0.5
 --- !u!114 &114124959217433104
@@ -4638,8 +4637,7 @@ MonoBehaviour:
   throttleSmoothTime: 0.25
   maxThrust: 40
   pivot: {fileID: 4372531209108296}
-  restAngle: {fileID: 4655971218819574}
-  pivotSpeed: 90
+  parent: {fileID: 4655971218819574}
   pivotSmoothTime: 0.25
   pivotThrustThreshold: 0.5
 --- !u!114 &114335314856968004
@@ -4688,8 +4686,7 @@ MonoBehaviour:
   throttleSmoothTime: 0.25
   maxThrust: 40
   pivot: {fileID: 4050060414831012}
-  restAngle: {fileID: 4655971218819574}
-  pivotSpeed: 90
+  parent: {fileID: 4655971218819574}
   pivotSmoothTime: 0.25
   pivotThrustThreshold: 0.5
 --- !u!114 &114510175471596454
@@ -4766,19 +4763,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   driversSeatSpawn: {fileID: 114654348595505352}
-  thrusters:
+  pods:
     thrusters:
     - {fileID: 114306304939668298}
     - {fileID: 114389863660314886}
     - {fileID: 114971462087555560}
     - {fileID: 114085873010835340}
-  thrust: 30
-  thrustVertical: 40
-  thrustStrafe: 15
-  roll: 2.5
+  thrust: {x: 15, y: 40, z: 40}
+  roll: 4
+  attitudeControlForce: 0.1
   inertiaDampenerDrag: 1
   gyroDrag: 5
-  attitudeControlForce: 0.1
 --- !u!114 &114640828946486362
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5148,8 +5143,7 @@ MonoBehaviour:
   throttleSmoothTime: 0.25
   maxThrust: 40
   pivot: {fileID: 4502402549915564}
-  restAngle: {fileID: 4655971218819574}
-  pivotSpeed: 90
+  parent: {fileID: 4655971218819574}
   pivotSmoothTime: 0.25
   pivotThrustThreshold: 0.5
 --- !u!114 &114982952013389064

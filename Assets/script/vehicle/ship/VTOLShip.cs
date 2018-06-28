@@ -3,38 +3,43 @@ using UnityEngine.Networking;
 
 public class VTOLShip : Vehicle {
 
-  // the thrusters this ship uses
-  public ThrusterGroup thrusters;
+  [Header("Thruster Groups")]
+  // the pod thrusters
+  public ThrusterGroup pods;
 
+  [Header("Forces")]
   // all thrust values are in m/s2 (mass independant)
-  public float thrust;                  // forward/backward
-  public float thrustVertical;          // up/down
-  public float thrustStrafe;            // left/right
+  // x: +right -left
+  // y: +up -down
+  // z: +forward -backward
+  public Vector3 thrust;
 
   // roll rate in radians/s2
   public float roll = 5f;
+  // attitude control rate in radians/s2
+  public float attitudeControlForce = 1f;
 
+  [Header("Drag")]
   // drag value to use for inertia dampening
   public float inertiaDampenerDrag = 2.5f;
   // drag value to use for gyro
   public float gyroDrag = 5f;
 
-  public float attitudeControlForce = 1f;
 
-  public bool hover { get; private set; }
-  public bool inertiaDampener { get; private set; }
-  public bool gyro { get; private set; }
+  public bool hoverOn { get; private set; }
+  public bool inertiaDampenerOn { get; private set; }
+  public bool gyroOn { get; private set; }
 
   public Rigidbody body => gbody.body;
 
   public override void OnStartServer() {
     base.OnStartServer();
-    inertiaDampener = true;
-    gyro = true;
+    inertiaDampenerOn = true;
+    gyroOn = true;
   }
 
   protected override void OnSync(NetworkSync sync) {
-    sync.Sync(thrusters);
+    sync.Sync(pods);
   }
 
   void FixedUpdate() {
@@ -44,19 +49,19 @@ public class VTOLShip : Vehicle {
       if (gfield != null) {
         gravity = gfield.WorldPointToGravity(transform.position);
       }
-      if (hover) {
+      if (hoverOn) {
         float dot = Vector3.Dot(-gravity, transform.up);
         if (dot >= 0) {
-          thrusters.AddLinearThrust(Vector3.Project(-gravity, transform.up));
+          pods.AddLinearThrust(Vector3.Project(-gravity, transform.up));
         }
       }
       if (isDriven) {
         // apply thrust forces
-        thrusters.AddLinearThrust(transform.forward * controls.thrust.value * thrust);
-        thrusters.AddLinearThrust(transform.right * controls.strafe.value * thrustStrafe);
-        thrusters.AddLinearThrust(-transform.up * controls.lift.value * thrustVertical);
+        pods.AddLinearThrust(transform.right * controls.strafe.value * thrust.x);
+        pods.AddLinearThrust(-transform.up * controls.lift.value * thrust.y);
+        pods.AddLinearThrust(transform.forward * controls.thrust.value * thrust.z);
         // apply roll torque
-        thrusters.AddAngularThrust(transform.forward * controls.roll.value * roll);
+        pods.AddAngularThrust(transform.forward * controls.roll.value * roll);
         // apply attitude control
         if (controls.steeringEnabled) {
           Vector3 attitudeTarget = controls.attitudeTarget;
@@ -66,10 +71,10 @@ public class VTOLShip : Vehicle {
           // get from one vector to the other
           Vector3 cross = Vector3.Cross(transform.forward, attitudeTarget);
           // apply torque along that axis according to the magnitude of the angle.
-          thrusters.AddAngularThrust(cross * angleDiff * attitudeControlForce);
+          pods.AddAngularThrust(cross * angleDiff * attitudeControlForce);
         }
       }
-      if(thrusters.ApplyThrust(body)) {
+      if(pods.ApplyThrust(body)) {
         ServerSync();
       }
     }
@@ -79,22 +84,22 @@ public class VTOLShip : Vehicle {
     if (isServer) {
       if (isDriven) {
         if (controls.toggleDampener.down) {
-          inertiaDampener = !inertiaDampener;
+          inertiaDampenerOn = !inertiaDampenerOn;
         }
         if (controls.toggleHover.down) {
-          hover = !hover;
+          hoverOn = !hoverOn;
         }
         if (controls.toggleGyro.down) {
-          gyro = !gyro;
+          gyroOn = !gyroOn;
         }
       }
-      if (inertiaDampener) {
+      if (inertiaDampenerOn) {
         body.drag = inertiaDampenerDrag;
       }
       else {
         body.drag = 0;
       }
-      if (gyro) {
+      if (gyroOn) {
         body.angularDrag = gyroDrag;
       }
       else {
