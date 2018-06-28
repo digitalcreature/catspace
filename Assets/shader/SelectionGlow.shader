@@ -6,11 +6,9 @@
 		_BlinkRate ("Blink Rate", Float) = 1
 	}
 	SubShader {
-		Tags { "RenderType"="Transparent" "Queue"="Transparent" }
+		Tags { "RenderType"="Transparent" }
 		LOD 100
 
-		ZTest Always
-		ZWrite Off
 		Blend SrcAlpha OneMinusSrcAlpha
 
 		Pass {
