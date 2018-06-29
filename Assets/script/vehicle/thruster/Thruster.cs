@@ -39,7 +39,9 @@ public class Thruster : MonoBehaviour, INetworkSyncable {
     Mathf.InverseLerp(0, maxThrust, thrust) ;
 
   // return true if any values changed that need to be syncronized over the network
-  public virtual bool SetTargetThrust(Vector3 totalThrust) {
+  public virtual bool SetTargetThrust(Vector3 totalThrust, Vector3 totalTorque) {
+    // figure out the tangent force for torque
+    totalThrust += GetTangentThrust(transform.position, totalTorque) * maxThrust;
     // figure out how much thrust we need to give in the direction that we are facing
     float thrust = Vector3.Dot(thrustDirection, -totalThrust);
     float targetThrottle = ThrottleForThrust(thrust);
@@ -48,6 +50,12 @@ public class Thruster : MonoBehaviour, INetworkSyncable {
       return true;
     }
     return false;
+  }
+
+  // given a world space position and a torque, find the tangent force (also world space)
+  public Vector3 GetTangentThrust(Vector3 position, Vector3 torque) {
+    Vector3 r = position - vehicle.centerOfMass;
+    return Vector3.Cross(torque, r) / r.sqrMagnitude;
   }
 
 
@@ -68,7 +76,7 @@ public class ThrusterGroup : INetworkSyncable {
     body.AddTorque(angularAcc, ForceMode.Acceleration);
     bool dirty = false;
     foreach (var thruster in thrusters) {
-      dirty = thruster.SetTargetThrust(linearAcc) || dirty;
+      dirty = thruster.SetTargetThrust(linearAcc, angularAcc) || dirty;
     }
     linearAcc = Vector3.zero;
     angularAcc = Vector3.zero;

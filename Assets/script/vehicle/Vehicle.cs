@@ -11,6 +11,10 @@ public class Vehicle : KittyNetworkBehaviour {
   public GCharacter driver { get; private set; }
   public PlayerVehicleController controller { get; private set; }
 
+  // the center of mass of the vehicle, in world space
+  public Vector3 centerOfMass
+    => transform.TransformPoint(gbody.body.centerOfMass);
+
   public PlayerVehicleController.Controls controls
     => controller == null ? null : controller.controls;
 
