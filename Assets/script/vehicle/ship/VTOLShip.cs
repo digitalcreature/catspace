@@ -59,9 +59,9 @@ public class VTOLShip : Vehicle {
       }
       if (isDriven) {
         // apply thrust forces
-        pods.AddLinearThrust(transform.right * controls.strafe.value * thrust.x);
-        pods.AddLinearThrust(-transform.up * controls.lift.value * thrust.y);
-        pods.AddLinearThrust(transform.forward * controls.thrust.value * thrust.z);
+        pods.AddLinearThrust(transform.right * controls.moveX.value * thrust.x);
+        pods.AddLinearThrust(transform.up * controls.moveY.value * thrust.y);
+        pods.AddLinearThrust(transform.forward * controls.moveZ.value * thrust.z);
         // apply roll torque
         pods.AddAngularThrust(transform.forward * controls.roll.value * roll);
         // apply attitude control

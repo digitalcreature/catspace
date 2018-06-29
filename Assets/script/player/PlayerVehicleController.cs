@@ -56,9 +56,9 @@ public class PlayerVehicleController : KittyNetworkBehaviour {
   [System.Serializable]
   public class Controls : INetworkSyncable {
 
-    public Axis thrust = new Axis(KeyCode.W, KeyCode.S);
-    public Axis strafe = new Axis(KeyCode.D, KeyCode.A);
-    public Axis lift = new Axis(KeyCode.LeftShift, KeyCode.Space);
+    public Axis moveX = new Axis(KeyCode.D, KeyCode.A);
+    public Axis moveY = new Axis(KeyCode.Space, KeyCode.LeftShift);
+    public Axis moveZ = new Axis(KeyCode.W, KeyCode.S);
     public Axis roll = new Axis(KeyCode.Q, KeyCode.E);
     public Button toggleSteering = new Button(KeyCode.Z);
     public Button toggleHover = new Button(KeyCode.H);
@@ -69,9 +69,9 @@ public class PlayerVehicleController : KittyNetworkBehaviour {
     public Vector3 attitudeTarget { get; private set; }
 
     public void OnSync(NetworkSync sync) {
-      sync.Sync(thrust);
-      sync.Sync(strafe);
-      sync.Sync(lift);
+      sync.Sync(moveX);
+      sync.Sync(moveY);
+      sync.Sync(moveZ);
       sync.Sync(roll);
       sync.Sync(toggleSteering);
       sync.Sync(toggleHover);
@@ -90,9 +90,9 @@ public class PlayerVehicleController : KittyNetworkBehaviour {
     }
 
     public void Update(Vector3 attitudeTarget) {
-      thrust.Update();
-      strafe.Update();
-      lift.Update();
+      moveX.Update();
+      moveY.Update();
+      moveZ.Update();
       roll.Update();
       toggleSteering.Update();
       toggleHover.Update();
