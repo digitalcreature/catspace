@@ -4600,6 +4600,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   throttleSmoothTime: 0.25
   maxThrust: 40
+  torqueWeight: 0.5
   pivot: {fileID: 4546601198093142}
   parent: {fileID: 4901212390255934}
   pivotSmoothTime: 0.25
@@ -4668,6 +4669,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   throttleSmoothTime: 0.25
   maxThrust: 40
+  torqueWeight: 0.5
   pivot: {fileID: 4372531209108296}
   parent: {fileID: 4901212390255934}
   pivotSmoothTime: 0.25
@@ -4720,6 +4722,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   throttleSmoothTime: 0.25
   maxThrust: 40
+  torqueWeight: 0.5
   pivot: {fileID: 4050060414831012}
   parent: {fileID: 4901212390255934}
   pivotSmoothTime: 0.25
@@ -5180,6 +5183,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   throttleSmoothTime: 0.25
   maxThrust: 40
+  torqueWeight: 0.5
   pivot: {fileID: 4502402549915564}
   parent: {fileID: 4901212390255934}
   pivotSmoothTime: 0.25

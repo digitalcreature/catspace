@@ -6,6 +6,8 @@ public class Thruster : MonoBehaviour, INetworkSyncable {
   public float throttleSmoothTime = 0.25f;
   public float maxThrust = 15f; // the maximum thrust that this thruster can give (m/s2)
 
+  public float torqueWeight = 1f;
+
   public float throttle { get; private set; }
   public float thrust => ThrustForThrottle(throttle);
   public Vector3 thrustDirection => transform.forward;
@@ -41,7 +43,7 @@ public class Thruster : MonoBehaviour, INetworkSyncable {
   // return true if any values changed that need to be syncronized over the network
   public virtual bool SetTargetThrust(Vector3 totalThrust, Vector3 totalTorque) {
     // figure out the tangent force for torque
-    totalThrust += GetTangentThrust(transform.position, totalTorque) * maxThrust;
+    totalThrust += GetTangentThrust(transform.position, totalTorque) * maxThrust * torqueWeight;
     // figure out how much thrust we need to give in the direction that we are facing
     float thrust = Vector3.Dot(thrustDirection, -totalThrust);
     float targetThrottle = ThrottleForThrust(thrust);

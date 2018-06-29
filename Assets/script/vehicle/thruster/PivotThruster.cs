@@ -49,7 +49,6 @@ public class PivotThruster : Thruster {
   protected override void Update() {
     base.Update();
     targetAngle = Mathf.Clamp(targetAngle, 0, pivotRange);
-    // Debug.LogFormat("angle = {0} target = {1}", angle, targetAngle);
     angle = Mathf.SmoothDamp(angle, targetAngle, ref angleVelocity, pivotSmoothTime);
   }
 
@@ -58,10 +57,9 @@ public class PivotThruster : Thruster {
     float oldTargetAngle = targetAngle;
     Vector3 tangent = GetTangentThrust(pivot.position, totalTorque) * maxThrust;
     // limit torque pivoting to only go down, never up
-    Vector3 pivotThrust = totalThrust + (tangent * (Vector3.Dot(tangent, parent.up) <= 0 ? 0 : 1));
+    Vector3 pivotThrust = totalThrust + (tangent * torqueWeight * (Vector3.Dot(tangent, parent.up) <= 0 ? 0 : 1));
     if (Vector3.ProjectOnPlane(pivotThrust, parent.right).magnitude > pivotThrustThreshold) {
       targetAngle = ForwardToAngle(pivotThrust + tangent);
-      Debug.Log(targetAngle);
     }
     else {
       targetAngle = pivotRest;

@@ -26,6 +26,7 @@ public class VTOLShip : Vehicle {
   public float gyroDrag = 5f;
 
 
+  public bool steeringOn { get; private set; }
   public bool hoverOn { get; private set; }
   public bool inertiaDampenerOn { get; private set; }
   public bool gyroOn { get; private set; }
@@ -34,6 +35,7 @@ public class VTOLShip : Vehicle {
 
   public override void OnStartServer() {
     base.OnStartServer();
+    steeringOn = true;
     inertiaDampenerOn = true;
     gyroOn = true;
   }
@@ -63,7 +65,7 @@ public class VTOLShip : Vehicle {
         // apply roll torque
         pods.AddAngularThrust(transform.forward * controls.roll.value * roll);
         // apply attitude control
-        if (controls.steeringEnabled) {
+        if (steeringOn) {
           Vector3 attitudeTarget = controls.attitudeTarget;
           //get the angle between transform.forward and target delta
           float angleDiff = Vector3.Angle(transform.forward, attitudeTarget);
@@ -83,6 +85,9 @@ public class VTOLShip : Vehicle {
   void Update() {
     if (isServer) {
       if (isDriven) {
+        if (controls.toggleSteering.down) {
+          steeringOn = !steeringOn;
+        }
         if (controls.toggleDampener.down) {
           inertiaDampenerOn = !inertiaDampenerOn;
         }

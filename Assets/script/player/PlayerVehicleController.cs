@@ -7,7 +7,6 @@ public class PlayerVehicleController : KittyNetworkBehaviour {
   public float sendRate = 12; // how often to send updates to the server (updates per second)
 
   public Controls controls;
-  public KeyCode toggleSteeringKey = KeyCode.Z;
 
   public const short controlsUpdateMessageType = 413;
 
@@ -31,9 +30,6 @@ public class PlayerVehicleController : KittyNetworkBehaviour {
   void Update() {
     if (isLocalPlayer && character.isDriving) {
       // update the controls locally
-      if (Input.GetKeyDown(toggleSteeringKey)) {
-        controls.steeringEnabled = !controls.steeringEnabled;
-      }
       controls.Update(CameraRig.instance.lookDirection);
       // if we arent the server, send the update to the server
       if (!isServer) {
@@ -64,11 +60,11 @@ public class PlayerVehicleController : KittyNetworkBehaviour {
     public Axis strafe = new Axis(KeyCode.D, KeyCode.A);
     public Axis lift = new Axis(KeyCode.LeftShift, KeyCode.Space);
     public Axis roll = new Axis(KeyCode.Q, KeyCode.E);
+    public Button toggleSteering = new Button(KeyCode.Z);
     public Button toggleHover = new Button(KeyCode.H);
     public Button toggleDampener = new Button(KeyCode.I);
     public Button toggleGyro = new Button(KeyCode.G);
 
-    public bool steeringEnabled = true;
 
     public Vector3 attitudeTarget { get; private set; }
 
@@ -77,13 +73,13 @@ public class PlayerVehicleController : KittyNetworkBehaviour {
       sync.Sync(strafe);
       sync.Sync(lift);
       sync.Sync(roll);
+      sync.Sync(toggleSteering);
       sync.Sync(toggleHover);
       sync.Sync(toggleDampener);
       sync.Sync(toggleGyro);
       Vector3 at = attitudeTarget;
       sync.Sync(ref at);
       attitudeTarget = at;
-      sync.Sync(ref steeringEnabled);
     }
 
     public void Reset() {
@@ -97,6 +93,7 @@ public class PlayerVehicleController : KittyNetworkBehaviour {
       strafe.Update();
       lift.Update();
       roll.Update();
+      toggleSteering.Update();
       toggleHover.Update();
       toggleDampener.Update();
       toggleGyro.Update();
