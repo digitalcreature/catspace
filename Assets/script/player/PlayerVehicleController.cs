@@ -83,6 +83,7 @@ public class PlayerVehicleController : KittyNetworkBehaviour {
     }
 
     public void Reset() {
+      toggleSteering.Reset();
       toggleHover.Reset();
       toggleDampener.Reset();
       toggleGyro.Reset();

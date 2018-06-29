@@ -54,7 +54,6 @@ public class PivotThruster : Thruster {
 
   public override bool SetTargetThrust(Vector3 totalThrust, Vector3 totalTorque) {
     // figure out the tangent force for torque
-    float oldTargetAngle = targetAngle;
     Vector3 tangent = GetTangentThrust(pivot.position, totalTorque) * maxThrust;
     // limit torque pivoting to only go down, never up
     Vector3 pivotThrust = totalThrust + (tangent * torqueWeight * (Vector3.Dot(tangent, parent.up) <= 0 ? 0 : 1));
@@ -64,7 +63,8 @@ public class PivotThruster : Thruster {
     else {
       targetAngle = pivotRest;
     }
-    return base.SetTargetThrust(totalThrust + tangent, Vector3.zero) || oldTargetAngle != targetAngle;
+    base.SetTargetThrust(totalThrust + tangent, Vector3.zero);
+    return true;
   }
 
   void OnValidate() {
@@ -84,9 +84,7 @@ public class PivotThruster : Thruster {
 
   public override void OnSync(NetworkSync sync) {
     base.OnSync(sync);
-    float angle = this.angle;
-    sync.Sync(ref angle);
-    this.angle = angle;
+    sync.Sync(ref targetAngle);
   }
 
   #if UNITY_EDITOR
