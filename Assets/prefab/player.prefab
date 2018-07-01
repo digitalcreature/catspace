@@ -2093,26 +2093,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sendRate: 12
   controls:
-    thrust:
-      positive: 119
-      negative: 115
-    strafe:
+    moveX:
       positive: 100
       negative: 97
-    lift:
-      positive: 304
-      negative: 32
+    moveY:
+      positive: 32
+      negative: 304
+    moveZ:
+      positive: 119
+      negative: 115
     roll:
       positive: 113
       negative: 101
+    toggleSteering:
+      key: 122
     toggleHover:
       key: 104
     toggleDampener:
       key: 105
     toggleGyro:
       key: 103
-    steeringEnabled: 1
-  toggleSteeringKey: 122
 --- !u!114 &114563769206621288
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2148,7 +2148,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab1: {fileID: 114607560305259286, guid: bae294a5b78938d43ac4d23a68677593, type: 2}
   prefab2: {fileID: 114959350587681998, guid: ea8f2ff2452a6c04789f767dd414df9b, type: 2}
-  prefab3: {fileID: 0}
+  prefab3: {fileID: 114260194639413934, guid: b49746e664f989842be6a911492d9ab1, type: 2}
   prefab4: {fileID: 0}
   prefab5: {fileID: 0}
   prefab6: {fileID: 0}
