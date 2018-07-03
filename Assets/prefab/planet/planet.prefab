@@ -259,7 +259,7 @@ MonoBehaviour:
   baseMesh: {fileID: 4300010, guid: 340ec3144543828459c77245463b8303, type: 3}
   fragmentLength: 75
   tileLength: 1.25
-  detailLevelCount: 3
+  detailLevelCount: 2
   detailFactorCurve:
     serializedVersion: 2
     m_Curve:
@@ -273,8 +273,8 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.56
-      value: 0.15
+      time: 0.5490747
+      value: 0.37009278
       inSlope: 0
       outSlope: 0
       tangentMode: 0
