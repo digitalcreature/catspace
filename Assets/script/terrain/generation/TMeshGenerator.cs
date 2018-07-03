@@ -14,25 +14,25 @@ public abstract class TMeshGenerator : MonoBehaviour {
   }
 
   // use the generator to generate a mesh (based on a previous iteration)
-  public abstract TMeshData Generate(TMeshData mesh);
+  public abstract TMesh Generate(TMesh mesh);
 
 }
 
 
 // intermidiate stage mesh generation utility
-public struct TMeshData {
+public struct TMesh {
 
   public Vector3[] vert;
   public int[] tri;
   public Vector2[] uv;
 
-  public TMeshData(Vector3[] vert, int[] tri, Vector2[] uv = null) {
+  public TMesh(Vector3[] vert, int[] tri, Vector2[] uv = null) {
     this.vert = vert;
     this.tri = tri;
     this.uv = uv;
   }
 
-  public TMeshData(Mesh mesh) {
+  public TMesh(Mesh mesh) {
     vert = mesh.vertices;
     tri = mesh.triangles;
     uv = mesh.uv;
@@ -76,6 +76,83 @@ public struct TMeshData {
     }
     mesh.normals = norm;
     return mesh;
+  }
+
+  // create a new TMesh by subdividing a triangle
+  public static TMesh CreateSubGrid(Vector3 a, Vector3 b, Vector3 c, int n = 2) {
+    int tLength = (n - 1) * (n - 1) * 3;
+    Vector3[] vs = new Vector3[tLength];
+    int[] ts = new int[tLength];
+    for (int i = 0; i < tLength; i ++) {
+      ts[i] = i;
+    }
+    Vector3 p = (b - a);
+    Vector3 q = (c - a);
+    int v = 0;
+    for (int i = 0; i < n; i ++) {
+      int colHeight = n - i;
+      for (int j = 0; j < colHeight; j ++) {
+        if (i > 0) {
+          if (j > 0) {
+            vs[v ++] = SubVert(a, p, q, n, i, j);
+            vs[v ++] = SubVert(a, p, q, n, i - 1, j);
+            vs[v ++] = SubVert(a, p, q, n, i, j - 1);
+          }
+          vs[v ++] = SubVert(a, p, q, n, i, j);
+          vs[v ++] = SubVert(a, p, q, n, i - 1, j + 1);
+          vs[v ++] = SubVert(a, p, q, n, i - 1, j);
+        }
+      }
+    }
+    return new TMesh(vs, ts);
+  }
+
+  // subdivide each of the triangles of this mesh
+  public TMesh SubGrid(int n = 2) {
+    int tLength = (n - 1) * (n - 1) * tri.Length;
+    Vector3[] vs = new Vector3[tLength];
+    int[] ts = new int[tLength];
+    for (int i = 0; i < tLength; i ++) {
+      ts[i] = i;
+    }
+    int v = 0;
+    for (int t = 0; t < tri.Length;) {
+      Vector3 a = vert[tri[t ++]];
+      Vector3 b = vert[tri[t ++]];
+      Vector3 c = vert[tri[t ++]];
+      Vector3 p = (b - a);
+      Vector3 q = (c - a);
+      for (int i = 0; i < n; i ++) {
+        int colHeight = n - i;
+        for (int j = 0; j < colHeight; j ++) {
+          if (i > 0) {
+            if (j > 0) {
+              vs[v ++] = SubVert(a, p, q, n, i, j);
+              vs[v ++] = SubVert(a, p, q, n, i - 1, j);
+              vs[v ++] = SubVert(a, p, q, n, i, j - 1);
+            }
+            vs[v ++] = SubVert(a, p, q, n, i, j);
+            vs[v ++] = SubVert(a, p, q, n, i - 1, j + 1);
+            vs[v ++] = SubVert(a, p, q, n, i - 1, j);
+          }
+        }
+      }
+    }
+    vert = vs;
+    tri = ts;
+    // for right now, were only going to be calling this on meshes without uvs
+    if (uv != null) {
+      uv = null;
+    }
+    return this;
+  }
+
+  // helper for subgrid functions
+  static Vector3 SubVert(Vector3 a, Vector3 p, Vector3 q, int n, int i, int j) {
+    return (a +
+      (p * ((float) i / (n - 1))) +
+      (q * ((float) j / (n - 1)))
+    );
   }
 
 }

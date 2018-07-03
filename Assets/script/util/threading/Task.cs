@@ -8,7 +8,7 @@ public static class TaskManager {
 
   public static bool workersAreRunning => workers != null;
 
-  static ConcurrentPriorityQueue<float, ITask> tasks = new ConcurrentPriorityQueue<float, ITask>();
+  static ConcurrentPriorityQueue<float, Task> tasks = new ConcurrentPriorityQueue<float, Task>();
 
   static ManualResetEvent tasksAvailableEvent = new ManualResetEvent(false);
 
@@ -16,9 +16,20 @@ public static class TaskManager {
 
   static Thread[] workers;
 
-  public static Task<T> Schedule<T>(float priority, Func<T> f) {
-    if (f == null) throw new ArgumentException();
-    Task<T> task = new Task<T>(f);
+  public static Task<T> Schedule<T>(Func<T> f, float priority = 0) {
+    Task<T> task = new Task<T>(f, priority);
+    task.Schedule();
+    return task;
+  }
+
+  public static Task Schedule(Action f, float priority = 0) {
+    Task task = new Task(f, priority);
+    task.Schedule();
+    return task;
+  }
+
+  public static T Schedule<T>(T task, float priority = 0) where T : Task {
+    if (task == null) throw new ArgumentException();
     tasks.Enqueue(priority, task);
     tasksAvailableEvent.Set();
     return task;
@@ -57,9 +68,14 @@ public static class TaskManager {
 
   static void Worker() {
     while (true) {
-      KeyValuePair<float, ITask> pair;
+      KeyValuePair<float, Task> pair;
       while (tasks.TryDequeue(out pair)) {
-        pair.Value.Run();
+        Task task = pair.Value;
+        task.Run();
+        foreach (Task dependant in task.dependants) {
+          dependant.dependencies.Remove(task);
+          dependant.Schedule();
+        }
       }
       if (joinRequested) {
         return;
@@ -73,27 +89,52 @@ public static class TaskManager {
 
 }
 
-public class Task<T> : ITask {
-
-  public bool isDone { get; private set; } = false;
+public class Task<T> : Task {
 
   public T result { get; private set; }
 
-  Func<T> task;    // the task to perform
-
-  public Task(Func<T> task) {
-    this.task = task;
-  }
-
-  public void Run() {
-    result = task();
-    isDone = true;
+  public Task(Func<T> task, float priority = 0) : base(() => {}, priority) {
+    if (task == null) throw new ArgumentException();
+    action = () => result = task();
   }
 
 }
 
-interface ITask {
+public class Task {
 
-  void Run();
+  public bool isDone { get; private set; } = false;
 
+  public HashSet<Task> dependencies { get; private set; }  // the set of all tasks that need to finish before this one
+  public HashSet<Task> dependants { get; private set; }    // the set of all tasks waiting for this one to complete
+
+  protected Action action;    // the task to perform
+
+  public float priority { get; private set; }
+
+  public Task(Action action, float priority = 0) {
+    if (action == null) throw new ArgumentException();
+    this.action = action;
+    this.priority = priority;
+    dependencies = new HashSet<Task>();
+    dependants = new HashSet<Task>();
+  }
+
+  public void AddDependency(Task dependency) {
+    if (dependency != null && !dependency.isDone) {
+      dependency.dependants.Add(this);
+      dependencies.Add(dependency);
+    }
+  }
+
+  public void Run() {
+    action();
+    isDone = true;
+  }
+
+  public Task Schedule() {
+    if (dependencies.Count == 0) {
+      TaskManager.Schedule(this, priority);
+    }
+    return this;
+  }
 }

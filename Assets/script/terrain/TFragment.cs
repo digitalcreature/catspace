@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 public class TFragment : MonoBehaviour {
 
-  public int detailLevelCount = 4; // how many levels of detali should this fragment generate for?
-
   public GridTerrain terrain { get; private set; }
 
   public Vector3 center { get; private set; }       // the center of this fragment, local to terrain
@@ -14,6 +12,8 @@ public class TFragment : MonoBehaviour {
   public MeshFilter filter { get; private set; }
   public MeshCollider hull { get; private set; }
   public MeshRenderer render { get; private set; }
+
+  public int maxGridSize { get; private set; }   // the size of the grid at the highest level of detail
 
   public bool isLoaded { get; private set; } = false;
   public bool isVisible { get; private set; } = true;
@@ -26,43 +26,51 @@ public class TFragment : MonoBehaviour {
   public Vector3 b { get; private set; }
   public Vector3 c { get; private set; }
 
+  public int detailLevelCount => terrain.detailLevelCount;
+
   // a set of all unloaded surfacebodies that should be loaded when this fragment is
   public HashSet<GBody> unloadedBodies { get; private set; } = new HashSet<GBody>();
 
   DetailMesh[] detailMeshes;    // collection of detail meshes for each detail level
 
-  void Awake() {
-    filter = GetComponent<MeshFilter>();
-    hull = GetComponent<MeshCollider>();
-    render = GetComponent<MeshRenderer>();
-    detailMeshes = new DetailMesh[detailLevelCount];
+
+  public static TFragment Create(GridTerrain terrain, Vector3 a, Vector3 b, Vector3 c, int maxGridSize) {
+    GameObject gameObject = new GameObject("terrain fragment");
+    TFragment frag = gameObject.AddComponent<TFragment>();
+    frag.Initialize(terrain, a, b, c, maxGridSize);
+    return frag;
+  }
+
+  void Initialize(GridTerrain terrain, Vector3 a, Vector3 b, Vector3 c, int maxGridSize) {
+    gameObject.SetActive(true);
+    this.terrain = terrain;
+    this.a = a;
+    this.b = b;
+    this.c = c;
+    this.maxGridSize = maxGridSize;
+    center = (a + b + c) / 3;
+    filter = gameObject.AddComponent<MeshFilter>();
+    render = gameObject.AddComponent<MeshRenderer>();
+    render.sharedMaterial = terrain.terrainMaterial;
+    render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.TwoSided;
+    hull = gameObject.AddComponent<MeshCollider>();
+    detailMeshes = new DetailMesh[terrain.detailLevelCount];
     for (int i = 0; i < detailMeshes.Length; i ++) {
       detailMeshes[i] = new DetailMesh();
     }
   }
 
+
   void Update() {
     if (isLoaded) {
       // always use the highest detail level mesh for the hull
-      Mesh hullMesh = GetDetailMesh(1, 1 - detailFactor);
+      Mesh hullMesh = GetDetailMesh(1, - detailFactor);
       hull.enabled = hullMesh != null;
       if (hullMesh != null) {
         hull.sharedMesh = hullMesh;
       }
       UpdateDetailLevel(this.detailFactor);
     }
-  }
-
-  public TFragment Instantiate(GridTerrain terrain, Vector3 a, Vector3 b, Vector3 c) {
-    TFragment frag = Instantiate(this);
-    frag.gameObject.SetActive(true);
-    frag.terrain = terrain;
-    frag.name = name;
-    frag.center = (a + b + c) / 3;
-    frag.a = a;
-    frag.b = b;
-    frag.c = c;
-    return frag;
   }
 
   public int DetailFactorToDetailLevel(float detailFactor) {
@@ -72,40 +80,6 @@ public class TFragment : MonoBehaviour {
     return detailLevel;
   }
 
-  private TMeshData CreateSubGrid(Vector3 a, Vector3 b, Vector3 c, int n = 2) {
-    int tLength = (n - 1) * (n - 1) * 3;
-    Vector3[] vs = new Vector3[tLength];
-    int[] ts = new int[tLength];
-    for (int i = 0; i < tLength; i ++) {
-      ts[i] = i;
-    }
-    Vector3 p = (b - a);
-    Vector3 q = (c - a);
-    int v = 0;
-    for (int i = 0; i < n; i ++) {
-      int colHeight = n - i;
-      for (int j = 0; j < colHeight; j ++) {
-        if (i > 0) {
-          if (j > 0) {
-            vs[v ++] = SubVert(a, p, q, n, i, j);
-            vs[v ++] = SubVert(a, p, q, n, i - 1, j);
-            vs[v ++] = SubVert(a, p, q, n, i, j - 1);
-          }
-          vs[v ++] = SubVert(a, p, q, n, i, j);
-          vs[v ++] = SubVert(a, p, q, n, i - 1, j + 1);
-          vs[v ++] = SubVert(a, p, q, n, i - 1, j);
-        }
-      }
-    }
-    return new TMeshData(vs, ts);
-  }
-
-  private Vector3 SubVert(Vector3 a, Vector3 p, Vector3 q, int n, int i, int j) {
-    return (a +
-      (p * ((float) i / (n - 1))) +
-      (q * ((float) j / (n - 1)))
-    );
-  }
 
   public void Load() {
     if (!isLoaded) {
@@ -123,6 +97,7 @@ public class TFragment : MonoBehaviour {
   public void Unload() {
     if (isLoaded) {
       isLoaded = false;
+      gameObject.SetActive(false);
       // if (terrain.isServer) {
       //   foreach (GBody body in GBody.loaded) {
       //     if (SphereIsOverFragment(body.transform.position, body.loadRadius)) {
@@ -134,7 +109,6 @@ public class TFragment : MonoBehaviour {
       //   }
       // }
       // hull.enabled = false;
-      gameObject.SetActive(false);
     }
   }
 
@@ -171,7 +145,7 @@ public class TFragment : MonoBehaviour {
     DetailMesh detailMesh = detailMeshes[detailLevel];
     Mesh mesh = detailMesh.mesh;
     if (mesh == null) {
-      Task<TMeshData> meshTask = StartMeshGeneration(detailFactor, priority);
+      Task<TMesh> meshTask = StartMeshGeneration(detailFactor, priority);
       if (meshTask.isDone) {
         mesh = meshTask.result.ToMesh();
         detailMesh.mesh = mesh;
@@ -179,31 +153,40 @@ public class TFragment : MonoBehaviour {
     }
     return mesh;
   }
-  public Mesh GetDetailMesh(float detailFactor) => GetDetailMesh(detailFactor, 1 - detailFactor);
+  public Mesh GetDetailMesh(float detailFactor) => GetDetailMesh(detailFactor, - detailFactor);
 
   // get the task responsible for generating the detail mesh
   // if the task isnt running yet, start it
   // pririty is used to set the priority of the generation task
-  Task<TMeshData> StartMeshGeneration(float detailFactor, float priority) {
+  Task<TMesh> StartMeshGeneration(float detailFactor, float priority) {
     int detailLevel = DetailFactorToDetailLevel(detailFactor);
     DetailMesh detailMesh = detailMeshes[detailLevel];
-    Task<TMeshData> task = detailMesh.task;
+    Task<TMesh> task = detailMesh.task;
+    if (terrain.detailLevelCount > 1) {
+      detailFactor = (float) detailLevel / (terrain.detailLevelCount - 1);
+    }
+    else {
+      detailFactor = 1;
+    }
+    detailFactor = Mathf.Clamp01(terrain.detailFactorCurve.Evaluate(detailFactor));
     if (task == null) {
-      task = TaskManager.Schedule(priority, () => {
-        return GenerateMesh(detailLevel);
-      });
+      task = new Task<TMesh>(() => {
+        return GenerateMesh(detailFactor);
+      }, priority);
+      task.AddDependency(terrain.gridMeshTask);
+      task.Schedule();
       detailMesh.task = task;
     }
     return task;
   }
-  Task<TMeshData> StartMeshGeneration(float detailFactor) => StartMeshGeneration(detailFactor, 1 - detailFactor);
+  Task<TMesh> StartMeshGeneration(float detailFactor) => StartMeshGeneration(detailFactor, 1 - detailFactor);
 
   // mesh generation function
   // this is run in a worker thread
-  public TMeshData GenerateMesh(int detailLevel) {
-    int gridSize = (int) (terrain.gridSize * ((float) detailLevel / (float) detailLevelCount));
+  public TMesh GenerateMesh(float detailFactor) {
+    int gridSize = (int) (maxGridSize * detailFactor);
     if (gridSize < 2) gridSize = 2;
-    TMeshData data = CreateSubGrid(a, b, c, gridSize);
+    TMesh data = TMesh.CreateSubGrid(a, b, c, gridSize);
     if (terrain.generator != null) {
       data = terrain.generator.Generate(data);
     }
@@ -213,13 +196,13 @@ public class TFragment : MonoBehaviour {
 
   public void SetVisible(bool isVisible) {
     this.isVisible = isVisible;
-    render.enabled = isVisible;
+    // render.enabled = isVisible;
   }
 
   class DetailMesh {
 
     public Mesh mesh;
-    public Task<TMeshData> task;
+    public Task<TMesh> task;
 
   }
 

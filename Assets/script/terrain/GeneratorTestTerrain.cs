@@ -15,7 +15,7 @@ public class GeneratorTestTerrain : TerrainBase {
   public override void Generate() {
     Awake();
     generator.Initialize();
-    filter.mesh = generator.Generate(new TMeshData(baseMesh)).ToMesh();
+    filter.mesh = generator.Generate(new TMesh(baseMesh)).ToMesh();
   }
 
 }

@@ -16,7 +16,7 @@ public class TPerlinGenerator : TMeshGenerator {
     base.Initialize();
   }
 
-  public override TMeshData Generate(TMeshData mesh) {
+  public override TMesh Generate(TMesh mesh) {
     // we have to clone stuff using AnimationCurve because its not threadsafe for some fuckign reason
     HeightmapSteps steps = this.steps.Clone();
     AnimationCurve elevationCurve = this.elevationCurve.Clone();
@@ -40,7 +40,7 @@ public class TPerlinGenerator : TMeshGenerator {
       uvs[b] = uv;
       uvs[c] = uv;
     }
-    return new TMeshData(vs, ts, uvs);
+    return new TMesh(vs, ts, uvs);
   }
 
   private void ApplyMap(AnimationCurve elevationCurve, HeightmapSteps steps, ref Vector3 vert, out float height) {
