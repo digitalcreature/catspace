@@ -338,6 +338,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isInteractable: 1
+  glowMeshFilters:
+  - {fileID: 33458302416188298}
   anchor: {fileID: 4487090081825092}
   exit: {fileID: 4601824962285848}
 --- !u!114 &114921240321076698

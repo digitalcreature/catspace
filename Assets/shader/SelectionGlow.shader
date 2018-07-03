@@ -10,7 +10,7 @@
 		LOD 100
 
 		ZWrite Off
-		ZTest Always
+		ZTest LEqual
 
 		Blend SrcAlpha OneMinusSrcAlpha
 
@@ -28,8 +28,8 @@
 
 			struct v2f {
 				float4 pos : SV_POSITION;
-				float3 normal : NORMAL;
-				float4 posWorld : TEXCOORD0;
+				float3 worldNormal : NORMAL;
+				float4 worldPos : TEXCOORD0;
 			};
 
 			v2f vert(appdata_base v) {
@@ -37,15 +37,15 @@
 
 				o.pos = UnityObjectToClipPos(v.vertex);
 
-				o.posWorld = mul(unity_ObjectToWorld, v.vertex);
-				o.normal = normalize(mul(float4(v.normal, 0.0), unity_WorldToObject).xyz);
+				o.worldPos = mul(unity_ObjectToWorld, v.vertex);
+				o.worldNormal = normalize(mul(float4(v.normal, 0.0), unity_WorldToObject).xyz);
 
 				return o;
 			}
 
 			half4 frag(v2f i) : SV_Target {
-				float3 normalDir = i.normal;
-				float3 viewDir = normalize(_WorldSpaceCameraPos.xyz - i.posWorld.xyz);
+				float3 normalDir = i.worldNormal;
+				float3 viewDir = normalize(_WorldSpaceCameraPos.xyz - i.worldPos.xyz);
 				float power = lerp(_GlowPowerLow, _GlowPowerHigh, (sin(_Time.y * _BlinkRate) + 1) / 2.0f);
 				float rim = 1 - saturate(dot(viewDir, normalDir));
 				rim = pow(rim, power);

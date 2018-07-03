@@ -1,11 +1,13 @@
-﻿Shader "FX/IcoStar" {
+Shader "FX/FresnelGlass" {
 	Properties {
 		_MainTex ("Texture", 2D) = "white" {}
-		_Color ("Color", Color) = (1, 1, 1, 0.5)
+    _Color ("Color", Color) = (1, 1, 1, 0.5)
 		_FresnelPower ("Fresnel Power", Float) = 5
-		_AlphaFresnel ("Alpha Fresnel", Float) = 1
-		_RimColor ("Rimlight Color", Color) = (1, 1, 1, 1)
-		_RimIntensity ("Rimlight Intensity", Float) = 1
+    _AlphaFresnel ("Alpha Fresnel", Float) = 1
+    _SpecularFresnel ("Specular Fresnel", Float) = 1
+    _SmoothnessFresnel ("Smoothness Fresnel", Float) = 1
+		_Specular ("Specular", Color) = (1, 1, 1, 1)
+		_Smoothness ("Smoothness", Range(0, 1)) = 0.5
 		_ShadowAlpha ("Shadow Alpha", Range(0, 1)) = 0.5
 	}
 
@@ -19,7 +21,7 @@
 
 		CGPROGRAM
 
-		#pragma surface surf WrapLambert alpha
+		#pragma surface surf StandardSpecular alpha
 
 		#include "UnityCG.cginc"
 
@@ -27,9 +29,10 @@
     fixed4 _Color;
 		float _FresnelPower;
 		float _AlphaFresnel;
-
-		fixed4 _RimColor;
-		float _RimIntensity;
+		float _SpecularFresnel;
+		float _SmoothnessFresnel;
+		fixed4 _Specular;
+		fixed _Smoothness;
 
 		struct Input {
 			float2 uv_MainTex;
@@ -37,16 +40,18 @@
 			float3 worldPos;
 		};
 
-		void surf(Input i, inout SurfaceOutput o) {
-			float3 viewDir = normalize(_WorldSpaceCameraPos.xyz - i.worldPos.xyz);
+		void surf(Input i, inout SurfaceOutputStandardSpecular o) {
+      float3 viewDir = normalize(_WorldSpaceCameraPos.xyz - i.worldPos.xyz);
 			float fresnel = 1 - saturate(dot(viewDir, i.worldNormal));
-			fresnel = pow(fresnel, _FresnelPower);
+      fresnel = pow(fresnel, _FresnelPower);
 
 			fixed4 color = tex2D(_MainTex, i.uv_MainTex) * _Color;
 
 			o.Albedo = color.rgb;
-			o.Alpha = clamp(color.a + fresnel * _AlphaFresnel, 0, 1);
-			o.Emission = clamp(_RimColor.rgb * fresnel * _RimIntensity, 0, 1);
+      o.Alpha = clamp(color.a + fresnel * _AlphaFresnel, 0, 1);
+			o.Specular = clamp(_Specular.rgb + fresnel * _SpecularFresnel, 0, 1);
+			o.Smoothness = clamp(_Smoothness + fresnel * _SmoothnessFresnel, 0, 1);
+
 		}
 
 		half4 LightingWrapLambert (SurfaceOutput s, half3 lightDir, half atten) {
@@ -63,9 +68,6 @@
 		Pass {
 
 			Name "SHADOWCASTER"
-
-			// semitransparent shadow code adapted from:
-			// https://catlikecoding.com/unity/tutorials/rendering/part-12/
 
 			Tags { "LightMode" = "ShadowCaster" }
 

@@ -176,6 +176,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isInteractable: 1
+  glowMeshFilters:
+  - {fileID: 33823956587986778}
 --- !u!114 &114424661210024862
 MonoBehaviour:
   m_ObjectHideFlags: 1

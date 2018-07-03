@@ -5,19 +5,18 @@ public class Interactable : KittyNetworkBehaviour {
 
   [SyncVar] public bool isInteractable = true;
 
-  MeshFilter[] filters;
+  public MeshFilter[] glowMeshFilters;  // the mesh filters to use for the glow effect
 
   // the interaction manager, for convenience
   public InteractionManager manager
     => InteractionManager.instance;
 
-  protected override void Awake() {
-    base.Awake();
-    filters = GetComponentsInChildren<MeshFilter>();
-  }
+  // protected override void Awake() {
+  //   base.Awake();
+  // }
 
   public void DrawHighlight(Material highlightMaterial, Camera camera = null) {
-    foreach (MeshFilter filter in filters) {
+    foreach (MeshFilter filter in glowMeshFilters) {
       if (filter != null) {
         Mesh mesh = filter.mesh;
         Matrix4x4 matrix = filter.transform.localToWorldMatrix;
