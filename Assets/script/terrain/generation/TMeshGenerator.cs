@@ -26,6 +26,8 @@ public struct TMesh {
   public int[] tri;
   public Vector2[] uv;
 
+  public bool isInvalid => vert == null;
+
   public TMesh(Vector3[] vert, int[] tri, Vector2[] uv = null) {
     this.vert = vert;
     this.tri = tri;
@@ -45,8 +47,11 @@ public struct TMesh {
     Vector3[] vert = new Vector3[tri.Length];
     Vector2[] uv = new Vector2[tri.Length];
     for (int t = 0; t < tri.Length; t ++) {
+      int i = tri[t];
       vert[v] = this.vert[tri[t]];
-      uv[v] = this.uv[tri[t]];
+      if (this.uv != null && i < this.uv.Length) {
+        uv[v] = this.uv[tri[t]];
+      }
       tri[t] = v;
       v ++;
     }

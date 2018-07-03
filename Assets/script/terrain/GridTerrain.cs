@@ -1,80 +1,114 @@
 using UnityEngine;
 using UnityEngine.Networking;
+using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 public class GridTerrain : TerrainBase {
 
   [Header("Terrain")]
   public Material terrainMaterial;
-  public MeshFilter terrainMeshFilter;  // the terrain filter containing the mesh for the terrain at large
+  public float terrainTileLength = 15f; // the approximate edge length of a triangle of the final terrain mesh
 
   [Header("Grid")]
   public Mesh baseMesh;
-
-  public float fragmentLength = 1f;     // the approximate edge length of an individual fragment mesh
-  public float tileLength = 1f;         // the approximate edge length of an individual terrain triangle
+  public float fragmentLength = 25f;     // the approximate edge length of an individual fragment mesh
 
   [Header("Fragments")]
+  public float tileLength = 1f;         // the approximate edge length of an individual terrain triangle
   public int detailLevelCount = 4;      // how many levels of detail should fragments generate for?
   public AnimationCurve detailFactorCurve = AnimationCurve.Linear(0, 0, 1, 1);
 
-
   public Task<TMesh> gridMeshTask { get; private set; }   // the task generating the grid mesh
   public TMesh gridMesh { get; private set; }             // the grid mesh itself
+
+  Transform terrainParent;
+  Transform sectionsParent;
+  Transform fragmentsParent;
 
   public int gridSize { get; private set; }
 
   List<TFragment> fragments;
 
+  [HideInInspector] public TFragment fragmentPrefab;
+  [HideInInspector] public MeshRenderer terrainSectionPrefab;
+
+  ConcurrentQueue<TMesh> finishedSections;
+  int sectionTasksRemaining;
 
   public override void Generate() {
-    if (generator != null) {
-      generator.Initialize();
-    }
     // start worker threads for fragments
     if (!TaskManager.workersAreRunning) {
       TaskManager.StartWorkers(4);
     }
+    // initialize generator
+    if (generator != null) {
+      generator.Initialize();
+    }
+    // create heirarchy
+    terrainParent = new GameObject("terrain").transform;
+    sectionsParent = new GameObject("sections").transform;
+    fragmentsParent = new GameObject("fragments").transform;
+    terrainParent.parent = transform;
+    sectionsParent.parent = terrainParent;
+    fragmentsParent.parent = terrainParent;
     // start task to generate grid mesh
-    TMesh gridMesh = new TMesh(baseMesh);
+    TMesh baseMesh = new TMesh(this.baseMesh);
+    baseMesh.Clean();
+    // make sure the base mesh is the right scale
+    Vector3[] vs = baseMesh.vert;
+    for (int i = 0; i < vs.Length; i ++) {
+      vs[i] = gfield.LocalPointToSurface(vs[i]);
+    }
     gridMeshTask = TaskManager.Schedule(() => {
-      this.gridMesh = GenerateGridMesh(gridMesh);
-      if (generator != null) {
-        return generator.Generate(this.gridMesh);
-      }
-      else {
-        return gridMesh;
-      }
+      return GenerateGridMesh(baseMesh, fragmentLength);
     });
+    // start terrain section generation tasks
+    finishedSections = new ConcurrentQueue<TMesh>();
+    int sectionGridSize = MeshToGridSize(baseMesh, terrainTileLength);
+    sectionTasksRemaining = baseMesh.tri.Length / 3;
+    ForeachTriangle(baseMesh, (a, b, c) => {
+      TaskManager.Schedule(() => {
+        TMesh section = TMesh.CreateSubGrid(a, b, c, sectionGridSize);
+        if (generator != null) {
+          section = generator.Generate(section);
+        }
+        finishedSections.Enqueue(section);
+      });
+    });
+  }
+
+  void ForeachTriangle(TMesh mesh, Action<Vector3, Vector3, Vector3> action) {
+    var vs = mesh.vert;
+    var ts = mesh.tri;
+    for (var i = 0; i < ts.Length;) {
+      Vector3 a = vs[ts[i++]];
+      Vector3 b = vs[ts[i++]];
+      Vector3 c = vs[ts[i++]];
+      action(a, b, c);
+    }
   }
 
   void Update() {
     // once the grid mesh is complete, we can create the fragments
-    // as well as the mesh for the rest of the terrain
-    if (gridMeshTask != null && gridMeshTask.isDone && fragments == null) {
-      // create the mesh for the terrain at large
-      MeshRenderer renderer = terrainMeshFilter.GetComponent<MeshRenderer>();
-      renderer.sharedMaterial = terrainMaterial;
-      // renderer.materials = new Material[] { renderer.sharedMaterial, terrainMaterial };
-      terrainMeshFilter.mesh = gridMeshTask.result.ToMesh();
-
+    if (gridMeshTask != null && gridMeshTask.isDone && gridMesh.isInvalid) {
+      gridMesh = gridMeshTask.result;
       fragments = new List<TFragment>();
       // create a new fragment for each triangle in the grid mesh
-      gridSize = 0;
-      var vs = gridMesh.vert;
-      var ts = gridMesh.tri;
-      for (var i = 0; i < ts.Length;) {
-        Vector3 a = gfield.LocalPointToSurface(vs[ts[i++]]);
-        Vector3 b = gfield.LocalPointToSurface(vs[ts[i++]]);
-        Vector3 c = gfield.LocalPointToSurface(vs[ts[i++]]);
-        if (gridSize == 0) {
-          gridSize = SegmentToGridSize(a, b, tileLength);
-          gridSize = gridSize < 2 ? 2 : gridSize;
-        }
-        var frag = TFragment.Create(this, a, b, c, gridSize);
-        frag.transform.parent = terrainMeshFilter.transform;
+      gridSize = MeshToGridSize(gridMesh, tileLength);
+      ForeachTriangle(gridMesh, (a, b, c) => {
+        var frag = fragmentPrefab.Instantiate(this, a, b, c, gridSize);
+        frag.transform.parent = fragmentsParent;
         frag.gameObject.SetActive(false);
         fragments.Add(frag);
+      });
+    }
+    // as the section mesh tasks complete, add them to the model
+    if (sectionTasksRemaining > 0) {
+      TMesh sectionMesh;
+      while (finishedSections.TryDequeue(out sectionMesh)) {
+        sectionTasksRemaining --;
+        CreateTerrainSection(sectionMesh.ToMesh());
       }
     }
     // if we have the fragments, go ahead and update them
@@ -105,21 +139,37 @@ public class GridTerrain : TerrainBase {
     }
   }
 
-  public int SegmentToGridSize(Vector3 a, Vector3 b, float triLength) {
-    int n = 1 + (int) Mathf.Round((a - b).magnitude / triLength);
+  int MeshToGridSize(TMesh mesh, float edgeLength) {
+    // assuming a mesh with regular spacing between vertices
+    var vs = mesh.vert;
+    var ts = mesh.tri;
+    return SegmentToGridSize(vs[ts[0]], vs[ts[1]], edgeLength);
+  }
+
+  public int SegmentToGridSize(Vector3 a, Vector3 b, float edgeLength) {
+    int n = 1 + (int) Mathf.Round((a - b).magnitude / edgeLength);
     return n < 2 ? 2 : n;
   }
 
-  public TMesh GenerateGridMesh(TMesh gridMesh) {
-    Vector3[] vs = gridMesh.vert;
-    for (int i = 0; i < vs.Length; i ++) {
-      vs[i] = gfield.LocalPointToSurface(vs[i]);
-    }
-    gridMesh.vert = vs;
+  TMesh GenerateGridMesh(TMesh baseMesh, float edgeLength) {
+    var vs = baseMesh.vert;
     Vector3 a = vs[0];
     Vector3 b = vs[1];
-    int gridSize = SegmentToGridSize(a, b, fragmentLength);
-    return gridMesh.SubGrid(gridSize);
+    int gridSize = SegmentToGridSize(a, b, edgeLength);
+    return baseMesh.SubGrid(gridSize);
+  }
+
+  MeshRenderer CreateTerrainSection(Mesh mesh) {
+    MeshRenderer renderer = Instantiate(terrainSectionPrefab);
+    MeshFilter filter = renderer.GetComponent<MeshFilter>();
+    renderer.name = terrainSectionPrefab.name;
+    filter.sharedMesh = mesh;
+    renderer.sharedMaterial = terrainMaterial;
+    MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
+    propertyBlock.SetFloat("_CullSphereEnabled", 1);
+    renderer.SetPropertyBlock(propertyBlock);
+    renderer.transform.parent = sectionsParent;
+    return renderer;
   }
 
 }

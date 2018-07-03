@@ -33,10 +33,15 @@ public class TFragment : MonoBehaviour {
 
   DetailMesh[] detailMeshes;    // collection of detail meshes for each detail level
 
+  void Awake() {
+    filter = GetComponent<MeshFilter>();
+    render = GetComponent<MeshRenderer>();
+    hull = GetComponent<MeshCollider>();
+  }
 
-  public static TFragment Create(GridTerrain terrain, Vector3 a, Vector3 b, Vector3 c, int maxGridSize) {
-    GameObject gameObject = new GameObject("terrain fragment");
-    TFragment frag = gameObject.AddComponent<TFragment>();
+  public TFragment Instantiate(GridTerrain terrain, Vector3 a, Vector3 b, Vector3 c, int maxGridSize) {
+    TFragment frag = Instantiate(this);
+    frag.name = name;
     frag.Initialize(terrain, a, b, c, maxGridSize);
     return frag;
   }
@@ -49,17 +54,12 @@ public class TFragment : MonoBehaviour {
     this.c = c;
     this.maxGridSize = maxGridSize;
     center = (a + b + c) / 3;
-    filter = gameObject.AddComponent<MeshFilter>();
-    render = gameObject.AddComponent<MeshRenderer>();
     render.sharedMaterial = terrain.terrainMaterial;
-    render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.TwoSided;
-    hull = gameObject.AddComponent<MeshCollider>();
     detailMeshes = new DetailMesh[terrain.detailLevelCount];
     for (int i = 0; i < detailMeshes.Length; i ++) {
       detailMeshes[i] = new DetailMesh();
     }
   }
-
 
   void Update() {
     if (isLoaded) {

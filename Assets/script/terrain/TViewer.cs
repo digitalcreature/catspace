@@ -7,6 +7,7 @@ public class TViewer : KittyNetworkBehaviour {
 
   public float minRange = 100f;
   public float maxRange = 250f;
+  public float cullSpherePadding = 50;
 
   public static HashSet<TViewer> all {get; private set; } = new HashSet<TViewer>();
 
@@ -26,6 +27,17 @@ public class TViewer : KittyNetworkBehaviour {
     return t;
   }
 
+  static int cullSphereCenter_id = -1;
+  static int cullSphereRadius_id = -1;
+
+  protected override void Awake() {
+    base.Awake();
+    if (cullSphereCenter_id < 0) {
+      cullSphereCenter_id = Shader.PropertyToID("_CullSphereCenter");
+      cullSphereRadius_id = Shader.PropertyToID("_CullSphereRadius");
+    }
+  }
+
   void Start() {
     OnEnable();
   }
@@ -38,6 +50,14 @@ public class TViewer : KittyNetworkBehaviour {
     all.Remove(this);
   }
 
+  void Update() {
+    if (isLocalPlayer) {
+      Vector3 c = transform.position;
+      Shader.SetGlobalVector(cullSphereCenter_id, new Vector4(c.x, c.y, c.z, 1));
+      Shader.SetGlobalFloat(cullSphereRadius_id, maxRange - cullSpherePadding);
+    }
+  }
+
   void OnDrawGizmosSelected() {
     Color c = Gizmos.color;
     Gizmos.color = new Color(1.0f, 0.7f, 0.5f);
@@ -46,5 +66,7 @@ public class TViewer : KittyNetworkBehaviour {
     Gizmos.color = new Color(1.0f, 0.5f, 0.5f);
     Gizmos.color = c;
   }
+
+
 
 }
