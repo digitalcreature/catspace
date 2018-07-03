@@ -11,11 +11,6 @@ public class TViewer : KittyNetworkBehaviour {
 
   public static HashSet<TViewer> all {get; private set; } = new HashSet<TViewer>();
 
-  // return true if a point in world space can be seen (and should be loaded)
-  // public bool CanSeePoint(Vector3 point) {
-  //   return (point - transform.position).sqrMagnitude < (range * range);
-  // }
-
   // what level of detail should an object located at a point in world space be displayed at?
   // objects >= maxRange distance away are at LOD = 0,
   // objects <= minRange distance away are at LOD = 1,

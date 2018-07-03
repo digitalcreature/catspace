@@ -112,7 +112,7 @@ public struct TMesh {
     return new TMesh(vs, ts);
   }
 
-  // subdivide each of the triangles of this mesh
+  // return a version of this mesh where all triangles have been subdivided
   public TMesh SubGrid(int n = 2) {
     int tLength = (n - 1) * (n - 1) * tri.Length;
     Vector3[] vs = new Vector3[tLength];
@@ -143,13 +143,8 @@ public struct TMesh {
         }
       }
     }
-    vert = vs;
-    tri = ts;
     // for right now, were only going to be calling this on meshes without uvs
-    if (uv != null) {
-      uv = null;
-    }
-    return this;
+    return new TMesh(vs, ts);
   }
 
   // helper for subgrid functions

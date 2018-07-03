@@ -259,40 +259,14 @@ MonoBehaviour:
   baseMesh: {fileID: 4300010, guid: 340ec3144543828459c77245463b8303, type: 3}
   fragmentLength: 75
   tileLength: 1.25
-  detailLevelCount: 2
-  detailFactorCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0.1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.5490747
-      value: 0.37009278
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.08941261
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  detailFactorCascades:
+    cascades:
+    - factorIn: 0
+      factorOut: 0.15
+    - factorIn: 0.3
+      factorOut: 0.5
+    - factorIn: 0.7
+      factorOut: 1
   fragmentPrefab: {fileID: 114122704813742492, guid: 6447e23b842477c4392cc2757a71945d,
     type: 2}
   terrainSectionPrefab: {fileID: 23335525815336824, guid: 9287d002014464a43849847516ff83a1,

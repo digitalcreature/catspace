@@ -16,8 +16,9 @@ public class GridTerrain : TerrainBase {
 
   [Header("Fragments")]
   public float tileLength = 1f;         // the approximate edge length of an individual terrain triangle
-  public int detailLevelCount = 4;      // how many levels of detail should fragments generate for?
-  public AnimationCurve detailFactorCurve = AnimationCurve.Linear(0, 0, 1, 1);
+  public DetailFactorCascades detailFactorCascades;
+
+  public int detailLevelCount => detailFactorCascades.cascadeCount;
 
   public Task<TMesh> gridMeshTask { get; private set; }   // the task generating the grid mesh
   public TMesh gridMesh { get; private set; }             // the grid mesh itself
@@ -70,6 +71,10 @@ public class GridTerrain : TerrainBase {
     ForeachTriangle(baseMesh, (a, b, c) => {
       TaskManager.Schedule(() => {
         TMesh section = TMesh.CreateSubGrid(a, b, c, sectionGridSize);
+        Vector3[] vert = section.vert;
+        for (int i = 0; i < vert.Length; i ++) {
+          vert[i] = gfield.LocalPointToSurface(vert[i]);
+        }
         if (generator != null) {
           section = generator.Generate(section);
         }
@@ -156,7 +161,12 @@ public class GridTerrain : TerrainBase {
     Vector3 a = vs[0];
     Vector3 b = vs[1];
     int gridSize = SegmentToGridSize(a, b, edgeLength);
-    return baseMesh.SubGrid(gridSize);
+    TMesh gridMesh = baseMesh.SubGrid(gridSize);
+    vs = gridMesh.vert;
+    for (int i = 0; i < vs.Length; i ++) {
+      vs[i] = gfield.LocalPointToSurface(vs[i]);
+    }
+    return gridMesh;
   }
 
   MeshRenderer CreateTerrainSection(Mesh mesh) {
@@ -170,6 +180,41 @@ public class GridTerrain : TerrainBase {
     renderer.SetPropertyBlock(propertyBlock);
     renderer.transform.parent = sectionsParent;
     return renderer;
+  }
+
+}
+
+[Serializable]
+public class DetailFactorCascades {
+
+  [SerializeField] Cascade[] cascades;
+
+  public int cascadeCount => cascades.Length;
+
+  public float Evaluate(float factorIn, out int level) {
+    factorIn = Mathf.Clamp01(factorIn);
+    for (int i = 1; i < cascades.Length; i ++) {
+      var cascade = cascades[i];
+      if (factorIn < cascade.factorIn) {
+        level = i - 1;
+        return cascades[i - 1].factorOut;
+      }
+    }
+    level = cascades.Length - 1;
+    return cascades[level].factorOut;
+  }
+
+  [Serializable]
+  public struct Cascade {
+
+    public float factorIn;
+    public float factorOut;
+
+    public Cascade(float factorIn, float factorOut) {
+      this.factorIn = factorIn;
+      this.factorOut = factorOut;
+    }
+
   }
 
 }

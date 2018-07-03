@@ -26,8 +26,6 @@ public class TFragment : MonoBehaviour {
   public Vector3 b { get; private set; }
   public Vector3 c { get; private set; }
 
-  public int detailLevelCount => terrain.detailLevelCount;
-
   // a set of all unloaded surfacebodies that should be loaded when this fragment is
   public HashSet<GBody> unloadedBodies { get; private set; } = new HashSet<GBody>();
 
@@ -73,12 +71,8 @@ public class TFragment : MonoBehaviour {
     }
   }
 
-  public int DetailFactorToDetailLevel(float detailFactor) {
-    detailFactor = Mathf.Clamp01(detailFactor);
-    int detailLevel = (int) Mathf.Floor(detailFactor * (float) detailLevelCount);
-    if (detailLevel >= detailLevelCount) detailLevel --;
-    return detailLevel;
-  }
+  public float EvaluateDetailFactorCascades(float detailFactor, out int detailLevel)
+    => terrain.detailFactorCascades.Evaluate(detailFactor, out detailLevel);
 
 
   public void Load() {
@@ -141,7 +135,8 @@ public class TFragment : MonoBehaviour {
   // if it isnt done generating, returns null
   // priority is used as the priority for the threaded task if the mesh needs to be generated
   public Mesh GetDetailMesh(float detailFactor, float priority) {
-    int detailLevel = DetailFactorToDetailLevel(detailFactor);
+    int detailLevel;
+    EvaluateDetailFactorCascades(detailFactor, out detailLevel);
     DetailMesh detailMesh = detailMeshes[detailLevel];
     Mesh mesh = detailMesh.mesh;
     if (mesh == null) {
@@ -159,16 +154,10 @@ public class TFragment : MonoBehaviour {
   // if the task isnt running yet, start it
   // pririty is used to set the priority of the generation task
   Task<TMesh> StartMeshGeneration(float detailFactor, float priority) {
-    int detailLevel = DetailFactorToDetailLevel(detailFactor);
+    int detailLevel;
+    detailFactor = EvaluateDetailFactorCascades(detailFactor, out detailLevel);
     DetailMesh detailMesh = detailMeshes[detailLevel];
     Task<TMesh> task = detailMesh.task;
-    if (terrain.detailLevelCount > 1) {
-      detailFactor = (float) detailLevel / (terrain.detailLevelCount - 1);
-    }
-    else {
-      detailFactor = 1;
-    }
-    detailFactor = Mathf.Clamp01(terrain.detailFactorCurve.Evaluate(detailFactor));
     if (task == null) {
       task = new Task<TMesh>(() => {
         return GenerateMesh(detailFactor);
