@@ -1936,8 +1936,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ebd38c8608c76748a942ccb2a2e1900, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minRange: 20
-  maxRange: 350
+  minRange: 0
+  maxRange: 300
   cullSpherePadding: 200
 --- !u!114 &114747777925909738
 MonoBehaviour:

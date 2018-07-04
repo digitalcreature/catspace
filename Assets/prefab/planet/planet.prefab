@@ -265,7 +265,9 @@ MonoBehaviour:
       factorOut: 0.15
     - factorIn: 0.3
       factorOut: 0.5
-    - factorIn: 0.7
+    - factorIn: 0.5
+      factorOut: 0.75
+    - factorIn: 0.75
       factorOut: 1
   fragmentPrefab: {fileID: 114122704813742492, guid: 6447e23b842477c4392cc2757a71945d,
     type: 2}
