@@ -3,7 +3,7 @@ using UnityEngine.Networking;
 using System;
 
 // an object that gcharacters can sit on
-public class Seat : Interactable {
+public class Seat : InteractableModule {
 
   public event Action<GCharacter> EventOnSitLocal;
 
@@ -38,10 +38,10 @@ public class Seat : Interactable {
     drivenVehicle = vehicle;
   }
 
-  protected override void OnInteractLocal(GCharacter character) {
+  protected override void OnInteractLocal(GCharacter character, InteractionMode mode) {
     // we only need to call this once, on the server
     // the logic in GCharacter will make sure the change is serialized
-    if (isServer) {
+    if (mode == InteractionMode.Interact && isServer) {
       character.Sit(this);
     }
   }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MoveOnInteract : Interactable {
+public class MoveOnInteract : InteractableModule {
 
   public float moveSpeed = 15;
   public Vector2 moveDirection = new Vector2(1f, 1f); // x is forward, y is up
@@ -12,8 +12,8 @@ public class MoveOnInteract : Interactable {
     gbody = GetComponent<GBody>();
   }
 
-  protected override void OnInteractLocal(GCharacter character) {
-    if (hasAuthority) {
+  protected override void OnInteractLocal(GCharacter character, InteractionMode mode) {
+    if (hasAuthority && mode == InteractionMode.Interact) {
       Vector3 up = -gbody.gravity.normalized;
       Vector3 forward = (transform.position - character.transform.position);
       forward = Vector3.ProjectOnPlane(forward, up).normalized;

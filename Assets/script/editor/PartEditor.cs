@@ -8,19 +8,19 @@ public class PartEditor : Editor {
     DrawDefaultInspector();
     Part part = (Part) target;
     if (GUILayout.Button("Spawn Parts")) {
-      foreach (PartSpawn spawn in part.GetComponentsInChildren<PartSpawn>()) {
-        if (spawn.partPrefab != null) {
-          Part child = Instantiate(spawn.partPrefab);
-          child.transform.parent = spawn.transform;
+      foreach (PartNode node in part.GetComponentsInChildren<PartNode>()) {
+        if (node.spawnPart != null) {
+          Part child = Instantiate(node.spawnPart);
+          child.transform.parent = node.transform;
           child.transform.localPosition = Vector3.zero;
           child.transform.localRotation = Quaternion.identity;
         }
       }
     }
     if (GUILayout.Button("Destroy Parts")) {
-      foreach (PartSpawn spawn in part.GetComponentsInChildren<PartSpawn>()) {
-        for (int i = 0; i < spawn.transform.childCount; i ++) {
-          DestroyImmediate(spawn.transform.GetChild(i).gameObject);
+      foreach (PartNode node in part.GetComponentsInChildren<PartNode>()) {
+        for (int i = 0; i < node.transform.childCount; i ++) {
+          DestroyImmediate(node.transform.GetChild(i).gameObject);
         }
       }
     }
@@ -28,17 +28,17 @@ public class PartEditor : Editor {
 
 }
 
-[CustomEditor(typeof(PartSpawn))]
-public class PartSpawnEditor : Editor {
+[CustomEditor(typeof(PartNode))]
+public class PartNodeEditor : Editor {
 
   public override void OnInspectorGUI() {
     DrawDefaultInspector();
-    PartSpawn spawn = (PartSpawn) target;
-    if (spawn.transform.childCount == 0) {
+    PartNode node = (PartNode) target;
+    if (node.transform.childCount == 0) {
       if (GUILayout.Button("Spawn")) {
-        if (spawn.partPrefab != null) {
-          Part part = Instantiate(spawn.partPrefab);
-          part.transform.parent = spawn.transform;
+        if (node.spawnPart != null) {
+          Part part = Instantiate(node.spawnPart);
+          part.transform.parent = node.transform;
           part.transform.localPosition = Vector3.zero;
           part.transform.localRotation = Quaternion.identity;
         }
@@ -46,8 +46,8 @@ public class PartSpawnEditor : Editor {
     }
     else {
       if (GUILayout.Button("Destroy")) {
-        for (int i = 0; i < spawn.transform.childCount; i ++) {
-          DestroyImmediate(spawn.transform.GetChild(i).gameObject);
+        for (int i = 0; i < node.transform.childCount; i ++) {
+          DestroyImmediate(node.transform.GetChild(i).gameObject);
         }
       }
     }

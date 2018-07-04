@@ -6,7 +6,9 @@ public class InteractionManager : SingletonBehaviour<InteractionManager> {
   public float interactionRange = 5f;
 
   public KeyCode backpackKey = KeyCode.Tab;
-  public KeyCode interactionKey = KeyCode.F;
+
+  public KeyCode interactKey = KeyCode.F;
+  public KeyCode carryKey = KeyCode.Mouse0;
 
   public LayerMask interactableMask;
   public Material selectionGlowEffect;
@@ -62,8 +64,8 @@ public class InteractionManager : SingletonBehaviour<InteractionManager> {
         // dont let the cursor show, or let the player interact while driving
         targetHit = new RaycastHit();
         // let them leave the seat theyre in still
-        if (Input.GetKeyDown(interactionKey)) {
-          player.chr.Interact(null);
+        if (Input.GetKeyDown(interactKey)) {
+          player.chr.Interact(null, InteractionMode.Interact);
         }
       }
       else {
@@ -92,8 +94,11 @@ public class InteractionManager : SingletonBehaviour<InteractionManager> {
         if (target != null) {
           target.DrawHighlight(selectionGlowEffect);
         }
-        if (Input.GetKeyDown(interactionKey)) {
-          player.chr.Interact(target);
+        if (Input.GetKeyDown(interactKey)) {
+          player.chr.Interact(target, InteractionMode.Interact);
+        }
+        else if (Input.GetKeyDown(carryKey)) {
+          player.chr.Interact(target, InteractionMode.Carry);
         }
         if (otherExaminationRig.target != null) {
           Vector3 targetPosition = otherExaminationRig.target.examineCenter.position;

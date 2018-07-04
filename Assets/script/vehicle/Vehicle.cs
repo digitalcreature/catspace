@@ -3,7 +3,7 @@ using UnityEngine.Networking;
 
 public class Vehicle : KittyNetworkBehaviour {
 
-  public PartSpawn driversSeatSpawn;
+  public PartNode driversSeatSpawn;
 
   public GBody gbody { get; private set; }
 

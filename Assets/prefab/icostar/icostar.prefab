@@ -40,8 +40,8 @@ GameObject:
   - component: {fileID: 54018506041208158}
   - component: {fileID: 114384708910043800}
   - component: {fileID: 114260194639413934}
+  - component: {fileID: 114618819661201570}
   - component: {fileID: 114164200506479594}
-  - component: {fileID: 114033465853904308}
   - component: {fileID: 114848381199265810}
   - component: {fileID: 114213942899282778}
   m_Layer: 0
@@ -288,20 +288,6 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &114033465853904308
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1478529998920612}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d570e706f9bedc84ba52d288801dc668, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isInteractable: 1
-  glowMeshFilters:
-  - {fileID: 33397789242209986}
 --- !u!114 &114164200506479594
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -381,6 +367,20 @@ MonoBehaviour:
     i15: 177
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
+--- !u!114 &114618819661201570
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1478529998920612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0374651d1f589e74baa7832eb0256fc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isInteractable: 1
+  glowMeshFilters:
+  - {fileID: 33397789242209986}
 --- !u!114 &114848381199265810
 MonoBehaviour:
   m_ObjectHideFlags: 1

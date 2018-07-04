@@ -31,15 +31,15 @@ public class ExaminationCameraRig : MonoBehaviour {
         cam.enabled = false;
         if (target != null) {
           target.ResetRenderLayer();
-          target.targeter = null;
+          target.observingRig = null;
           target = null;
         }
       }
     }
     else {
       if (target != null) {
-        if (target.targeter == null) {
-          target.targeter = this;
+        if (target.observingRig == null) {
+          target.observingRig = this;
           target.SetRenderLayer(examinationLayer);
         }
         cam.enabled = true;
@@ -75,7 +75,7 @@ public class ExaminationCameraRig : MonoBehaviour {
         else {
           zoomTween.speed = 0;
           zoomTween.t = 1;
-          this.target.targeter = null;
+          this.target.observingRig = null;
           this.target.ResetRenderLayer();
         }
         this.target = target;

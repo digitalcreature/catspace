@@ -680,7 +680,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactionRange: 5
   backpackKey: 9
-  interactionKey: 102
+  interactKey: 102
   interactableMask:
     serializedVersion: 2
     m_Bits: 257

@@ -12,12 +12,17 @@ public class Player : KittyNetworkBehaviour {
 
   public static Player localPlayer { get; private set; }
 
-  public Examinable backpack;
+  public PartNode backpackNode;
+  public Examinable backpack { get; private set; }
 
   protected override void Awake() {
     base.Awake();
     chr = GetComponent<GCharacter>();
     focus = GetComponent<CameraRigFocusable>();
+    if (backpackNode != null) {
+      backpackNode.EventOnChildSpawnedLocal +=
+        (part) => backpack = part.GetComponent<Examinable>();
+    }
   }
 
   public override void OnStartLocalPlayer() {

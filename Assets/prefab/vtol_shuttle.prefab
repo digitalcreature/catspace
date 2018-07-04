@@ -777,8 +777,6 @@ GameObject:
   - component: {fileID: 54056854300571380}
   - component: {fileID: 114982952013389064}
   - component: {fileID: 114534797416874122}
-  - component: {fileID: 114198249476122704}
-  - component: {fileID: 114879661676701748}
   m_Layer: 0
   m_Name: vtol_shuttle
   m_TagString: Untagged
@@ -3280,18 +3278,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &114198249476122704
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1648212071545866}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d570e706f9bedc84ba52d288801dc668, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isInteractable: 0
 --- !u!114 &114306304939668298
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3374,10 +3360,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1176690924081132}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be53cf82daa1b634b912f4db0d96646f, type: 3}
+  m_Script: {fileID: 11500000, guid: d700e20e1869c2943b44c0a2829375d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  partPrefab: {fileID: 114735214743514470, guid: 0124896ba929cda419899f9d3be97cf0,
+  spawnPart: {fileID: 114075887798577180, guid: 0124896ba929cda419899f9d3be97cf0,
     type: 2}
 --- !u!114 &114534797416874122
 MonoBehaviour:
@@ -3496,10 +3482,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1097858995224666}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be53cf82daa1b634b912f4db0d96646f, type: 3}
+  m_Script: {fileID: 11500000, guid: d700e20e1869c2943b44c0a2829375d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  partPrefab: {fileID: 114735214743514470, guid: 8012c956fdfe08c4e976d8e3d98bb987,
+  spawnPart: {fileID: 114307273786198700, guid: 8012c956fdfe08c4e976d8e3d98bb987,
     type: 2}
 --- !u!114 &114656518820976558
 MonoBehaviour:
@@ -3657,10 +3643,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1314972484133766}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be53cf82daa1b634b912f4db0d96646f, type: 3}
+  m_Script: {fileID: 11500000, guid: d700e20e1869c2943b44c0a2829375d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  partPrefab: {fileID: 114735214743514470, guid: 0124896ba929cda419899f9d3be97cf0,
+  spawnPart: {fileID: 114075887798577180, guid: 0124896ba929cda419899f9d3be97cf0,
     type: 2}
 --- !u!114 &114784451421162382
 MonoBehaviour:
@@ -3744,32 +3730,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1648212071545866}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73692e979f2a73d4d8063c67cfce56b5, type: 3}
+  m_Script: {fileID: 11500000, guid: d02ee679a37b4f548a3ff10818c79352, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114879661676701748
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1648212071545866}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0a05b229c94c0446a4a4099319946ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  defaultLayer: 0
-  renderers:
-  - {fileID: 23141983107774890}
-  - {fileID: 23992290142091568}
-  - {fileID: 23438871787344360}
-  - {fileID: 23096830539235228}
-  - {fileID: 23355880500895822}
-  - {fileID: 23473125555969880}
-  - {fileID: 23213900597810158}
-  examineCenter: {fileID: 4149220496583514}
-  boundingRadius: 6.5
-  lockCameraRotation: 0
 --- !u!114 &114942657469126858
 MonoBehaviour:
   m_ObjectHideFlags: 1
