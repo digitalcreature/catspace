@@ -1,0 +1,249 @@
+fileFormatVersion: 2
+guid: eb14a468efb997f4aac10fc2144fc48d
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: Antenna
+    100002: Antenna Shiny Bits
+    100004: Back Wheels
+    100006: Cable 1
+    100008: Cable 5
+    100010: Cable2
+    100012: Cable3
+    100014: Cable4
+    100016: //RootNode
+    100018: Chair Left
+    100020: Chair Left Shiny
+    100022: Chair Right
+    100024: Chair Right Shiny
+    100026: Chasis
+    100028: DataPlugs
+    100030: Filler Shiny
+    100032: Front Filler
+    100034: Front Wheels
+    100036: IBM Terminal
+    100038: InPlugs
+    100040: JoyStick
+    100042: NurbsPath.001
+    100044: NurbsPath.002
+    100046: NurbsPath.003
+    100048: NurbsPath.004
+    100050: OutPlugs
+    100052: Radar Dish
+    100054: Screen
+    100056: Steering Assembly
+    100058: Steering Shiny
+    100060: Trunk
+    100062: Wheel Hubs
+    100064: Wheel Hubs Back
+    400000: Antenna
+    400002: Antenna Shiny Bits
+    400004: Back Wheels
+    400006: Cable 1
+    400008: Cable 5
+    400010: Cable2
+    400012: Cable3
+    400014: Cable4
+    400016: //RootNode
+    400018: Chair Left
+    400020: Chair Left Shiny
+    400022: Chair Right
+    400024: Chair Right Shiny
+    400026: Chasis
+    400028: DataPlugs
+    400030: Filler Shiny
+    400032: Front Filler
+    400034: Front Wheels
+    400036: IBM Terminal
+    400038: InPlugs
+    400040: JoyStick
+    400042: NurbsPath.001
+    400044: NurbsPath.002
+    400046: NurbsPath.003
+    400048: NurbsPath.004
+    400050: OutPlugs
+    400052: Radar Dish
+    400054: Screen
+    400056: Steering Assembly
+    400058: Steering Shiny
+    400060: Trunk
+    400062: Wheel Hubs
+    400064: Wheel Hubs Back
+    2300000: Antenna
+    2300002: Antenna Shiny Bits
+    2300004: Back Wheels
+    2300006: Cable 1
+    2300008: Cable 5
+    2300010: Cable2
+    2300012: Cable3
+    2300014: Cable4
+    2300016: Chair Left
+    2300018: Chair Left Shiny
+    2300020: Chair Right
+    2300022: Chair Right Shiny
+    2300024: Chasis
+    2300026: DataPlugs
+    2300028: Filler Shiny
+    2300030: Front Filler
+    2300032: Front Wheels
+    2300034: IBM Terminal
+    2300036: InPlugs
+    2300038: JoyStick
+    2300040: NurbsPath.001
+    2300042: NurbsPath.002
+    2300044: NurbsPath.003
+    2300046: NurbsPath.004
+    2300048: OutPlugs
+    2300050: Radar Dish
+    2300052: Screen
+    2300054: Steering Assembly
+    2300056: Steering Shiny
+    2300058: Trunk
+    2300060: Wheel Hubs
+    2300062: Wheel Hubs Back
+    3300000: Antenna
+    3300002: Antenna Shiny Bits
+    3300004: Back Wheels
+    3300006: Cable 1
+    3300008: Cable 5
+    3300010: Cable2
+    3300012: Cable3
+    3300014: Cable4
+    3300016: Chair Left
+    3300018: Chair Left Shiny
+    3300020: Chair Right
+    3300022: Chair Right Shiny
+    3300024: Chasis
+    3300026: DataPlugs
+    3300028: Filler Shiny
+    3300030: Front Filler
+    3300032: Front Wheels
+    3300034: IBM Terminal
+    3300036: InPlugs
+    3300038: JoyStick
+    3300040: NurbsPath.001
+    3300042: NurbsPath.002
+    3300044: NurbsPath.003
+    3300046: NurbsPath.004
+    3300048: OutPlugs
+    3300050: Radar Dish
+    3300052: Screen
+    3300054: Steering Assembly
+    3300056: Steering Shiny
+    3300058: Trunk
+    3300060: Wheel Hubs
+    3300062: Wheel Hubs Back
+    4300000: Chair Right
+    4300002: Chair Right Shiny
+    4300004: InPlugs
+    4300006: OutPlugs
+    4300008: DataPlugs
+    4300010: Radar Dish
+    4300012: Screen
+    4300014: Cable4
+    4300016: NurbsPath.003
+    4300018: Cable3
+    4300020: NurbsPath.002
+    4300022: Cable2
+    4300024: NurbsPath.001
+    4300026: Cable 5
+    4300028: NurbsPath.004
+    4300030: Cable 1
+    4300032: Back Wheels
+    4300034: Wheel Hubs Back
+    4300036: Front Wheels
+    4300038: Wheel Hubs
+    4300040: Steering Assembly
+    4300042: Steering Shiny
+    4300044: IBM Terminal
+    4300046: JoyStick
+    4300048: Front Filler
+    4300050: Filler Shiny
+    4300052: Antenna
+    4300054: Antenna Shiny Bits
+    4300056: Trunk
+    4300058: Chasis
+    4300060: Chair Left
+    4300062: Chair Left Shiny
+    2186277476908879412: ImportLogs
+  externalObjects: {}
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
