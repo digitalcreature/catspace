@@ -1844,7 +1844,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c775f48f19acbd94786aba333c472a4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backpackNode: {fileID: 114300346015752978}
+  backpackNode: {fileID: 0}
 --- !u!114 &114516318025019986
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1925,7 +1925,7 @@ MonoBehaviour:
   prefab5: {fileID: 0}
   prefab6: {fileID: 0}
   prefab7: {fileID: 0}
-  prefab8: {fileID: 0}
+  prefab8: {fileID: 114135207701404552, guid: 82ccbf4b7d2e10646838a92f4f277fc5, type: 2}
   prefab9: {fileID: 114092903369050426, guid: ac3e838e0d47ff541960b8e47b782f22, type: 2}
   prefab0: {fileID: 114534797416874122, guid: 643f72c5a380acf499e9610ad546a0c0, type: 2}
   spawnHeight: 1
