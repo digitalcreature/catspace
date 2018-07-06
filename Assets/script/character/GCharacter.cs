@@ -3,28 +3,31 @@ using UnityEngine.Networking;
 
 public partial class GCharacter : GBody {
 
-  public LayerMask groundMask;
-
-  public float surfaceHeight = 0f;
   public bool alignToGravity = true;
-  public Transform hullTransform;           // the root of the hull transform; used when a character gets parented to another object
+  public Transform hullTransform;                   // the root of the hull transform; used when a character gets parented to another object
+  public float facingDirectionSmoothTime = 0.15f;   // how long should the character take to rotate towards its facing direction?
+
 
   [Header("Ground Checking")]
+  public LayerMask groundMask;
   public Vector3 groundCheckStartPosition;  // local space ground check start position
   public float groundCheckRadius = 0.5f;
   public float groundCheckDistance = 2f;
 
-  public bool isGrounded { get; set; }                // is the character grounded?
-  public Vector3 groundNormal { get; private set; }   // world space normal of ground
+  [HideInInspector] public bool isGrounded;             // is the character grounded?
+  public Vector3 groundNormal { get; private set; }     // world space normal of ground
 
+  [HideInInspector] public Vector3 facingDirection;           // the direction the character is facing
+  public Vector3 facingDirectionSmooth { get; private set; }  // the direction the character is facing, but smoothed
 
   [Range(0f, 90f)] public float maxSlopeAngle = 60f;  // the max slope that can be traversed
+
+  Vector3 facingDirectionSmoothVelocity;
 
   protected override void FixedUpdate() {
     if (isLocalPlayer && gfield != null) {
       if (!isSitting) {
         if (isGrounded) {
-          // position.origin -= gravity * surfaceHeight;
           Ray position;
           Vector3 gravity;
           gravity = this.gravity;
@@ -64,9 +67,7 @@ public partial class GCharacter : GBody {
             AddGravity();
           }
         }
-        if (alignToGravity) {
-          gfield.AlignTransformToGravity(transform);
-        }
+        UpdateFacingDirection();
         body.rotation = transform.rotation;
         Ray ground;
         if (SphereCastGround(transform.TransformPoint(groundCheckStartPosition), out ground)) {
@@ -74,6 +75,27 @@ public partial class GCharacter : GBody {
         }
       }
     }
+  }
+
+  // update the facing direction of the character
+  public void UpdateFacingDirection() {
+    facingDirection = facingDirection.normalized;
+    Vector3 dir = Vector3.SmoothDamp(
+      facingDirectionSmooth, facingDirection,
+      ref facingDirectionSmoothVelocity, facingDirectionSmoothTime
+    );
+    if (gfield != null && alignToGravity) {
+      Vector3 forward = gfield.AlignRayToGravity(new Ray(transform.position, dir)).direction;
+      if (forward != Vector3.zero) {
+        transform.forward = forward;
+      }
+      gfield.AlignTransformToGravity(transform);
+    }
+    else {
+      // if we are in zero-g, just face wherever, man
+      transform.rotation = Quaternion.LookRotation(dir, transform.up);
+    }
+    facingDirectionSmooth = dir;
   }
 
   float GetSlopeAngle(Vector3 groundNormal, Vector3 gravity) {
@@ -128,12 +150,16 @@ public partial class GCharacter : GBody {
   protected override void OnSync(NetworkSync sync) {
     base.OnSync(sync);
     SyncSit(sync);
+    SyncCarry(sync);
   }
 
   // interact with an interactable object
   public void Interact(Interactable interactable, InteractionMode mode) {
     if (mode == InteractionMode.Interact && isSitting && (interactable == null || interactable == seat)) {
       LeaveSeat();
+    }
+    if (mode == InteractionMode.Carry && isCarrying && interactable == null) {
+      DropCarried();
     }
     else if (interactable != null) {
       if (isServer) {

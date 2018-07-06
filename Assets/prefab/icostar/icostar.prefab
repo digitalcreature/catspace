@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 114260194639413934}
   - component: {fileID: 114618819661201570}
   - component: {fileID: 114164200506479594}
+  - component: {fileID: 114688893254599462}
   - component: {fileID: 114848381199265810}
   - component: {fileID: 114213942899282778}
   m_Layer: 0
@@ -381,6 +382,17 @@ MonoBehaviour:
   isInteractable: 1
   glowMeshFilters:
   - {fileID: 33397789242209986}
+--- !u!114 &114688893254599462
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1478529998920612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a4874fa123044f4db8f521cea6313be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114848381199265810
 MonoBehaviour:
   m_ObjectHideFlags: 1

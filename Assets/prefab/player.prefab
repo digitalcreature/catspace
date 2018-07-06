@@ -192,12 +192,12 @@ GameObject:
   - component: {fileID: 114546416098252714}
   - component: {fileID: 54133797803356966}
   - component: {fileID: 114566646264115336}
+  - component: {fileID: 114992872489552846}
   - component: {fileID: 95990772253233462}
   - component: {fileID: 114894354901835276}
   - component: {fileID: 114609587813954906}
   - component: {fileID: 114217934965784390}
   - component: {fileID: 114236999233246330}
-  - component: {fileID: 114431548848775960}
   - component: {fileID: 114717007297429528}
   - component: {fileID: 114747777925909738}
   m_Layer: 0
@@ -718,6 +718,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1720888840283294
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4184571209272838}
+  m_Layer: 0
+  m_Name: carry anchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1727875220208690
 GameObject:
   m_ObjectHideFlags: 1
@@ -1023,6 +1038,19 @@ Transform:
   - {fileID: 4911054726637888}
   m_Father: {fileID: 4829425822565542}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4184571209272838
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1720888840283294}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.669, z: 0.555}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4921046171813640}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4197894592960498
 Transform:
@@ -1609,6 +1637,7 @@ Transform:
   - {fileID: 4649811758847574}
   - {fileID: 4471258229800150}
   - {fileID: 4896509945180928}
+  - {fileID: 4184571209272838}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1804,17 +1833,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPart: {fileID: 114064011261068932, guid: be69c3b5d4384e34c8c34a6490a7306c,
     type: 2}
---- !u!114 &114431548848775960
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1193754530521302}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8abc00db795b2d4fb966315d1431998, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114501836894621390
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1839,16 +1857,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadRadius: 3
+  alignToGravity: 1
+  hullTransform: {fileID: 4649811758847574}
+  facingDirectionSmoothTime: 0.15
   groundMask:
     serializedVersion: 2
     m_Bits: 257
-  surfaceHeight: 0
-  alignToGravity: 1
-  hullTransform: {fileID: 4649811758847574}
   groundCheckStartPosition: {x: 0, y: 0.7, z: 0}
   groundCheckRadius: 0.45
   groundCheckDistance: 0.8
+  isGrounded: 0
+  facingDirection: {x: 0, y: 0, z: 0}
   maxSlopeAngle: 50
+  carryAnchor: {fileID: 4184571209272838}
+  carryJointSpringForce: 100
+  carryJointSpringDamp: 5
+  carryJointAngleLimit: 0
+  carryJointLinearLimit: 0
+  carryJointProjectionDistance: 0.1
 --- !u!114 &114546416098252714
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1961,9 +1987,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc2e521f54d1b1f4492721edc22b1a60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  faceVelocity: 1
   baseWalkSpeed: 10
   velocitySmoothTime: 0.25
+  verticalLookDeadzone: 0.01
   airControlFactor: 0.5
   jumpSpeed: 8
   jumpBoostDuration: 1.5
@@ -1999,6 +2025,18 @@ MonoBehaviour:
     i15: 235
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
+--- !u!114 &114992872489552846
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1193754530521302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 122f4e73330753d48a3d04be08b53918, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkVelocityScale: 0.1
 --- !u!136 &136099994202899746
 CapsuleCollider:
   m_ObjectHideFlags: 1

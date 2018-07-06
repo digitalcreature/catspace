@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 114602940876973118}
   - component: {fileID: 114106634524469246}
   - component: {fileID: 114542391896427162}
+  - component: {fileID: 114939120278189928}
   m_Layer: 0
   m_Name: small crate
   m_TagString: Untagged
@@ -263,3 +264,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadRadius: 1
+--- !u!114 &114939120278189928
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1795650458808972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a4874fa123044f4db8f521cea6313be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

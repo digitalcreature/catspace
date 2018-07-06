@@ -12,7 +12,7 @@ partial class GCharacter : GBody {
   void SyncSit(NetworkSync sync) {
     Seat seat = this.seat;
     sync.SyncBehaviour(ref seat);
-    if (sync.isReading) {
+    if (sync.isReading && seat != this.seat) {
       SitLocal(seat);
     }
   }

@@ -27,6 +27,7 @@ GameObject:
   - component: {fileID: 114516081505155936}
   - component: {fileID: 114140531727948952}
   - component: {fileID: 114148712669397616}
+  - component: {fileID: 114548873010431256}
   m_Layer: 0
   m_Name: large crate
   m_TagString: Untagged
@@ -251,6 +252,17 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 1276d95a5b507184f8de95118d9c13df, type: 2}
   - {fileID: 2100000, guid: 6d9c36d7e8200984293c07256db1fbb4, type: 2}
   - {fileID: 2100000, guid: 50a9a9f30cd8e024e8f04a313a168ee3, type: 2}
+--- !u!114 &114548873010431256
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1332923994179236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a4874fa123044f4db8f521cea6313be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114959350587681998
 MonoBehaviour:
   m_ObjectHideFlags: 1
