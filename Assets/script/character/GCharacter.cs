@@ -3,9 +3,8 @@ using UnityEngine.Networking;
 
 public partial class GCharacter : GBody {
 
-  public bool alignToGravity = true;
-  public Transform hullTransform;                   // the root of the hull transform; used when a character gets parented to another object
-  public float facingDirectionSmoothTime = 0.15f;   // how long should the character take to rotate towards its facing direction?
+  public Transform hullTransform;             // the root of the hull transform; used when a character gets parented to another object
+  public float turnSpeed = 15f;             // speed of character rotation in degrees/s
 
 
   [Header("Ground Checking")]
@@ -23,6 +22,12 @@ public partial class GCharacter : GBody {
   [Range(0f, 90f)] public float maxSlopeAngle = 60f;  // the max slope that can be traversed
 
   Vector3 facingDirectionSmoothVelocity;
+
+  protected override void Awake() {
+    base.Awake();
+    facingDirection = transform.forward;
+    facingDirectionSmooth = transform.forward;
+  }
 
   protected override void FixedUpdate() {
     if (isLocalPlayer && gfield != null) {
@@ -48,7 +53,7 @@ public partial class GCharacter : GBody {
             velocity = velocity.normalized * speed;
             body.velocity = velocity;
           }
-          transform.position = position.origin;
+          body.MovePosition(position.origin);
         }
         else {
           Vector3 next = body.position + body.velocity * Time.fixedDeltaTime;
@@ -68,7 +73,7 @@ public partial class GCharacter : GBody {
           }
         }
         UpdateFacingDirection();
-        body.rotation = transform.rotation;
+        // body.rotation = transform.rotation;
         Ray ground;
         if (SphereCastGround(transform.TransformPoint(groundCheckStartPosition), out ground)) {
           groundNormal = ground.direction;
@@ -80,20 +85,22 @@ public partial class GCharacter : GBody {
   // update the facing direction of the character
   public void UpdateFacingDirection() {
     facingDirection = facingDirection.normalized;
-    Vector3 dir = Vector3.SmoothDamp(
-      facingDirectionSmooth, facingDirection,
-      ref facingDirectionSmoothVelocity, facingDirectionSmoothTime
-    );
-    if (gfield != null && alignToGravity) {
+    Vector3 dir = Vector3.RotateTowards(
+      facingDirectionSmooth, facingDirection, Time.fixedDeltaTime * turnSpeed * Mathf.Deg2Rad, 0
+    ).normalized;
+    if (gfield != null) {
+      Vector3 gravity = gfield.WorldPointToGravity(transform.position);
       Vector3 forward = gfield.AlignRayToGravity(new Ray(transform.position, dir)).direction;
+      Debug.DrawRay(transform.position, dir, Color.red);
+      Debug.DrawRay(transform.position, facingDirection, Color.green);
+      Debug.DrawRay(transform.position, facingDirectionSmooth, Color.blue);
       if (forward != Vector3.zero) {
-        transform.forward = forward;
+        body.MoveRotation(Quaternion.LookRotation(forward, -gravity));
       }
-      gfield.AlignTransformToGravity(transform);
     }
     else {
       // if we are in zero-g, just face wherever, man
-      transform.rotation = Quaternion.LookRotation(dir, transform.up);
+      body.MoveRotation(Quaternion.LookRotation(dir, transform.up));
     }
     facingDirectionSmooth = dir;
   }
