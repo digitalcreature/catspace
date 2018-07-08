@@ -273,7 +273,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isInteractable: 1
   glowMeshFilters:
-  - {fileID: 3300020, guid: eb14a468efb997f4aac10fc2144fc48d, type: 3}
+  - {fileID: 33206892670604090}
 --- !u!114 &114294185325260372
 MonoBehaviour:
   m_ObjectHideFlags: 1

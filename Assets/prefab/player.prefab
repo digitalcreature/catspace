@@ -194,9 +194,9 @@ GameObject:
   - component: {fileID: 114566646264115336}
   - component: {fileID: 114992872489552846}
   - component: {fileID: 95990772253233462}
+  - component: {fileID: 114217934965784390}
   - component: {fileID: 114894354901835276}
   - component: {fileID: 114609587813954906}
-  - component: {fileID: 114217934965784390}
   - component: {fileID: 114236999233246330}
   - component: {fileID: 114717007297429528}
   - component: {fileID: 114747777925909738}
@@ -1798,7 +1798,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Animator: {fileID: 95990772253233462}
-  m_ParameterSendBits: 56
+  m_ParameterSendBits: 63
   param0: 
   param1: 
   param2: 
@@ -1844,7 +1844,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c775f48f19acbd94786aba333c472a4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backpackNode: {fileID: 0}
+  backpackNode: {fileID: 114300346015752978}
 --- !u!114 &114516318025019986
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1987,7 +1987,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseWalkSpeed: 10
-  velocitySmoothTime: 0.25
+  velocitySmoothTime: 0.15
   verticalLookDeadzone: 0.01
   airControlFactor: 0.5
   jumpSpeed: 8
