@@ -196,7 +196,6 @@ GameObject:
   - component: {fileID: 95990772253233462}
   - component: {fileID: 114217934965784390}
   - component: {fileID: 114894354901835276}
-  - component: {fileID: 114609587813954906}
   - component: {fileID: 114236999233246330}
   - component: {fileID: 114717007297429528}
   - component: {fileID: 114747777925909738}
@@ -1857,8 +1856,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadRadius: 3
+  syncRate: 15
   hullTransform: {fileID: 4649811758847574}
-  turnSpeed: 180
+  turnSpeed: 360
   groundMask:
     serializedVersion: 2
     m_Bits: 257
@@ -1929,27 +1929,6 @@ MonoBehaviour:
   prefab9: {fileID: 114092903369050426, guid: ac3e838e0d47ff541960b8e47b782f22, type: 2}
   prefab0: {fileID: 114534797416874122, guid: 643f72c5a380acf499e9610ad546a0c0, type: 2}
   spawnHeight: 1
---- !u!114 &114609587813954906
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1193754530521302}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TransformSyncMode: 3
-  m_SendInterval: 0.04761905
-  m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 0
-  m_SyncSpin: 0
-  m_MovementTheshold: 0.001
-  m_VelocityThreshold: 0.0001
-  m_SnapThreshold: 5
-  m_InterpolateRotation: 10
-  m_InterpolateMovement: 1
 --- !u!114 &114717007297429528
 MonoBehaviour:
   m_ObjectHideFlags: 1

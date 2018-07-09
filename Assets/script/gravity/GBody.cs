@@ -3,7 +3,7 @@ using UnityEngine.Networking;
 using System.Collections.Generic;
 
 // a rigidbody that experiences the physics of a gravitational field
-public class GBody : KittyNetworkBehaviour {
+public partial class GBody : KittyNetworkBehaviour {
 
   // the radius used when checking if a body should be loaded/unloaded
   // this should contain every collider in the body
@@ -19,12 +19,11 @@ public class GBody : KittyNetworkBehaviour {
   public Vector3 gravity =>
     gfield == null ? Vector3.zero : gfield.WorldPointToGravity(transform.position);
 
-  public NetworkTransform netTransform { get; private set; }
 
   protected override void Awake() {
     base.Awake();
     body = GetComponent<Rigidbody>();
-    netTransform = GetComponent<NetworkTransform>();
+    AwakePositionSync();
   }
 
   public override void OnStartAuthority() {
@@ -35,6 +34,10 @@ public class GBody : KittyNetworkBehaviour {
     if (hasAuthority) {
       AddGravity();
     }
+  }
+
+  protected virtual void Update() {
+    UpdatePositionSync();
   }
 
   protected void AddGravity() {

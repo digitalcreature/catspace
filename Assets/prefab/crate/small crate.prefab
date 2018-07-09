@@ -40,7 +40,6 @@ GameObject:
   - component: {fileID: 114276753588598438}
   - component: {fileID: 114607560305259286}
   - component: {fileID: 54807705645378008}
-  - component: {fileID: 114121375692662804}
   - component: {fileID: 114602940876973118}
   - component: {fileID: 114106634524469246}
   - component: {fileID: 114542391896427162}
@@ -162,27 +161,6 @@ MonoBehaviour:
   isInteractable: 1
   glowMeshFilters:
   - {fileID: 33590444671520948}
---- !u!114 &114121375692662804
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1795650458808972}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TransformSyncMode: 3
-  m_SendInterval: 0.083333336
-  m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 1
-  m_SyncSpin: 1
-  m_MovementTheshold: 0.001
-  m_VelocityThreshold: 0.0001
-  m_SnapThreshold: 5
-  m_InterpolateRotation: 10
-  m_InterpolateMovement: 1
 --- !u!114 &114276753588598438
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -264,6 +242,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadRadius: 1
+  syncRate: 10
 --- !u!114 &114939120278189928
 MonoBehaviour:
   m_ObjectHideFlags: 1

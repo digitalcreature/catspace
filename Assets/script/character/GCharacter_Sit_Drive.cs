@@ -51,9 +51,6 @@ partial class GCharacter : GBody {
           // entering seat from standing
           oldParent = transform.parent;
         }
-        if (!hasAuthority) {
-          netTransform.enabled = false;
-        }
         transform.parent = seat.anchor;
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
@@ -63,9 +60,6 @@ partial class GCharacter : GBody {
       }
       else {
         // leaving seat
-        if (!hasAuthority) {
-          netTransform.enabled = true;
-        }
         transform.parent = oldParent;
         transform.position = oldSeat.exit.position;
         // transform.rotation = oldSeat.exit.rotation;

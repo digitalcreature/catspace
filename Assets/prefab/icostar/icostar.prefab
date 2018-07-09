@@ -43,7 +43,6 @@ GameObject:
   - component: {fileID: 114618819661201570}
   - component: {fileID: 114164200506479594}
   - component: {fileID: 114688893254599462}
-  - component: {fileID: 114848381199265810}
   - component: {fileID: 114213942899282778}
   m_Layer: 0
   m_Name: icostar
@@ -336,6 +335,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadRadius: 0.5
+  syncRate: 10
 --- !u!114 &114384708910043800
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -393,24 +393,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a4874fa123044f4db8f521cea6313be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114848381199265810
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1478529998920612}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TransformSyncMode: 3
-  m_SendInterval: 0.1
-  m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 0
-  m_SyncSpin: 0
-  m_MovementTheshold: 0.001
-  m_VelocityThreshold: 0.0001
-  m_SnapThreshold: 5
-  m_InterpolateRotation: 10
-  m_InterpolateMovement: 1
