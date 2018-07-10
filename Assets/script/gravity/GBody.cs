@@ -78,6 +78,7 @@ public partial class GBody : KittyNetworkBehaviour {
     if (sync.isReading) {
       SetGFieldLocal(gfield);
     }
+    SyncPositionSync(sync);
   }
 
   public void Load() {

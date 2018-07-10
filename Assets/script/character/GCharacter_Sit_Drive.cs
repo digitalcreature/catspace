@@ -55,6 +55,7 @@ partial class GCharacter : GBody {
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
         body.isKinematic = true;
+        positionSyncEnabled = false;
         hullTransform.gameObject.SetActive(false);
         newSeat.OnSitLocal(this);
       }
@@ -64,6 +65,7 @@ partial class GCharacter : GBody {
         transform.position = oldSeat.exit.position;
         // transform.rotation = oldSeat.exit.rotation;
         body.isKinematic = false;
+        positionSyncEnabled = true;
         hullTransform.gameObject.SetActive(true);
       }
     }

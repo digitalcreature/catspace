@@ -4,6 +4,7 @@ using UnityEngine.Networking;
 partial class GBody : KittyNetworkBehaviour {
 
   [Header("Position Sync")]
+  public bool positionSyncEnabled = true;
   public float syncRate = 10;           //  updates per second
 
   float lastSyncTime;
@@ -16,15 +17,24 @@ partial class GBody : KittyNetworkBehaviour {
   }
 
   void UpdatePositionSync() {
-    if (hasAuthority) {
-      while (Time.time - lastSyncTime > (1 / syncRate)) {
-        lastSyncTime = Time.time;
-        SyncPosition(PositionSync.Read(this));
+    if (positionSyncEnabled) {
+      if (hasAuthority) {
+        while (Time.time - lastSyncTime > (1 / syncRate)) {
+          lastSyncTime = Time.time;
+          SyncPosition(PositionSync.Read(this));
+        }
+      }
+      else {
+        PositionSync.Lerp(lastPSync, nextPSync, (Time.time - lastSyncTime) * syncRate).Write(this);
       }
     }
-    else {
-      PositionSync.Lerp(lastPSync, nextPSync, (Time.time - lastSyncTime) * syncRate).Write(this);
-    }
+  }
+
+  void SyncPositionSync(NetworkSync sync) {
+    sync.Sync(ref positionSyncEnabled);
+    bool isKinematic = body.isKinematic;
+    sync.Sync(ref isKinematic);
+    body.isKinematic = isKinematic;
   }
 
   void SyncPosition(PositionSync psync) {
@@ -57,18 +67,23 @@ partial class GBody : KittyNetworkBehaviour {
 
     public Vector3 position;
     public Quaternion rotation;
+    public Vector3 velocity;
+    public Vector3 angularVelocity;
 
     public static PositionSync Read(GBody gbody) {
       return new PositionSync() {
         position = gbody.body.position,
-        rotation = gbody.body.rotation
+        rotation = gbody.body.rotation,
+        velocity = gbody.body.velocity,
+        angularVelocity = gbody.body.angularVelocity
       };
     }
 
     public void Write(GBody gbody) {
-      gbody.body.isKinematic = true;
       gbody.body.MovePosition(position);
       gbody.body.MoveRotation(rotation);
+      gbody.body.velocity = velocity;
+      gbody.body.angularVelocity = angularVelocity;
     }
 
     public static PositionSync Lerp(PositionSync a, PositionSync b, float t) {
@@ -76,6 +91,8 @@ partial class GBody : KittyNetworkBehaviour {
       PositionSync c = a;
       c.position = Vector3.Lerp(a.position, b.position, t);
       c.rotation = Quaternion.Lerp(a.rotation, b.rotation, t);
+      c.velocity = Vector3.Lerp(a.velocity, b.velocity, t);
+      c.angularVelocity = Vector3.Lerp(a.angularVelocity, b.angularVelocity, t);
       return c;
     }
 
