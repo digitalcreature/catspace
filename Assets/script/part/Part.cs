@@ -10,8 +10,12 @@ public class Part : KittyNetworkBehaviour {
 
   public PartNode[] childNodes { get; private set; }
 
+  SyncRef<Part> parentRef;
+
+
   protected override void Awake() {
     base.Awake();
+    parentRef = new SyncRef<Part>(this, (parent) => AttachToParentLocal(parent, childId));
     childNodes = GetComponentsInChildren<PartNode>();
     for (int i = 0; i < childNodes.Length; i ++) {
       childNodes[i].Initialize(this, i);
@@ -67,18 +71,17 @@ public class Part : KittyNetworkBehaviour {
     }
   }
 
+  // temp
+  int childId;
+
   protected override void OnSync(NetworkSync sync) {
     if (sync.isWriting) {
-      sync.Write(parentNode == null ? null : parentNode.parent);
       sync.Write(parentNode == null ? -1 : parentNode.childId);
     }
     else {
-      Part parent = null;
-      int childId = 0;
-      sync.ReadBehaviour(ref parent);
       sync.Read(ref childId);
-      AttachToParentLocal(parent, childId);
     }
+    parentRef.Sync(sync, parent);
   }
 
 }

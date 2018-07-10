@@ -12,11 +12,11 @@ partial class GBody : KittyNetworkBehaviour {
   PositionSync lastPSync;
   PositionSync nextPSync;
 
-  void AwakePositionSync() {
+  void Awake_PositionSync() {
     lastPSync = nextPSync = PositionSync.Read(this);
   }
 
-  void UpdatePositionSync() {
+  void Update_PositionSync() {
     if (positionSyncEnabled) {
       if (hasAuthority) {
         while (Time.time - lastSyncTime > (1 / syncRate)) {
@@ -30,7 +30,7 @@ partial class GBody : KittyNetworkBehaviour {
     }
   }
 
-  void SyncPositionSync(NetworkSync sync) {
+  void OnSync_PositionSync(NetworkSync sync) {
     sync.Sync(ref positionSyncEnabled);
     bool isKinematic = body.isKinematic;
     sync.Sync(ref isKinematic);

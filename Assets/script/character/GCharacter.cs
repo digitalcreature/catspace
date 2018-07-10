@@ -27,6 +27,8 @@ public partial class GCharacter : GBody {
     base.Awake();
     facingDirection = transform.forward;
     facingDirectionSmooth = transform.forward;
+    Awake_Sit_Drive();
+    Awake_Carry();
   }
 
   protected override void FixedUpdate() {
@@ -156,8 +158,8 @@ public partial class GCharacter : GBody {
 
   protected override void OnSync(NetworkSync sync) {
     base.OnSync(sync);
-    SyncSit(sync);
-    SyncCarry(sync);
+    OnSync_Sit_Drive(sync);
+    OnSync_Carry(sync);
   }
 
   // interact with an interactable object

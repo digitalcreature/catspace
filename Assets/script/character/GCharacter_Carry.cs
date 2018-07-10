@@ -16,12 +16,14 @@ partial class GCharacter : GBody {
 
   public bool isCarrying => carried != null;
 
-  void SyncCarry(NetworkSync sync) {
-    Carryable carried = this.carried;
-    sync.SyncBehaviour(ref carried);
-    if (sync.isReading && carried != this.carried) {
-      CarryLocal(carried);
-    }
+  SyncRef<Carryable> carriedRef;
+
+  void Awake_Carry() {
+    carriedRef = new SyncRef<Carryable>(this, CarryLocal);
+  }
+
+  void OnSync_Carry(NetworkSync sync) {
+    carriedRef.Sync(sync, carried);
   }
 
   // make the character start carrying an object

@@ -9,12 +9,14 @@ partial class GCharacter : GBody {
   public bool isSitting => seat != null;              // is the character sitting?
   public bool isDriving => vehicle != null;           // is the character driving?
 
-  void SyncSit(NetworkSync sync) {
-    Seat seat = this.seat;
-    sync.SyncBehaviour(ref seat);
-    if (sync.isReading && seat != this.seat) {
-      SitLocal(seat);
-    }
+  SyncRef<Seat> seatRef;
+
+  void Awake_Sit_Drive() {
+    seatRef = new SyncRef<Seat>(this, SitLocal);
+  }
+
+  void OnSync_Sit_Drive(NetworkSync sync) {
+    seatRef.Sync(sync, seat);
   }
 
   // make the character sit

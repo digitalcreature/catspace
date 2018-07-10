@@ -21,10 +21,6 @@ public class NetworkSync {
     this.reader = reader;
   }
 
-  public NetworkSync SyncBehaviour<T>(ref T value) where T : KittyNetworkBehaviour {
-    if (isWriting) return Write(value);
-    else return ReadBehaviour(ref value); }
-
   public NetworkSync Sync<T>(ref T value) where T : struct, INetworkSyncable {
     value.OnSync(this);
     return this;
@@ -141,7 +137,6 @@ public class NetworkSync {
     else return Read(ref value); }
 
   // write
-  public NetworkSync Write(KittyNetworkBehaviour value) { writer.Write(value == null ? null : value.gameObject); return this; }
   public NetworkSync Write(char value) { writer.Write(value); return this; }
   public NetworkSync Write(byte value) { writer.Write(value); return this; }
   public NetworkSync Write(sbyte value) { writer.Write(value); return this; }
@@ -178,10 +173,6 @@ public class NetworkSync {
   public NetworkSync Write(KeyCode value) { writer.Write((int) value); return this; }
 
   // read
-  public NetworkSync ReadBehaviour<T>(ref T value) where T : KittyNetworkBehaviour {
-    GameObject obj = null; this.Read(ref obj);
-    value = obj == null ? null : obj.GetComponent<T>();
-    return this; }
   public NetworkSync Read(ref char value) { value = reader.ReadChar(); return this; }
   public NetworkSync Read(ref byte value) { value = reader.ReadByte(); return this; }
   public NetworkSync Read(ref sbyte value) { value = reader.ReadSByte(); return this; }
