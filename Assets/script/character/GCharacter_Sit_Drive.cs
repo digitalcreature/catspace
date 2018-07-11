@@ -56,9 +56,8 @@ partial class GCharacter : GBody {
         transform.parent = seat.anchor;
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
-        body.isKinematic = true;
+        hasPhysics = false;
         positionSyncEnabled = false;
-        hullTransform.gameObject.SetActive(false);
         newSeat.OnSitLocal(this);
       }
       else {
@@ -66,9 +65,8 @@ partial class GCharacter : GBody {
         transform.parent = oldParent;
         transform.position = oldSeat.exit.position;
         // transform.rotation = oldSeat.exit.rotation;
-        body.isKinematic = false;
+        hasPhysics = true;
         positionSyncEnabled = true;
-        hullTransform.gameObject.SetActive(true);
       }
     }
     if (newSeat == null || !newSeat.isDriversSeat) {

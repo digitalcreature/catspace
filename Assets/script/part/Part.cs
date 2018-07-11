@@ -12,7 +12,6 @@ public class Part : KittyNetworkBehaviour {
 
   SyncRef<Part> parentRef;
 
-
   protected override void Awake() {
     base.Awake();
     parentRef = new SyncRef<Part>(this, (parent) => AttachToParentLocal(parent, childId));
@@ -81,7 +80,7 @@ public class Part : KittyNetworkBehaviour {
     else {
       sync.Read(ref childId);
     }
-    parentRef.Sync(sync, parent);
+    parentRef.Sync(sync, parentNode == null ? null : parentNode.parent);
   }
 
 }

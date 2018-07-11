@@ -17,16 +17,15 @@ public partial class GBody : KittyNetworkBehaviour {
 
   public SyncRef<GField> gfieldRef;
 
-  public Rigidbody body { get; private set; }
   public Vector3 gravity =>
     gfield == null ? Vector3.zero : gfield.WorldPointToGravity(transform.position);
-
 
   protected override void Awake() {
     base.Awake();
     body = GetComponent<Rigidbody>();
     gfieldRef = new SyncRef<GField>(this, SetGFieldLocal);
     Awake_PositionSync();
+    hasPhysics = true;
   }
 
   public override void OnStartAuthority() {
@@ -78,6 +77,7 @@ public partial class GBody : KittyNetworkBehaviour {
   protected override void OnSync(NetworkSync sync) {
     gfieldRef.Sync(sync, gfield);
     OnSync_PositionSync(sync);
+    OnSync_Rigidbody(sync);
   }
 
   public void Load() {

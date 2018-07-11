@@ -73,16 +73,19 @@ public class ThrusterGroup : INetworkSyncable {
   Vector3 angularAcc;
 
   // return true if any values changed that need to be syncronized over the network
-  public bool ApplyThrust(Rigidbody body) {
-    body.AddForce(linearAcc, ForceMode.Acceleration);
-    body.AddTorque(angularAcc, ForceMode.Acceleration);
-    bool dirty = false;
-    foreach (var thruster in thrusters) {
-      dirty = thruster.SetTargetThrust(linearAcc, angularAcc) || dirty;
+  public bool ApplyThrust(GBody gbody) {
+    if (gbody.hasPhysics) {
+      gbody.body.AddForce(linearAcc, ForceMode.Acceleration);
+      gbody.body.AddTorque(angularAcc, ForceMode.Acceleration);
+      bool dirty = false;
+      foreach (var thruster in thrusters) {
+        dirty = thruster.SetTargetThrust(linearAcc, angularAcc) || dirty;
+      }
+      linearAcc = Vector3.zero;
+      angularAcc = Vector3.zero;
+      return dirty;
     }
-    linearAcc = Vector3.zero;
-    angularAcc = Vector3.zero;
-    return dirty;
+    return false;
   }
 
   public void AddLinearThrust(Vector3 acceleration) {

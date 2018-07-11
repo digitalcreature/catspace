@@ -238,7 +238,6 @@ GameObject:
   - component: {fileID: 4380384250240196}
   - component: {fileID: 114046016295948162}
   - component: {fileID: 114483765492920400}
-  - component: {fileID: 54701921852446954}
   - component: {fileID: 114135207701404552}
   m_Layer: 0
   m_Name: carproto
@@ -2673,21 +2672,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1334066311244782}
   m_Mesh: {fileID: 4300016, guid: eb14a468efb997f4aac10fc2144fc48d, type: 3}
---- !u!54 &54701921852446954
-Rigidbody:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1215211374899526}
-  serializedVersion: 2
-  m_Mass: 181
-  m_Drag: 1.5
-  m_AngularDrag: 2.5
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!65 &65163396588061656
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -2874,7 +2858,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadRadius: 7.59
+  positionSyncEnabled: 1
   syncRate: 20
+  mass: 181
+  drag: 0
+  angularDrag: 0
+  useGravity: 1
+  interpolation: 0
+  collisionDetection: 0
+  constraints: 0
 --- !u!114 &114378178675851218
 MonoBehaviour:
   m_ObjectHideFlags: 1

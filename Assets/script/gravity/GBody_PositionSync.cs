@@ -71,19 +71,35 @@ partial class GBody : KittyNetworkBehaviour {
     public Vector3 angularVelocity;
 
     public static PositionSync Read(GBody gbody) {
-      return new PositionSync() {
-        position = gbody.body.position,
-        rotation = gbody.body.rotation,
-        velocity = gbody.body.velocity,
-        angularVelocity = gbody.body.angularVelocity
-      };
+      if (gbody.hasPhysics) {
+        return new PositionSync() {
+          position = gbody.body.position,
+          rotation = gbody.body.rotation,
+          velocity = gbody.body.velocity,
+          angularVelocity = gbody.body.angularVelocity
+        };
+      }
+      else {
+        return new PositionSync() {
+          position = gbody.transform.position,
+          rotation = gbody.transform.rotation,
+          velocity = Vector3.zero,
+          angularVelocity = Vector3.zero
+        };
+      }
     }
 
     public void Write(GBody gbody) {
-      gbody.body.MovePosition(position);
-      gbody.body.MoveRotation(rotation);
-      gbody.body.velocity = velocity;
-      gbody.body.angularVelocity = angularVelocity;
+      if (gbody.hasPhysics) {
+        gbody.body.MovePosition(position);
+        gbody.body.MoveRotation(rotation);
+        gbody.body.velocity = velocity;
+        gbody.body.angularVelocity = angularVelocity;
+      }
+      else {
+        gbody.transform.position = position;
+        gbody.transform.rotation = rotation;
+      }
     }
 
     public static PositionSync Lerp(PositionSync a, PositionSync b, float t) {

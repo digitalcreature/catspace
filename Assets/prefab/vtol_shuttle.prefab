@@ -774,7 +774,6 @@ GameObject:
   - component: {fileID: 114335314856968004}
   - component: {fileID: 114858906645371688}
   - component: {fileID: 114579473320313470}
-  - component: {fileID: 54056854300571380}
   - component: {fileID: 114534797416874122}
   m_Layer: 0
   m_Name: vtol_shuttle
@@ -2583,21 +2582,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1955336211534166}
   m_Mesh: {fileID: 4300000, guid: 565906db4f73c804f8240c466a30c49b, type: 3}
---- !u!54 &54056854300571380
-Rigidbody:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1648212071545866}
-  serializedVersion: 2
-  m_Mass: 10000
-  m_Drag: 2.5
-  m_AngularDrag: 5
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!64 &64015585820357574
 MeshCollider:
   m_ObjectHideFlags: 1
@@ -3376,7 +3360,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadRadius: 7.59
+  positionSyncEnabled: 1
   syncRate: 20
+  mass: 10000
+  drag: 0
+  angularDrag: 0
+  useGravity: 1
+  interpolation: 0
+  collisionDetection: 0
+  constraints: 0
 --- !u!114 &114558034523455466
 MonoBehaviour:
   m_ObjectHideFlags: 1

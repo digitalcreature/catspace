@@ -3,9 +3,8 @@ using UnityEngine.Networking;
 
 public partial class GCharacter : GBody {
 
-  public Transform hullTransform;             // the root of the hull transform; used when a character gets parented to another object
+  [Header("Character")]
   public float turnSpeed = 15f;             // speed of character rotation in degrees/s
-
 
   [Header("Ground Checking")]
   public LayerMask groundMask;
@@ -33,7 +32,7 @@ public partial class GCharacter : GBody {
 
   protected override void FixedUpdate() {
     if (isLocalPlayer && gfield != null) {
-      if (!isSitting) {
+      if (hasPhysics) {
         if (isGrounded) {
           Ray position;
           Vector3 gravity;

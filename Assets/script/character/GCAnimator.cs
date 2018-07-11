@@ -25,19 +25,21 @@ public class GCAnimator : KittyNetworkBehaviour {
 		if (isLocalPlayer) {
 			GField gfield = character.gfield;
 			if (gfield != null) {
-				Vector3 velocity = character.body.velocity;
-				Vector3 gravity = gfield.WorldPointToGravity(character.body.position).normalized;
-        Vector3 walkVelocity = Vector3.ProjectOnPlane(velocity, -gravity);
-        // find walk velocity, local to facing direction
-        Vector3 forward = character.facingDirectionSmooth.normalized;
-        Vector3 right = Vector3.Cross(forward, gravity).normalized;
-        Vector2 localWalkVelocity = new Vector2(
+        if (character.hasPhysics) {
+          Vector3 velocity = character.body.velocity;
+          Vector3 gravity = gfield.WorldPointToGravity(character.transform.position).normalized;
+          Vector3 walkVelocity = Vector3.ProjectOnPlane(velocity, -gravity);
+          // find walk velocity, local to facing direction
+          Vector3 forward = character.facingDirectionSmooth.normalized;
+          Vector3 right = Vector3.Cross(forward, gravity).normalized;
+          Vector2 localWalkVelocity = new Vector2(
           Vector3.Dot(right, walkVelocity) * walkVelocityScale,
           Vector3.Dot(forward, walkVelocity) * walkVelocityScale
-        );
-        anim.SetFloat(WALK_VEL_X, localWalkVelocity.x);
-        anim.SetFloat(WALK_VEL_Y, localWalkVelocity.y);
-				anim.SetFloat(WALK_SPEED, walkVelocity.magnitude);
+          );
+          anim.SetFloat(WALK_VEL_X, localWalkVelocity.x);
+          anim.SetFloat(WALK_VEL_Y, localWalkVelocity.y);
+          anim.SetFloat(WALK_SPEED, walkVelocity.magnitude);
+        }
 				anim.SetBool(IS_GROUNDED, character.isGrounded);
 				anim.SetBool(IS_SITTING, character.isSitting);
 			}
