@@ -18,12 +18,12 @@ public class SyncRef<T> where T : KittyNetworkBehaviour {
 
   public void Sync(NetworkSync sync, T value) {
     if (sync.isWriting) {
-      sync.Write(value);
+      sync.Write(value.Id());
     }
     else {
       NetworkInstanceId id = NetworkInstanceId.Invalid;
       sync.Read(ref id);
-      if (id.Value <= 0) {
+      if (id == NetworkInstanceId.Invalid) {
         this.value = null;
         readCallback(null);
       }
@@ -70,12 +70,12 @@ public class SyncRef<T, D> where T : KittyNetworkBehaviour {
 
   public void Sync(NetworkSync sync, T value, D data) {
     if (sync.isWriting) {
-      sync.Write(value);
+      sync.Write(value.Id());
     }
     else {
       NetworkInstanceId id = NetworkInstanceId.Invalid;
       sync.Read(ref id);
-      if (id.Value <= 0) {
+      if (id == NetworkInstanceId.Invalid) {
         this.value = null;
         readCallback(null, data);
       }

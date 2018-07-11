@@ -28,10 +28,6 @@ public class Part : KittyNetworkBehaviour {
     }
   }
 
-  // public override void OnStartClient() {
-  //   Debug.Log(this.Id());
-  // }
-
   // must be called from server
   // attach this part to a part node. if node is left null, detach from current parent
   public void AttachToParent(PartNode node) {
@@ -47,7 +43,6 @@ public class Part : KittyNetworkBehaviour {
   }
 
   void AttachToParentLocal(Part parent, int childId) {
-    // Debug.LogFormat("{0} AttachToParentLocal({1}, {2})", this.Id(), parent.Id(), childId);
     this.parent = parent;
     PartNode parentNode;
     if (parent == null) {
@@ -76,15 +71,9 @@ public class Part : KittyNetworkBehaviour {
   }
 
   protected override void OnSync(NetworkSync sync) {
-    if (sync.isWriting) {
-      Debug.LogFormat("Write {0}", this.Id());
-    }
-    else {
-      Debug.LogFormat("Read {0}", this.Id());
-    }
     int childId = parentNode == null ? -1 : parentNode.childId;
     sync.Sync(ref childId);
-    parentRef.Sync(sync, parentNode == null ? null : parentNode.parent, childId);
+    parentRef.Sync(sync, parent, childId);
   }
 
 }
