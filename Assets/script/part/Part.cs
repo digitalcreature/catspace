@@ -10,11 +10,11 @@ public class Part : KittyNetworkBehaviour {
 
   public PartNode[] childNodes { get; private set; }
 
-  SyncRef<Part> parentRef;
+  SyncRef<Part, int> parentRef;
 
   protected override void Awake() {
     base.Awake();
-    parentRef = new SyncRef<Part>(this, (parent) => AttachToParentLocal(parent, childId));
+    parentRef = new SyncRef<Part, int>(this, AttachToParentLocal);
     childNodes = GetComponentsInChildren<PartNode>();
     for (int i = 0; i < childNodes.Length; i ++) {
       childNodes[i].Initialize(this, i);
@@ -27,6 +27,10 @@ public class Part : KittyNetworkBehaviour {
       node.SpawnChild();
     }
   }
+
+  // public override void OnStartClient() {
+  //   Debug.Log(this.Id());
+  // }
 
   // must be called from server
   // attach this part to a part node. if node is left null, detach from current parent
@@ -43,6 +47,7 @@ public class Part : KittyNetworkBehaviour {
   }
 
   void AttachToParentLocal(Part parent, int childId) {
+    // Debug.LogFormat("{0} AttachToParentLocal({1}, {2})", this.Id(), parent.Id(), childId);
     this.parent = parent;
     PartNode parentNode;
     if (parent == null) {
@@ -70,17 +75,16 @@ public class Part : KittyNetworkBehaviour {
     }
   }
 
-  // temp
-  int childId;
-
   protected override void OnSync(NetworkSync sync) {
     if (sync.isWriting) {
-      sync.Write(parentNode == null ? -1 : parentNode.childId);
+      Debug.LogFormat("Write {0}", this.Id());
     }
     else {
-      sync.Read(ref childId);
+      Debug.LogFormat("Read {0}", this.Id());
     }
-    parentRef.Sync(sync, parentNode == null ? null : parentNode.parent);
+    int childId = parentNode == null ? -1 : parentNode.childId;
+    sync.Sync(ref childId);
+    parentRef.Sync(sync, parentNode == null ? null : parentNode.parent, childId);
   }
 
 }
