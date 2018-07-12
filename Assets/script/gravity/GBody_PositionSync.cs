@@ -32,9 +32,11 @@ partial class GBody : KittyNetworkBehaviour {
 
   void OnSync_PositionSync(NetworkSync sync) {
     sync.Sync(ref positionSyncEnabled);
-    bool isKinematic = body.isKinematic;
-    sync.Sync(ref isKinematic);
-    body.isKinematic = isKinematic;
+    if (hasPhysics) {
+      bool isKinematic = body.isKinematic;
+      sync.Sync(ref isKinematic);
+      body.isKinematic = isKinematic;
+    }
   }
 
   void SyncPosition(PositionSync psync) {

@@ -5,13 +5,8 @@ public static class Network {
 
   public static NetworkClient client => NetworkManager.singleton.client;
 
-  public static NetworkInstanceId Id(this KittyNetworkBehaviour component) {
-    if (component == null) {
-      return NetworkInstanceId.Invalid;
-    }
-    else {
-      return component.netId;
-    }
+  public static Id Id(this KittyNetworkBehaviour component) {
+    return new Id(component);
   }
 
   public static T Find<T>(this NetworkInstanceId id) where T : KittyNetworkBehaviour {
@@ -35,16 +30,37 @@ public static class Network {
 // this struct lets you use shorthand instead of the cumbersome "NetworkInstanceId" everywhere
 public struct Id {
 
-  public NetworkInstanceId id;
+  public uint value;
 
-  public Id(NetworkInstanceId id) {
-    this.id = id;
+  public const uint nullValue = 0xFFFFFFFF;
+
+  public bool isNull => value == nullValue;
+  public bool isUnspawned => value == 0;
+
+  public Id(uint value) {
+    this.value = value;
   }
 
-  public static implicit operator Id (NetworkInstanceId id) => new Id(id);
-  public static implicit operator NetworkInstanceId (Id id) => id.id;
+  public Id(KittyNetworkBehaviour obj) {
+    if (obj == null) {
+      value = nullValue;
+    }
+    else {
+      NetworkInstanceId id = obj.netId;
+      if (id.IsEmpty()) {
+        value = 0;
+      }
+      else {
+        value = id.Value;
+      }
+    }
+  }
+
 
   public T Find<T>() where T : KittyNetworkBehaviour {
+    if (isNull) return null;
+    if (isUnspawned) return null;
+    NetworkInstanceId id = new NetworkInstanceId(value);
     return id.Find<T>();
   }
 

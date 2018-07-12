@@ -43,7 +43,9 @@ partial class GBody : KittyNetworkBehaviour {
   void OnSync_Rigidbody(NetworkSync sync) {
     bool hasPhysics = this.hasPhysics;
     sync.Sync(ref hasPhysics);
-    this.hasPhysics = hasPhysics;
+    if (hasPhysics != this.hasPhysics) {
+      this.hasPhysics = hasPhysics;
+    }
   }
 
 }

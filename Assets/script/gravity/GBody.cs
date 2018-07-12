@@ -43,7 +43,7 @@ public partial class GBody : KittyNetworkBehaviour {
   }
 
   protected void AddGravity() {
-    if (body.useGravity) {
+    if (hasPhysics && body.useGravity) {
       body.AddForce(gravity, ForceMode.Acceleration);
     }
   }
@@ -76,8 +76,8 @@ public partial class GBody : KittyNetworkBehaviour {
 
   protected override void OnSync(NetworkSync sync) {
     gfieldRef.Sync(sync, gfield);
-    OnSync_PositionSync(sync);
     OnSync_Rigidbody(sync);
+    OnSync_PositionSync(sync);
   }
 
   public void Load() {

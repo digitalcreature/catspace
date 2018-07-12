@@ -33,6 +33,9 @@ public class NetworkSync {
 
   // unity supported types
 
+  public NetworkSync Sync(ref Id value) {
+    if (isWriting) return Write(value);
+    else return Read(ref value); }
   public NetworkSync Sync(ref char value) {
     if (isWriting) return Write(value);
     else return Read(ref value); }
@@ -137,6 +140,7 @@ public class NetworkSync {
     else return Read(ref value); }
 
   // write
+  public NetworkSync Write(Id value) { writer.Write(value.value); return this; }
   public NetworkSync Write(char value) { writer.Write(value); return this; }
   public NetworkSync Write(byte value) { writer.Write(value); return this; }
   public NetworkSync Write(sbyte value) { writer.Write(value); return this; }
@@ -173,6 +177,7 @@ public class NetworkSync {
   public NetworkSync Write(KeyCode value) { writer.Write((int) value); return this; }
 
   // read
+  public NetworkSync Read(ref Id value) { value = new Id(reader.ReadUInt32()); return this; }
   public NetworkSync Read(ref char value) { value = reader.ReadChar(); return this; }
   public NetworkSync Read(ref byte value) { value = reader.ReadByte(); return this; }
   public NetworkSync Read(ref sbyte value) { value = reader.ReadSByte(); return this; }

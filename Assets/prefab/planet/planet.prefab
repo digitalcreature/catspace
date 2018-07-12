@@ -70,7 +70,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   heightMap:
     offset: {x: 426.1, y: 176.89, z: 59.51}
-    frequency: 0.01
+    frequency: 0.005
     octaves: 9
     lacunarity: 2
     gain: 0.5
@@ -124,15 +124,15 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 4.5024157
-      outSlope: 4.5024157
+      inSlope: 6.5292397
+      outSlope: 6.5292397
       tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 0.5877017
-      value: 2.6460772
+      value: 3.8372452
       inSlope: 23.670572
       outSlope: 23.670572
       tangentMode: 0
@@ -141,9 +141,9 @@ MonoBehaviour:
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 1.0023193
-      value: 34.92775
-      inSlope: 77.858894
-      outSlope: 77.858894
+      value: 50.65096
+      inSlope: 112.90815
+      outSlope: 112.90815
       tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334

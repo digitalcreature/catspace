@@ -21,20 +21,20 @@ public class SyncRef<T> where T : KittyNetworkBehaviour {
       sync.Write(value.Id());
     }
     else {
-      NetworkInstanceId id = NetworkInstanceId.Invalid;
+      Id id = new Id(0);
       sync.Read(ref id);
-      if (id == NetworkInstanceId.Invalid) {
+      if (id.isNull) {
         this.value = null;
         readCallback(null);
       }
       else {
-        value = new Id(id).Find<T>();
+        value = id.Find<T>();
         if (value != null) {
           this.value = value;
           readCallback(value);
         }
         else {
-          owner.StartCoroutine(SyncReadRoutine(new Id(id)));
+          owner.StartCoroutine(SyncReadRoutine(id));
         }
       }
     }
@@ -73,20 +73,20 @@ public class SyncRef<T, D> where T : KittyNetworkBehaviour {
       sync.Write(value.Id());
     }
     else {
-      NetworkInstanceId id = NetworkInstanceId.Invalid;
+      Id id = new Id(0);
       sync.Read(ref id);
-      if (id == NetworkInstanceId.Invalid) {
+      if (id.isNull) {
         this.value = null;
         readCallback(null, data);
       }
       else {
-        value = new Id(id).Find<T>();
+        value = id.Find<T>();
         if (value != null) {
           this.value = value;
           readCallback(value, data);
         }
         else {
-          owner.StartCoroutine(SyncReadRoutine(new Id(id), data));
+          owner.StartCoroutine(SyncReadRoutine(id, data));
         }
       }
     }
