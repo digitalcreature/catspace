@@ -170,7 +170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 451cbb311d3b68240b27e2c7b61e89b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loadRadius: 1
+  boundingRadius: 1
   positionSyncEnabled: 1
   syncRate: 10
   mass: 50

@@ -38,8 +38,8 @@ public class Carryable : InteractableModule {
   void FixedUpdate() {
     if (carrier != null) {
       if (gbody.hasPhysics) {
-        gbody.body.MovePosition(carrier.carryAnchor.position);
-        gbody.body.MoveRotation(carrier.carryAnchor.rotation);
+        gbody.body.MovePosition(carrier.GetCarryPosition(this));
+        gbody.body.MoveRotation(carrier.GetCarryRotation(this));
         if (carrier.hasPhysics) {
           gbody.body.velocity = carrier.body.velocity;
         }

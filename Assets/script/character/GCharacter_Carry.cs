@@ -5,11 +5,6 @@ partial class GCharacter : GBody {
 
   [Header("Carry")]
   public Transform carryAnchor;         // the point in local space where carried objects are held
-  public float carryJointSpringForce = 15;
-  public float carryJointSpringDamp = 5;
-  public float carryJointAngleLimit = 30;
-  public float carryJointLinearLimit = 0.15f;
-  public float carryJointProjectionDistance = 1f;
 
 
   public Carryable carried { get; private set; }  // the object currently being carried
@@ -17,6 +12,14 @@ partial class GCharacter : GBody {
   public bool isCarrying => carried != null;
 
   SyncRef<Carryable> carriedRef;
+
+  public Vector3 GetCarryPosition(Carryable obj) {
+    return carryAnchor.position + carryAnchor.forward * obj.gbody.boundingRadius;
+  }
+
+  public Quaternion GetCarryRotation(Carryable obj) {
+    return carryAnchor.rotation;
+  }
 
   void Awake_Carry() {
     carriedRef = new SyncRef<Carryable>(this, CarryLocal);

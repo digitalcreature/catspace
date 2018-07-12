@@ -718,7 +718,7 @@ GameObject:
   m_IsActive: 1
 --- !u!1 &1720888840283294
 GameObject:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
@@ -1043,13 +1043,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1720888840283294}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.873, z: 0.753}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0.01510802, y: 0.00000011919572, z: 0.0000000018009879, w: 0.9998859}
+  m_LocalPosition: {x: -0, y: 0.00645, z: 0.00251}
+  m_LocalScale: {x: 0.016666662, y: 0.016666656, z: 0.016666656}
   m_Children: []
-  m_Father: {fileID: 4921046171813640}
+  m_Father: {fileID: 4477540956054848}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 5.556, y: 0, z: 0}
 --- !u!4 &4197894592960498
 Transform:
   m_ObjectHideFlags: 1
@@ -1247,7 +1247,7 @@ Transform:
   m_GameObject: {fileID: 1397673510103300}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
   m_Children:
   - {fileID: 4795006415024464}
   m_Father: {fileID: 4921046171813640}
@@ -1266,6 +1266,7 @@ Transform:
   - {fileID: 4953488034824364}
   - {fileID: 4122592115339278}
   - {fileID: 4789979869828660}
+  - {fileID: 4184571209272838}
   m_Father: {fileID: 4444911833987748}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1635,7 +1636,6 @@ Transform:
   - {fileID: 4649811758847574}
   - {fileID: 4471258229800150}
   - {fileID: 4896509945180928}
-  - {fileID: 4184571209272838}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1839,7 +1839,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0eac139614124d4c85d7095ad179b11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loadRadius: 3
+  boundingRadius: 3
   positionSyncEnabled: 1
   syncRate: 15
   mass: 65
@@ -1860,11 +1860,6 @@ MonoBehaviour:
   facingDirection: {x: 0, y: 0, z: 0}
   maxSlopeAngle: 50
   carryAnchor: {fileID: 4184571209272838}
-  carryJointSpringForce: 100
-  carryJointSpringDamp: 5
-  carryJointAngleLimit: 0
-  carryJointLinearLimit: 0
-  carryJointProjectionDistance: 0.1
 --- !u!114 &114546416098252714
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2006,7 +2001,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkVelocityScale: 0.1
-  handIKPositionBias: {x: 0, y: 0, z: 0}
+  handIKPositionScale: 0.75
 --- !u!136 &136099994202899746
 CapsuleCollider:
   m_ObjectHideFlags: 1
@@ -2017,9 +2012,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
-  m_Height: 1.75
+  m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: 0.875, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!137 &137450344785583462
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
