@@ -1,13 +1,19 @@
 using UnityEngine;
 using UnityEngine.Networking;
+using System.Collections;
 
 public class Carryable : InteractableModule {
 
   public GCharacter carrier { get; private set; }
   public ConfigurableJoint joint { get; private set; }
 
+  public Transform leftHandIKTarget;
+  public Transform rightHandIKTarget;
+
   public GBody gbody { get; private set; }
   public Rigidbody body => gbody.body;
+
+  public bool isCarried => carrier != null;
 
   protected override void Awake() {
     base.Awake();
@@ -29,66 +35,61 @@ public class Carryable : InteractableModule {
     }
   }
 
+  void FixedUpdate() {
+    if (carrier != null) {
+      if (gbody.hasPhysics) {
+        gbody.body.MovePosition(carrier.carryAnchor.position);
+        gbody.body.MoveRotation(carrier.carryAnchor.rotation);
+        if (carrier.hasPhysics) {
+          gbody.body.velocity = carrier.body.velocity;
+        }
+        else {
+          gbody.body.velocity = Vector3.zero;
+        }
+        gbody.body.angularVelocity = Vector3.zero;
+      }
+    }
+  }
+
   // only call from GCharacter
   public void OnCarryLocal(GCharacter newChar) {
     GCharacter oldChar = carrier;
     if (newChar != oldChar) {
-      carrier = newChar;
       if (oldChar != null) {
         Destroy(joint);
         joint = null;
       }
       if (newChar != null) {
-        // connect with a joint
-        transform.position = newChar.carryAnchor.position;
-        transform.rotation = newChar.carryAnchor.rotation;
-        joint = gameObject.AddComponent<ConfigurableJoint>();
-        // limit angular motion
-        joint.angularXMotion =
-        joint.angularYMotion =
-        joint.angularZMotion =
-          ConfigurableJointMotion.Limited;
-        // limit linear motion
-        joint.xMotion =
-        joint.yMotion =
-        joint.zMotion =
-          ConfigurableJointMotion.Limited;
-        // set limits
-        var angleLimit = new SoftJointLimit();
-          angleLimit.limit = carrier.carryJointAngleLimit;
-          angleLimit.contactDistance = 0;
-          angleLimit.bounciness = 0;
-        var linearLimit = angleLimit;
-          linearLimit.limit = carrier.carryJointLinearLimit;
-          linearLimit.bounciness = 0;
-          linearLimit.contactDistance = 1;
-        joint.highAngularXLimit =
-        joint.lowAngularXLimit =
-        joint.angularYLimit =
-        joint.angularZLimit =
-          angleLimit;
-        joint.linearLimit =
-          linearLimit;
-        // set spring
-        var spring = new SoftJointLimitSpring();
-          spring.spring = carrier.carryJointSpringForce;
-          spring.damper = carrier.carryJointSpringDamp;
-        joint.linearLimitSpring =
-        joint.angularXLimitSpring =
-        joint.angularYZLimitSpring =
-          spring;
-        // configure projection
-        joint.projectionMode = JointProjectionMode.PositionAndRotation;
-        joint.projectionDistance = newChar.carryJointProjectionDistance;
-        // configure rest of joint
-        joint.autoConfigureConnectedAnchor = false;
-        joint.enableCollision = false;
-        joint.connectedAnchor = newChar.transform.InverseTransformPoint(newChar.carryAnchor.position);
-        joint.massScale = body.mass;
-        joint.connectedMassScale = newChar.body.mass;
-        joint.connectedBody = newChar.body;
+        StartCoroutine(JointRoutine(newChar));
+      }
+      else {
+        carrier = newChar;
       }
     }
+  }
+
+  // we need to handle this in a sperate routine to prevent a wierd glitch where if a character is too close
+  // to an object when it picks it up, they start sliding backwards indefinitely
+  IEnumerator JointRoutine(GCharacter newChar) {
+    // make the object kinematic for a frame, thus resetting contact forces
+    body.isKinematic = true;
+    yield return new WaitForFixedUpdate();
+    joint = gameObject.AddComponent<ConfigurableJoint>();
+    // unlimit motion
+    joint.angularXMotion =
+    joint.angularYMotion =
+    joint.angularZMotion =
+    joint.xMotion =
+    joint.yMotion =
+    joint.zMotion =
+      ConfigurableJointMotion.Free;
+    // connect to joint
+    joint.autoConfigureConnectedAnchor = false;
+    joint.enableCollision = false;
+    joint.connectedBody = newChar.body;
+    // make the object not kinematic again
+    body.isKinematic = false;
+    carrier = newChar;
   }
 
 }

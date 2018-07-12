@@ -5,6 +5,8 @@ public class GCAnimator : KittyNetworkBehaviour {
 
   public float walkVelocityScale = 1;
 
+  public Vector3 handIKPositionBias;
+
 	public GCharacter character { get; private set; }
 	public Animator anim { get; private set; }
 
@@ -14,6 +16,7 @@ public class GCAnimator : KittyNetworkBehaviour {
 
   int WALK_VEL_X = Animator.StringToHash("walk_vel_x");
   int WALK_VEL_Y = Animator.StringToHash("walk_vel_y");
+
 
 	protected override void Awake() {
 		base.Awake();
@@ -45,5 +48,33 @@ public class GCAnimator : KittyNetworkBehaviour {
 			}
 		}
 	}
+
+  // void OnAnimatorIK(int layer) {
+  //   if (character.isCarrying) {
+  //     Carryable obj = character.carried;
+  //     Vector3 positionBias;
+  //     if (obj.leftHandIKTarget != null) {
+  //       positionBias = handIKPositionBias;
+  //       anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1);
+  //       anim.SetIKPosition(AvatarIKGoal.LeftHand, obj.leftHandIKTarget.position + transform.TransformDirection(positionBias));
+  //       anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1);
+  //       anim.SetIKRotation(AvatarIKGoal.LeftHand, obj.leftHandIKTarget.rotation);
+  //     }
+  //     if (obj.rightHandIKTarget != null) {
+  //       positionBias = handIKPositionBias;
+  //       positionBias.x *= -1;
+  //       anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
+  //       anim.SetIKPosition(AvatarIKGoal.RightHand, obj.rightHandIKTarget.position + transform.TransformDirection(positionBias));
+  //       anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
+  //       anim.SetIKRotation(AvatarIKGoal.RightHand, obj.rightHandIKTarget.rotation);
+  //     }
+  //   }
+  //   else {
+  //     anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 0);
+  //     anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, 0);
+  //     anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 0);
+  //     anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 0);
+  //   }
+  // }
 
 }

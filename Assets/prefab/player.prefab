@@ -1247,7 +1247,7 @@ Transform:
   m_GameObject: {fileID: 1397673510103300}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_Children:
   - {fileID: 4795006415024464}
   m_Father: {fileID: 4921046171813640}
@@ -1532,7 +1532,7 @@ Transform:
   m_GameObject: {fileID: 1290746813079608}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4246062759289902}
   - {fileID: 4444911833987748}
@@ -1849,7 +1849,6 @@ MonoBehaviour:
   interpolation: 0
   collisionDetection: 0
   constraints: 112
-  hullTransform: {fileID: 4649811758847574}
   turnSpeed: 360
   groundMask:
     serializedVersion: 2
@@ -2007,6 +2006,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkVelocityScale: 0.1
+  handIKPositionBias: {x: 0, y: 0, z: 0}
 --- !u!136 &136099994202899746
 CapsuleCollider:
   m_ObjectHideFlags: 1

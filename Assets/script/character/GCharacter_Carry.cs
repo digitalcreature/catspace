@@ -30,6 +30,9 @@ partial class GCharacter : GBody {
   // only call from server or local player
   public void Carry(Carryable obj) {
     if (isServer) {
+      if (obj != null && obj.isCarried) {
+        obj.carrier.DropCarried();
+      }
       CarryLocal(obj);
       ServerSync();
     }
