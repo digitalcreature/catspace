@@ -81,6 +81,7 @@ public class CameraRig : SingletonBehaviour<CameraRig> {
       // adjust the distance of the camera
       float d = distance;
       int count = Physics.RaycastNonAlloc(gimbal.position, -gimbal.forward, hits, d + distanceBias, distanceAdjustMask);
+      System.Array.Sort(hits, 0, count, new RaycastHitComparer());
       if (count > 0) {
         for (int i = 0; i < count; i ++) {
           RaycastHit hit = hits[i];

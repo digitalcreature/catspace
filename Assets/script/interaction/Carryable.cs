@@ -14,6 +14,7 @@ public class Carryable : InteractableModule {
   public Rigidbody body => gbody.body;
 
   public bool isCarried => carrier != null;
+  public float boundingRadius => gbody.boundingRadius;
 
   protected override void Awake() {
     base.Awake();

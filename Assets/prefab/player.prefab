@@ -1860,6 +1860,10 @@ MonoBehaviour:
   facingDirection: {x: 0, y: 0, z: 0}
   maxSlopeAngle: 50
   carryAnchor: {fileID: 4184571209272838}
+  carryLiftLimit: 0.5
+  carryLiftSpacing: 0.15
+  carryLiftSmoothTime: 0.15
+  carryLiftRadiusBuffer: 0.5
 --- !u!114 &114546416098252714
 MonoBehaviour:
   m_ObjectHideFlags: 1

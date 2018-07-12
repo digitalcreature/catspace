@@ -1,4 +1,6 @@
 using UnityEngine;
+using System;
+using System.Collections;
 
 // centralized manager that
 public class InteractionManager : SingletonBehaviour<InteractionManager> {
@@ -53,6 +55,8 @@ public class InteractionManager : SingletonBehaviour<InteractionManager> {
     otherExaminationRig.SetTarget(examinable);
   }
 
+  RaycastHit[] hits = new RaycastHit[8];
+
   void Update() {
     CameraRig rig = CameraRig.instance;
     if (Input.GetKeyDown(backpackKey)) {
@@ -77,12 +81,19 @@ public class InteractionManager : SingletonBehaviour<InteractionManager> {
         else {
           ray = rig.cam.ScreenPointToRay(Input.mousePosition);
         }
-        RaycastHit hit;
-        Physics.Raycast(ray, out hit, Mathf.Infinity, interactableMask);
-        targetHit = hit;
+        int count = Physics.RaycastNonAlloc(ray, hits, Mathf.Infinity, interactableMask);
+        Array.Sort(hits, 0, count, new RaycastHitComparer());
+        for (int i = 0; i < count; i ++) {
+          RaycastHit hit = hits[i];
+          // dont interact with object being carried if in first person
+          if (rig.isThirdPerson || hit.rigidbody == null || !hit.rigidbody.CompareTag("Carried")) {
+            targetHit = hit;
+            break;
+          }
+        }
         Interactable target = null;
-        if (hit.collider != null) {
-          target = hit.collider.GetComponentInParent<Interactable>();
+        if (targetHit.collider != null) {
+          target = targetHit.collider.GetComponentInParent<Interactable>();
           if (target != null) {
             float distance = (player.transform.position - target.transform.position).magnitude;
             if (!target.isInteractable || distance > interactionRange) {
