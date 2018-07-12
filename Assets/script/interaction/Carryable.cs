@@ -64,6 +64,7 @@ public class Carryable : InteractableModule {
       }
       else {
         carrier = newChar;
+        tag = "Untagged";
       }
     }
   }
@@ -90,6 +91,7 @@ public class Carryable : InteractableModule {
     // make the object not kinematic again
     body.isKinematic = false;
     carrier = newChar;
+    tag = "Carried";
   }
 
 }

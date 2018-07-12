@@ -31,6 +31,9 @@ public class CameraRig : SingletonBehaviour<CameraRig> {
   float targetDistance;
   float zoomVelocity;
 
+  // temp buffer
+  RaycastHit[] hits = new RaycastHit[8];
+
   void Awake() {
     cam = GetComponentInChildren<Camera>();
     targetDistance = distance;
@@ -76,12 +79,18 @@ public class CameraRig : SingletonBehaviour<CameraRig> {
         focus.UpdateRenderers(isFirstPerson);
       }
       // adjust the distance of the camera
-      RaycastHit hit;
       float d = distance;
-      if (Physics.Raycast(gimbal.position, -gimbal.forward, out hit, d + distanceBias, distanceAdjustMask)) {
-        d = hit.distance - distanceBias;
-        if (d < 0f) {
-          d = 0f;
+      int count = Physics.RaycastNonAlloc(gimbal.position, -gimbal.forward, hits, d + distanceBias, distanceAdjustMask);
+      if (count > 0) {
+        for (int i = 0; i < count; i ++) {
+          RaycastHit hit = hits[i];
+          if (hit.rigidbody == null || !hit.rigidbody.CompareTag("Carried")) {
+            d = hit.distance - distanceBias;
+            if (d < 0f) {
+              d = 0f;
+            }
+            break;
+          }
         }
       }
       cam.transform.localPosition = -Vector3.forward * d;
