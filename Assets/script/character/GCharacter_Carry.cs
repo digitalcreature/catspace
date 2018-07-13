@@ -8,16 +8,15 @@ partial class GCharacter : GBody {
 
   [System.Serializable]
   public class CarryFields {
-    public Transform anchor;               // the point in local space where carried objects are held
-    public float liftLimit = 0.5f;         // the highest that the carried object can be raised to avoid terrain
-    public float liftSpacing = 0.15f;      // the size of the gap between the bottom of the carried object and the ground
-    public float liftSmoothTime = 0.15f;
-    public float liftRadiusBuffer = 0.15f; // how much larger should the radius used for the spherecast be? (adds an extra buffer)
+    public Transform anchor;                // the point in local space where carried objects are held
+    public float liftLimit = 0.5f;          // the highest that the carried object can be raised to avoid terrain
+    public float liftSpacing = 0.15f;       // the size of the gap between the bottom of the carried object and the ground
 
-    public float angularSpring = 5;
 
-    [HideInInspector] public float liftVelocity = 0;
-    [HideInInspector] public float lift = 0;
+    public float pushinLimit = .05f;        // how far into the characters chest can the carried object be pushed?
+
+    public float linearSpring = 15;
+    public float angularSpring = 15;
 
   }
 
@@ -29,19 +28,18 @@ partial class GCharacter : GBody {
 
 
   public Vector3 GetCarryPosition(Carryable obj) {
-    Vector3 pos = carry.anchor.position + carry.anchor.forward * obj.boundingRadius;
-    float radius = obj.boundingRadius + carry.liftRadiusBuffer;
+    float radius = obj.boundingRadius;
+    Vector3 pos = carry.anchor.position + carry.anchor.forward * radius;
     Vector3 up = transform.up;
-    float liftTarget;
+    float lift;
     RaycastHit hit;
     if (Physics.SphereCast(pos + up * carry.liftLimit, radius, -up, out hit, carry.liftLimit + carry.liftSpacing, groundMask)) {
-      liftTarget = carry.liftLimit - (hit.distance - carry.liftSpacing) - carry.liftRadiusBuffer;
+      lift = carry.liftLimit - (hit.distance - carry.liftSpacing);
     }
     else {
-      liftTarget = 0;
+      lift = 0;
     }
-    carry.lift = Mathf.SmoothDamp(carry.lift, liftTarget, ref carry.liftVelocity, carry.liftSmoothTime);
-    return pos + up * carry.lift;
+    return pos + up * lift;
   }
 
   public Quaternion GetCarryRotation(Carryable obj) {

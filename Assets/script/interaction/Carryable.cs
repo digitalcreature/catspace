@@ -44,18 +44,33 @@ public class Carryable : InteractableModule {
   void FixedUpdate() {
     if (carrier != null) {
       if (gbody.hasPhysics) {
-        body.MovePosition(carrier.GetCarryPosition(this));
-        // body.MoveRotation(carrier.GetCarryRotation(this));
-        Quaternion target = carrier.GetCarryRotation(this);
+        Vector3 targetPosition = carrier.GetCarryPosition(this);
+        Quaternion targetRotation = carrier.GetCarryRotation(this);
+        Vector3 localPosition = body.position - targetPosition;
 
-        // Rotations stack right to left,
-        // so first we undo our rotation, then apply the target.
-        Quaternion delta = target * Quaternion.Inverse(body.rotation);
+        Vector3 velocity = 0.9f * - localPosition * carrier.carry.linearSpring;
 
+        // Vector3 targetForward = targetRotation * Vector3.forward;
+        // float dot = Vector3.Dot(localPosition, -targetForward);
+        // Vector3 projection = Vector3.Project(localPosition, -targetForward);
+        // if (dot > 0 && projection.magnitude > carrier.carry.pushinLimit) {
+        //   // cut off the bit that goes beyond the limit
+        //   projection = projection.normalized * (projection.magnitude - carrier.carry.pushinLimit);
+        //   localPosition -= projection;
+        //   body.MovePosition(targetPosition + localPosition);
+        //   velocity = Vector3.ProjectOnPlane(velocity, targetForward);
+        // }
+
+        if (carrier.hasPhysics) {
+          velocity += carrier.body.velocity;
+        }
+
+        body.velocity = velocity;
+
+        Quaternion delta = targetRotation * Quaternion.Inverse(body.rotation);
         float angle;
         Vector3 axis;
         delta.ToAngleAxis(out angle, out axis);
-
         // We get an infinite axis in the event that our rotation is already aligned.
         if (!float.IsInfinity(axis.x)) {
           if (angle > 180f) {
@@ -64,25 +79,16 @@ public class Carryable : InteractableModule {
           // Here I drop down to 0.9f times the desired movement,
           // since we'd rather undershoot and ease into the correct angle
           // than overshoot and oscillate around it in the event of errors.
-          Vector3 angular = (0.9f * Mathf.Deg2Rad * angle) * axis.normalized * carrier.carry.angularSpring;
-
+          Vector3 angular = 0.9f * Mathf.Deg2Rad * angle * axis.normalized * carrier.carry.angularSpring;
           body.angularVelocity = angular;
         }
 
-
-        // Vector3 targetForward = target * Vector3.forward;
-        // Vector3 forward = body.rotation * Vector3.forward;
-        // float angle = Vector3.Angle(forward, targetForward);
-        // Vector3 axis = Vector3.Cross(forward, targetForward).normalized;
-        // body.AddTorque(axis * angle * carrier.carry.angularSpring, ForceMode.Acceleration);
-        // Vector3 targetUp = target * Vector3.up;
-        // Vector3 up = body.rotation * Vector3.up;
-        if (carrier.hasPhysics) {
-          body.velocity = carrier.body.velocity;
-        }
-        else {
-          body.velocity = Vector3.zero;
-        }
+        // if (carrier.hasPhysics) {
+        //   body.velocity = carrier.body.velocity;
+        // }
+        // else {
+        //   body.velocity = Vector3.zero;
+        // }
         // body.angularVelocity = Vector3.zero;
       }
     }

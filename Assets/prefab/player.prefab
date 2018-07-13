@@ -1865,7 +1865,9 @@ MonoBehaviour:
     liftSpacing: 0.15
     liftSmoothTime: 0.15
     liftRadiusBuffer: 0.15
-    angularSpring: 20
+    pushinLimit: 0.05
+    linearSpring: 25
+    angularSpring: 35
     liftVelocity: 0
     lift: 0
 --- !u!114 &114546416098252714
