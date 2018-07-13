@@ -4,7 +4,9 @@ using UnityEngine.Networking;
 public partial class GCharacter : GBody {
 
   [Header("Character")]
-  public float turnSpeed = 15f;             // speed of character rotation in degrees/s
+  public float turnSmoothTime = 0.15f;
+
+  public HandIKTargets handIKTargets => isCarrying ? carried.handIKTargets : null;
 
   [Header("Ground Checking")]
   public LayerMask groundMask;
@@ -20,7 +22,7 @@ public partial class GCharacter : GBody {
 
   [Range(0f, 90f)] public float maxSlopeAngle = 60f;  // the max slope that can be traversed
 
-  Vector3 facingDirectionSmoothVelocity;
+  Vector3 facingDirectionVelocity;
 
   protected override void Awake() {
     base.Awake();
@@ -86,9 +88,7 @@ public partial class GCharacter : GBody {
   // update the facing direction of the character
   public void UpdateFacingDirection() {
     facingDirection = facingDirection.normalized;
-    Vector3 dir = Vector3.RotateTowards(
-      facingDirectionSmooth, facingDirection, Time.fixedDeltaTime * turnSpeed * Mathf.Deg2Rad, 0
-    ).normalized;
+    Vector3 dir = Vector3.SmoothDamp(facingDirectionSmooth, facingDirection, ref facingDirectionVelocity, turnSmoothTime);
     if (gfield != null) {
       Vector3 gravity = gfield.WorldPointToGravity(transform.position);
       Vector3 forward = gfield.AlignRayToGravity(new Ray(transform.position, dir)).direction;
@@ -104,6 +104,12 @@ public partial class GCharacter : GBody {
       body.MoveRotation(Quaternion.LookRotation(dir, transform.up));
     }
     facingDirectionSmooth = dir;
+  }
+
+  // snap to the current facing direction target wihtout smoothing
+  public void SnapFacingDirection() {
+    facingDirectionSmooth = facingDirection;
+    facingDirectionVelocity = Vector3.zero;
   }
 
   float GetSlopeAngle(Vector3 groundNormal, Vector3 gravity) {

@@ -5,7 +5,9 @@ public class GCAnimator : KittyNetworkBehaviour {
 
   public float walkVelocityScale = 1;
 
-  public float handIKPositionScale = 1;
+  public float limbIKPositionScale = 0.75f;
+
+  public float handIKWeightSmoothTime = 0.25f;
 
 	public GCharacter character { get; private set; }
 	public Animator anim { get; private set; }
@@ -17,6 +19,14 @@ public class GCAnimator : KittyNetworkBehaviour {
   int WALK_VEL_X = Animator.StringToHash("walk_vel_x");
   int WALK_VEL_Y = Animator.StringToHash("walk_vel_y");
 
+  int PICKUP = Animator.StringToHash("pickup");
+
+  public HandIKTargets handIKTargets { get; private set; }
+
+  bool isCarrying;
+
+  float handIKWeight;
+  float handIKWeightVelocity;
 
 	protected override void Awake() {
 		base.Awake();
@@ -26,6 +36,26 @@ public class GCAnimator : KittyNetworkBehaviour {
 
 	void FixedUpdate() {
 		if (isLocalPlayer) {
+      // handle ik smoothing
+      if (character.handIKTargets != null) {
+        handIKTargets = character.handIKTargets;
+      }
+      float targetWeight;
+      if (handIKTargets != null && character.handIKTargets == null) {
+        targetWeight = 0;
+      }
+      else {
+        targetWeight = 1;
+      }
+      handIKWeight = Mathf.SmoothDamp(handIKWeight, targetWeight, ref handIKWeightVelocity, handIKWeightSmoothTime);
+      if (targetWeight == 0 && handIKWeight < 0.001f) {
+        handIKTargets = null;
+      }
+      // handle pickup animation
+      if (character.isCarrying && !isCarrying) {
+        anim.SetTrigger(PICKUP);
+      }
+      isCarrying = character.isCarrying;
 			GField gfield = character.gfield;
 			if (gfield != null) {
         if (character.hasPhysics) {
@@ -50,33 +80,61 @@ public class GCAnimator : KittyNetworkBehaviour {
 	}
 
   void OnAnimatorIK(int layer) {
-    if (character.isCarrying) {
-      Carryable obj = character.carried;
-      if (obj.leftHandIKTarget != null) {
-        Vector3 position = obj.leftHandIKTarget.position;
-        position = transform.InverseTransformPoint(position) / handIKPositionScale;
-        position = transform.TransformPoint(position);
-        anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1);
-        anim.SetIKPosition(AvatarIKGoal.LeftHand, position);
-        anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1);
-        anim.SetIKRotation(AvatarIKGoal.LeftHand, obj.leftHandIKTarget.rotation);
+    handIKTargets.SetWeights(this, handIKWeight);
+    handIKTargets.SetTargets(this);
+  }
+
+}
+
+[System.Serializable]
+public class HandIKTargets {
+
+  public Transform leftHand;
+  public Transform rightHand;
+
+}
+
+public static class HandIKTargetsMethods {
+
+  public static void SetWeights(this HandIKTargets t, GCAnimator anim, float weight) {
+    // position
+    anim.anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, (t == null || t.leftHand == null) ? 0 : weight);
+    anim.anim.SetIKPositionWeight(AvatarIKGoal.RightHand, (t == null || t.rightHand == null) ? 0 : weight);
+    // rotation
+    anim.anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, (t == null || t.leftHand == null) ? 0 : weight);
+    anim.anim.SetIKRotationWeight(AvatarIKGoal.RightHand, (t == null || t.rightHand == null) ? 0 : weight);
+  }
+
+  public static void SetTargets(this HandIKTargets t, GCAnimator anim) {
+    // position
+    if (t != null) {
+      Vector3 position;
+      if (t.leftHand != null) {
+        position = t.leftHand.position;
+        position = anim.transform.InverseTransformPoint(position) / anim.limbIKPositionScale;
+        position = anim.transform.TransformPoint(position);
+        anim.anim.SetIKPosition(AvatarIKGoal.LeftHand, position);
       }
-      if (obj.rightHandIKTarget != null) {
-        Vector3 position = obj.rightHandIKTarget.position;
-        position = transform.InverseTransformPoint(position) / handIKPositionScale;
-        position = transform.TransformPoint(position);
-        anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
-        anim.SetIKPosition(AvatarIKGoal.RightHand, position);
-        anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
-        anim.SetIKRotation(AvatarIKGoal.RightHand, obj.rightHandIKTarget.rotation);
+      else {
+        anim.anim.SetIKPosition(AvatarIKGoal.LeftHand, Vector3.zero);
+      }
+      if (t.rightHand != null) {
+        position = t.rightHand.position;
+        position = anim.transform.InverseTransformPoint(position) / anim.limbIKPositionScale;
+        position = anim.transform.TransformPoint(position);
+        anim.anim.SetIKPosition(AvatarIKGoal.RightHand, position);
+      }
+      else {
+        anim.anim.SetIKPosition(AvatarIKGoal.RightHand, Vector3.zero);
       }
     }
     else {
-      anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 0);
-      anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, 0);
-      anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 0);
-      anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 0);
+      anim.anim.SetIKPosition(AvatarIKGoal.LeftHand, Vector3.zero);
+      anim.anim.SetIKPosition(AvatarIKGoal.RightHand, Vector3.zero);
     }
+    // rotation
+    anim.anim.SetIKRotation(AvatarIKGoal.LeftHand, (t == null || t.leftHand == null) ? Quaternion.identity : t.leftHand.rotation);
+    anim.anim.SetIKRotation(AvatarIKGoal.RightHand, (t == null || t.rightHand == null) ? Quaternion.identity : t.rightHand.rotation);
   }
 
 }

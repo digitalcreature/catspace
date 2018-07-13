@@ -66,7 +66,9 @@ public class PlayerController : GCController {
         }
         body.velocity = velocity;
         if (rig.isThirdPerson) {
-          character.facingDirection = input;
+          if (input.magnitude > 0.001f) {
+            character.facingDirection = input;
+          }
         }
         else {
           character.facingDirection = forward;

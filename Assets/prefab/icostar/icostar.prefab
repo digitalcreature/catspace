@@ -443,5 +443,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a4874fa123044f4db8f521cea6313be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  handIKTargets:
+    leftHand: {fileID: 4255846755648504}
+    rightHand: {fileID: 4341412422164000}
   leftHandIKTarget: {fileID: 4255846755648504}
   rightHandIKTarget: {fileID: 4341412422164000}

@@ -12,11 +12,10 @@ partial class GCharacter : GBody {
     public float liftLimit = 0.5f;          // the highest that the carried object can be raised to avoid terrain
     public float liftSpacing = 0.15f;       // the size of the gap between the bottom of the carried object and the ground
 
-
-    public float pushinLimit = .05f;        // how far into the characters chest can the carried object be pushed?
-
     public float linearSpring = 15;
     public float angularSpring = 15;
+
+    public float angularSnapThreshold = 90; // if the anchor turns more than this many degrees per second, snap the rotation
 
   }
 
@@ -81,6 +80,11 @@ partial class GCharacter : GBody {
       }
       if (newObj != null) {
         newObj.OnCarryLocal(this);
+        if (CameraRig.instance.isThirdPerson) {
+          Vector3 directionTo = newObj.transform.position - transform.position;
+          facingDirection = directionTo.normalized;
+          SnapFacingDirection();
+        }
       }
     }
   }
