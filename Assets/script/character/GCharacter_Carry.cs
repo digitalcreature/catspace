@@ -4,11 +4,22 @@ using UnityEngine.Networking;
 partial class GCharacter : GBody {
 
   [Header("Carry")]
-  public Transform carryAnchor;               // the point in local space where carried objects are held
-  public float carryLiftLimit = 0.5f;         // the highest that the carried object can be raised to avoid terrain
-  public float carryLiftSpacing = 0.15f;      // the size of the gap between the bottom of the carried object and the ground
-  public float carryLiftSmoothTime = 0.15f;
-  public float carryLiftRadiusBuffer = 0.15f; // how much larger should the radius used for the spherecast be? (adds an extra buffer)
+  public CarryFields carry;
+
+  [System.Serializable]
+  public class CarryFields {
+    public Transform anchor;               // the point in local space where carried objects are held
+    public float liftLimit = 0.5f;         // the highest that the carried object can be raised to avoid terrain
+    public float liftSpacing = 0.15f;      // the size of the gap between the bottom of the carried object and the ground
+    public float liftSmoothTime = 0.15f;
+    public float liftRadiusBuffer = 0.15f; // how much larger should the radius used for the spherecast be? (adds an extra buffer)
+
+    public float angularSpring = 5;
+
+    [HideInInspector] public float liftVelocity = 0;
+    [HideInInspector] public float lift = 0;
+
+  }
 
   public Carryable carried { get; private set; }  // the object currently being carried
 
@@ -16,27 +27,25 @@ partial class GCharacter : GBody {
 
   SyncRef<Carryable> carriedRef;
 
-  float carryLiftVelocity = 0;
-  float carryLift = 0;
 
   public Vector3 GetCarryPosition(Carryable obj) {
-    Vector3 pos = carryAnchor.position + carryAnchor.forward * obj.boundingRadius;
-    float radius = obj.boundingRadius + carryLiftRadiusBuffer;
+    Vector3 pos = carry.anchor.position + carry.anchor.forward * obj.boundingRadius;
+    float radius = obj.boundingRadius + carry.liftRadiusBuffer;
     Vector3 up = transform.up;
-    float carryLiftTarget;
+    float liftTarget;
     RaycastHit hit;
-    if (Physics.SphereCast(pos + up * carryLiftLimit, radius, -up, out hit, carryLiftLimit + carryLiftSpacing, groundMask)) {
-      carryLiftTarget = carryLiftLimit - (hit.distance - carryLiftSpacing) - carryLiftRadiusBuffer;
+    if (Physics.SphereCast(pos + up * carry.liftLimit, radius, -up, out hit, carry.liftLimit + carry.liftSpacing, groundMask)) {
+      liftTarget = carry.liftLimit - (hit.distance - carry.liftSpacing) - carry.liftRadiusBuffer;
     }
     else {
-      carryLiftTarget = 0;
+      liftTarget = 0;
     }
-    carryLift = Mathf.SmoothDamp(carryLift, carryLiftTarget, ref carryLiftVelocity, carryLiftSmoothTime);
-    return pos + up * carryLift;
+    carry.lift = Mathf.SmoothDamp(carry.lift, liftTarget, ref carry.liftVelocity, carry.liftSmoothTime);
+    return pos + up * carry.lift;
   }
 
   public Quaternion GetCarryRotation(Carryable obj) {
-    return carryAnchor.rotation;
+    return carry.anchor.rotation;
   }
 
   void Awake_Carry() {

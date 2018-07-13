@@ -1859,11 +1859,15 @@ MonoBehaviour:
   isGrounded: 0
   facingDirection: {x: 0, y: 0, z: 0}
   maxSlopeAngle: 50
-  carryAnchor: {fileID: 4184571209272838}
-  carryLiftLimit: 0.5
-  carryLiftSpacing: 0.15
-  carryLiftSmoothTime: 0.15
-  carryLiftRadiusBuffer: 0.5
+  carry:
+    anchor: {fileID: 4184571209272838}
+    liftLimit: 0.5
+    liftSpacing: 0.15
+    liftSmoothTime: 0.15
+    liftRadiusBuffer: 0.15
+    angularSpring: 20
+    liftVelocity: 0
+    lift: 0
 --- !u!114 &114546416098252714
 MonoBehaviour:
   m_ObjectHideFlags: 1

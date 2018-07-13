@@ -31,7 +31,12 @@ public class Carryable : InteractableModule {
         }
       }
       else {
-        character.Carry(this);
+        if (character.isCarrying) {
+          character.DropCarried();
+        }
+        else {
+          character.Carry(this);
+        }
       }
     }
   }
@@ -39,15 +44,46 @@ public class Carryable : InteractableModule {
   void FixedUpdate() {
     if (carrier != null) {
       if (gbody.hasPhysics) {
-        gbody.body.MovePosition(carrier.GetCarryPosition(this));
-        gbody.body.MoveRotation(carrier.GetCarryRotation(this));
+        body.MovePosition(carrier.GetCarryPosition(this));
+        // body.MoveRotation(carrier.GetCarryRotation(this));
+        Quaternion target = carrier.GetCarryRotation(this);
+
+        // Rotations stack right to left,
+        // so first we undo our rotation, then apply the target.
+        Quaternion delta = target * Quaternion.Inverse(body.rotation);
+
+        float angle;
+        Vector3 axis;
+        delta.ToAngleAxis(out angle, out axis);
+
+        // We get an infinite axis in the event that our rotation is already aligned.
+        if (!float.IsInfinity(axis.x)) {
+          if (angle > 180f) {
+            angle -= 360f;
+          }
+          // Here I drop down to 0.9f times the desired movement,
+          // since we'd rather undershoot and ease into the correct angle
+          // than overshoot and oscillate around it in the event of errors.
+          Vector3 angular = (0.9f * Mathf.Deg2Rad * angle) * axis.normalized * carrier.carry.angularSpring;
+
+          body.angularVelocity = angular;
+        }
+
+
+        // Vector3 targetForward = target * Vector3.forward;
+        // Vector3 forward = body.rotation * Vector3.forward;
+        // float angle = Vector3.Angle(forward, targetForward);
+        // Vector3 axis = Vector3.Cross(forward, targetForward).normalized;
+        // body.AddTorque(axis * angle * carrier.carry.angularSpring, ForceMode.Acceleration);
+        // Vector3 targetUp = target * Vector3.up;
+        // Vector3 up = body.rotation * Vector3.up;
         if (carrier.hasPhysics) {
-          gbody.body.velocity = carrier.body.velocity;
+          body.velocity = carrier.body.velocity;
         }
         else {
-          gbody.body.velocity = Vector3.zero;
+          body.velocity = Vector3.zero;
         }
-        gbody.body.angularVelocity = Vector3.zero;
+        // body.angularVelocity = Vector3.zero;
       }
     }
   }
