@@ -41,7 +41,11 @@ public class Carryable : InteractableModule {
   }
 
   void FixedUpdate() {
-    if (carrier != null) {
+    if (!gbody.positionSyncEnabled && !isCarried) {
+      gbody.SnapPosition();
+    }
+    gbody.positionSyncEnabled = !isCarried;
+    if (isCarried) {
       if (gbody.hasPhysics) {
         Vector3 targetPosition = carrier.GetCarryPosition(this);
         Quaternion targetRotation = carrier.GetCarryRotation(this);
