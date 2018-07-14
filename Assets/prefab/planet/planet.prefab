@@ -57,7 +57,7 @@ Transform:
   m_GameObject: {fileID: 1937474178568072}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2000, y: 2000, z: 2000}
+  m_LocalScale: {x: 1200, y: 1200, z: 1200}
   m_Children: []
   m_Father: {fileID: 4526219480434352}
   m_RootOrder: 0
@@ -358,4 +358,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a03e6482325143459047122775c7bb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 2000
+  maxAltitude: 200
+  surfaceFadeRange:
+    min: 0.125
+    max: 0.7
