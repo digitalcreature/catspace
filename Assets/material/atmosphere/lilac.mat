@@ -68,7 +68,7 @@ Material:
     - _FadeDistance: 1603
     - _FadeMaxDistance: 1.75
     - _FadeMaxDistanceSpace: 1.75
-    - _FadeMaxDistanceSurface: 0.6
+    - _FadeMaxDistanceSurface: 0.75
     - _FadeMinDistance: 0.125
     - _FresnelFactor: 1
     - _FresnelPower: 3
@@ -80,11 +80,11 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _Radius: 1200
+    - _Radius: 1200.03
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _SurfaceFade: 0
+    - _SurfaceFade: 0.143
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
