@@ -3,11 +3,16 @@ using UnityEngine;
 public class TPerlinGenerator : TMeshGenerator {
 
   public NoiseGenerator heightMap;
+  public NoiseGenerator splitMap;
+  public AnimationCurve splitCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
   public HeightmapSteps steps;
 
-  public AnimationCurve elevationCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
+  public AnimationCurve elevationCurve1 = AnimationCurve.Linear(0f, 0f, 1f, 1f);
+  public AnimationCurve elevationCurve2 = AnimationCurve.Linear(0f, 0f, 1f, 1f);
   public AnimationCurve texUCurve = AnimationCurve.Linear(0f, 0f, 1f, 0f);
   public int textureResolution = 8;     // used to quantize uv values, avoidng artifacts
+
+  public float maxHeight = 50;
 
   public float jitterFrequency = 1f;
   public float jitterRadius = 0.1f;
@@ -19,8 +24,10 @@ public class TPerlinGenerator : TMeshGenerator {
   public override TMesh Generate(TMesh mesh) {
     // we have to clone stuff using AnimationCurve because its not threadsafe for some fuckign reason
     HeightmapSteps steps = this.steps.Clone();
-    AnimationCurve elevationCurve = this.elevationCurve.Clone();
+    AnimationCurve elevationCurve1 = this.elevationCurve1.Clone();
+    AnimationCurve elevationCurve2 = this.elevationCurve2.Clone();
     AnimationCurve texUCurve = this.texUCurve.Clone();
+    AnimationCurve splitCurve = this.splitCurve.Clone();
     Vector3[] vs = mesh.vert;
     int[] ts = mesh.tri;
     Vector2[] uvs = new Vector2[vs.Length];
@@ -29,9 +36,9 @@ public class TPerlinGenerator : TMeshGenerator {
       int b = ts[t++];
       int c = ts[t++];
       float ha, hb, hc;
-      Vector3 va = vs[a]; ApplyMap(elevationCurve, steps, ref va, out ha); vs[a] = va;
-      Vector3 vb = vs[b]; ApplyMap(elevationCurve, steps, ref vb, out hb); vs[b] = vb;
-      Vector3 vc = vs[c]; ApplyMap(elevationCurve, steps, ref vc, out hc); vs[c] = vc;
+      Vector3 va = vs[a]; ApplyMap(elevationCurve1, elevationCurve2, steps, splitCurve, ref va, out ha); vs[a] = va;
+      Vector3 vb = vs[b]; ApplyMap(elevationCurve1, elevationCurve2, steps, splitCurve, ref vb, out hb); vs[b] = vb;
+      Vector3 vc = vs[c]; ApplyMap(elevationCurve1, elevationCurve2, steps, splitCurve, ref vc, out hc); vs[c] = vc;
       float h = (ha + hb + hc) / 3f;
       float u = texUCurve.Evaluate(h);
       u = Mathf.Floor(u * textureResolution) / ((float) textureResolution) + (1f / (textureResolution * 2f));
@@ -43,12 +50,17 @@ public class TPerlinGenerator : TMeshGenerator {
     return new TMesh(vs, ts, uvs);
   }
 
-  private void ApplyMap(AnimationCurve elevationCurve, HeightmapSteps steps, ref Vector3 vert, out float height) {
+  private void ApplyMap(AnimationCurve elevationCurve1, AnimationCurve elevationCurve2, HeightmapSteps steps,
+                        AnimationCurve splitCurve, ref Vector3 vert, out float height) {
     Vector3 v = vert;
-    float h = NoiseMap(v);
+    float h = heightMap.Sample(v);
+    float split = splitMap.Sample(v);
+    split = splitCurve.Evaluate(split);
+    float h1 = elevationCurve1.Evaluate(h);
+    float h2 = elevationCurve2.Evaluate(h);
+    h = Mathf.Lerp(h1, h2, split);
     height = h;
-    h = elevationCurve.Evaluate(h);
-    h = steps.Apply(h);
+    h = steps.Apply(h * maxHeight);
     v = VertexHeight(v, h);
     v += new Vector3(
       Perlin.Noise(jitterFrequency * (v + Vector3.right)) * jitterRadius,
