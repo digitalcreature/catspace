@@ -70,6 +70,10 @@ Material:
     - _FadeMaxDistanceSpace: 1.75
     - _FadeMaxDistanceSurface: 0.75
     - _FadeMinDistance: 0.125
+    - _FogAmount: 1
+    - _FogCeiling: 0.373
+    - _FogDensity: 0.5
+    - _FogFloor: 0.287
     - _FresnelFactor: 1
     - _FresnelPower: 3
     - _FresnelSize: 1.7

@@ -37,8 +37,25 @@ public class GridTerrain : TerrainBase {
   ConcurrentQueue<TMesh> finishedSections;
   int sectionTasksRemaining;
 
-  public override void Generate() {
-    // start worker threads for fragments
+  public override void Generate()
+    => Generate(true);
+
+  // [ContextMenu("Generate")]
+  // public void EditorGenerate() {
+  //   Awake();
+  //   Generate(false);
+  // }
+  //
+  // [ContextMenu("Cleanup")]
+  // public void EditorCleanup() {
+  //   TaskManager.AbortWorkers();
+  //   DestroyImmediate(terrainParent.gameObject);
+  //   terrainParent = null;
+  //   sectionsParent = null;
+  // }
+
+  void Generate(bool generateFragments) {
+    // start worker threads
     if (!TaskManager.workersAreRunning) {
       TaskManager.StartWorkers(4);
     }
@@ -49,11 +66,13 @@ public class GridTerrain : TerrainBase {
     // create heirarchy
     terrainParent = new GameObject("terrain").transform;
     sectionsParent = new GameObject("sections").transform;
-    fragmentsParent = new GameObject("fragments").transform;
     terrainParent.parent = transform;
     sectionsParent.parent = terrainParent;
-    fragmentsParent.parent = terrainParent;
-    // start task to generate grid mesh
+    if (generateFragments) {
+      fragmentsParent = new GameObject("fragments").transform;
+      fragmentsParent.parent = terrainParent;
+    }
+    // create base mesh
     TMesh baseMesh = new TMesh(this.baseMesh);
     baseMesh.Clean();
     // make sure the base mesh is the right scale
@@ -61,9 +80,13 @@ public class GridTerrain : TerrainBase {
     for (int i = 0; i < vs.Length; i ++) {
       vs[i] = gfield.LocalPointToSurface(vs[i]);
     }
-    gridMeshTask = TaskManager.Schedule(() => {
-      return GenerateGridMesh(baseMesh, fragmentLength);
-    });
+    // start task to generate grid mesh
+    if (generateFragments) {
+      // generate grid mesh for fragments
+      gridMeshTask = TaskManager.Schedule(() => {
+        return GenerateGridMesh(baseMesh, fragmentLength);
+      });
+    }
     // start terrain section generation tasks
     finishedSections = new ConcurrentQueue<TMesh>();
     int sectionGridSize = MeshToGridSize(baseMesh, terrainTileLength);
