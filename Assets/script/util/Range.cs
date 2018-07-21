@@ -30,6 +30,14 @@ public struct FloatRange : IRange<float> {
     return ((float) rng.NextDouble() * range) + min;
   }
 
+  public float Lerp(float t) {
+    return Mathf.Lerp(min, max, t);
+  }
+
+  public float InverseLerp(float value) {
+    return Mathf.InverseLerp(min, max, value);
+  }
+
   public float GetRandom() {
     return Random.value * range + min;
   }

@@ -94,7 +94,7 @@ public class TFragment : MonoBehaviour {
       gameObject.SetActive(false);
       // if (terrain.isServer) {
       //   foreach (GBody body in GBody.loaded) {
-      //     if (SphereIsOverFragment(body.transform.position, body.loadRadius)) {
+      //     if (SphereIsOverFragment(body.transform.position, body.boundingRadius)) {
       //       unloadedBodies.Add(body);
       //     }
       //   }

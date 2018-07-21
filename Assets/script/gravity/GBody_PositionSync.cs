@@ -65,6 +65,11 @@ partial class GBody : KittyNetworkBehaviour {
     nextPSync = psync;
   }
 
+  // used to cancel interpolation, causeing the object to snap to its next position
+  public void SnapPosition() {
+    lastPSync = nextPSync = PositionSync.Read(this);
+  }
+
   struct PositionSync {
 
     public Vector3 position;

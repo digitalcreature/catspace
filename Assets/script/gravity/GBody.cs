@@ -7,7 +7,8 @@ public partial class GBody : KittyNetworkBehaviour {
 
   // the radius used when checking if a body should be loaded/unloaded
   // this should contain every collider in the body
-  public float loadRadius = 0.5f;
+  // also used for general size approximations
+  public float boundingRadius = 0.5f;
 
   public static HashSet<GBody> loaded { get; private set; } = new HashSet<GBody>();
 
@@ -93,7 +94,7 @@ public partial class GBody : KittyNetworkBehaviour {
   protected virtual void OnDrawGizmosSelected() {
     Color c = Gizmos.color;
     Gizmos.color = new Color(1f, 0.5f, 0.75f);
-    Gizmos.DrawWireSphere(transform.position, loadRadius);
+    Gizmos.DrawWireSphere(transform.position, boundingRadius);
     Gizmos.color = c;
   }
 

@@ -34,9 +34,12 @@
 		};
 
 		void surf(Input i, inout SurfaceOutputStandard o) {
-			if (_CullSphereEnabled > 0 && length(i.worldPos - _CullSphereCenter.xyz) < _CullSphereRadius) {
-				discard;
-			}
+			// if (_CullSphereEnabled > 0 && length(i.worldPos - _CullSphereCenter.xyz) < _CullSphereRadius) {
+			// 	o.Alpha = 0;
+			// }
+			// else {
+			// 	o.Alpha = 1;
+			// }
 			o.Albedo = _Color.rgb * tex2D(_MainTex, i.uv_MainTex).rgb;
 		}
 

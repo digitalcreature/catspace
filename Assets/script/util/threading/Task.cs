@@ -15,6 +15,7 @@ public static class TaskManager {
   static bool joinRequested;
 
   static Thread[] workers;
+  static object[] workerLocks;
 
   public static Task<T> Schedule<T>(Func<T> f, float priority = 0) {
     Task<T> task = new Task<T>(f, priority);
@@ -38,11 +39,13 @@ public static class TaskManager {
   public static void StartWorkers(int n = 8) {
     JoinWorkers();
     workers = new Thread[n];
+    workerLocks = new object[n];
     joinRequested = false;
     tasksAvailableEvent.Reset();
     for (int i = 0; i < n; i ++) {
       Thread worker = new Thread(Worker);
       workers[i] = worker;
+      workerLocks[i] = new object();
       worker.Start();
     }
   }
@@ -50,19 +53,25 @@ public static class TaskManager {
   public static void JoinWorkers() {
     if (workers != null) {
       joinRequested = true;
-      foreach (Thread worker in workers) {
-        worker.Join();
+      for (int i = 0; i < workers.Length; i ++) {
+        lock(workerLocks[i]) {
+          workers[i].Join();
+        }
       }
       workers = null;
+      workerLocks = null;
     }
   }
 
   public static void AbortWorkers() {
     if (workers != null) {
-      foreach (Thread worker in workers) {
-        worker.Abort();
+      for (int i = 0; i < workers.Length; i ++) {
+        lock(workerLocks[i]) {
+          workers[i].Abort();
+        }
       }
       workers = null;
+      workerLocks = null;
     }
   }
 

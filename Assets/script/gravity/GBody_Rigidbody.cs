@@ -23,8 +23,7 @@ partial class GBody : KittyNetworkBehaviour {
         CreateRigidbody();
       }
       if (!value && body != null) {
-        Destroy(body);
-        body = null;
+        DestroyRigidbody();
       }
     }
   }
@@ -39,6 +38,19 @@ partial class GBody : KittyNetworkBehaviour {
     body.collisionDetectionMode = collisionDetection;
     body.constraints = constraints;
   }
+
+  void DestroyRigidbody() {
+    mass = body.mass;
+    drag = body.drag;
+    angularDrag = body.angularDrag;
+    useGravity = body.useGravity;
+    interpolation = body.interpolation;
+    collisionDetection = body.collisionDetectionMode;
+    constraints = body.constraints;
+    Destroy(body);
+    body = null;
+  }
+
 
   void OnSync_Rigidbody(NetworkSync sync) {
     bool hasPhysics = this.hasPhysics;
